@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { InstallBanner } from "@/components/pwa/install-banner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -32,6 +33,8 @@ const statusClasses: Record<(typeof statusTokens)[number]["status"], string> = {
 export default function HomePage() {
   return (
     <div className="flex flex-col gap-6">
+      <InstallBanner />
+
       <section className="flex flex-col gap-3">
         <h1 className="text-3xl font-black uppercase">MTG Deck Builder</h1>
         <p className="text-muted-foreground text-sm">
@@ -43,7 +46,7 @@ export default function HomePage() {
             <Link href="/decks">Go to decks</Link>
           </Button>
           <Button variant="outline" asChild>
-            <Link href="/settings">Install app</Link>
+            <Link href="/settings/install">Install app</Link>
           </Button>
         </div>
       </section>

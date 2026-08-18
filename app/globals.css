@@ -266,6 +266,20 @@
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
+/* Status-bar clearance. Required because the installed app declares
+   apple-mobile-web-app-status-bar-style=black-translucent, so the page draws
+   underneath the iOS status bar and notch. */
+@utility pt-safe {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+/* Anchors a fixed overlay just above the bottom navigation. */
+@utility bottom-above-nav {
+  bottom: calc(
+    var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px) + 0.5rem
+  );
+}
+
 @utility mb-safe-nav {
   margin-bottom: calc(
     var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px)

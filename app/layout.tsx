@@ -19,15 +19,36 @@ const spaceMono = Space_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MTG Deck Builder",
+  title: {
+    default: "MTG Deck Builder",
+    template: "%s · Deck Builder",
+  },
   description:
     "Track what's in your deck, what's going in, and what it costs. Local-first Commander deck manager.",
   applicationName: "MTG Deck Builder",
+  // Emits mobile-web-app-capable, apple-mobile-web-app-status-bar-style, and
+  // apple-mobile-web-app-title. The legacy apple-prefixed capable tag is added
+  // in the <head> below because Next no longer emits it.
+  appleWebApp: {
+    capable: true,
+    title: "Deck Builder",
+    statusBarStyle: "black-translucent",
+  },
+  icons: {
+    icon: "/icons/icon-192.png",
+    apple: "/icons/apple-touch-icon.png",
+  },
+  // Card names and set codes are not phone numbers.
+  formatDetection: {
+    telephone: false,
+  },
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  // Matches manifest.theme_color: the black Neo Brutalism border colour.
+  themeColor: "#000000",
   // Required so content can extend under the iPhone home indicator while the
   // bottom nav pads itself with env(safe-area-inset-bottom).
   viewportFit: "cover",
@@ -40,6 +61,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Next's metadata API emits only the standardized
+            mobile-web-app-capable. iOS before 16.4 ignores that name and needs
+            the apple-prefixed tag to launch from the Home Screen standalone. */}
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+      </head>
       <body className={`${dmSans.variable} ${spaceMono.variable} antialiased`}>
         <AppLayout>{children}</AppLayout>
       </body>

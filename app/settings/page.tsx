@@ -1,4 +1,11 @@
-import { Database, Info, Settings as SettingsIcon } from "lucide-react";
+import Link from "next/link";
+import {
+  ChevronRight,
+  Database,
+  Info,
+  Settings as SettingsIcon,
+  Smartphone,
+} from "lucide-react";
 
 import { EmptyState } from "@/components/shared/empty-state";
 import { Card, CardContent } from "@/components/ui/card";
@@ -22,6 +29,23 @@ export default function SettingsPage() {
   return (
     <div className="flex flex-col gap-6">
       <h1 className="text-2xl font-black uppercase">Settings</h1>
+
+      <Link
+        href="/settings/install"
+        data-testid="settings-install-link"
+        className="border-border bg-card shadow-brutal-sm hover:bg-muted flex min-h-11 items-center gap-3 border-2 px-4 py-3 transition-colors"
+      >
+        <Smartphone aria-hidden="true" className="size-5 shrink-0" />
+        <span className="flex flex-col">
+          <span className="text-sm font-black uppercase">
+            Install on iPhone
+          </span>
+          <span className="text-muted-foreground text-xs">
+            Add to Home Screen, and why to do it before building decks
+          </span>
+        </span>
+        <ChevronRight aria-hidden="true" className="ml-auto size-5 shrink-0" />
+      </Link>
 
       <EmptyState
         icon={SettingsIcon}
