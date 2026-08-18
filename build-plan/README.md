@@ -1,6 +1,8 @@
 # MTG Deck Builder — Phase-by-Phase Build Plan
 
-This folder contains **17 executable phase documents** (Phase 0–16) derived from the master product plan at [`plans/mtg-deck-builder-web-app-build-plan.md`](../plans/mtg-deck-builder-web-app-build-plan.md).
+This folder contains **18 executable phase documents** (Phase 0–17) derived from the master product plan at [`plans/mtg-deck-builder-web-app-build-plan.md`](../plans/mtg-deck-builder-web-app-build-plan.md).
+
+Phases 0–16 are the MVP build. **Phase 17 is the first post-launch improvement phase** and is optional for reaching v1.0.0.
 
 Each phase is designed to be executed by a **new, independent agent** with no prior conversation context.
 
@@ -43,6 +45,7 @@ Do not skip phases — later phases assume earlier deliverables exist.
 | 14    | [phase-14-ux-polish.md](./phase-14-ux-polish.md)                                 | Transitions, skeletons, safe areas, polish           |
 | 15    | [phase-15-testing-hardening.md](./phase-15-testing-hardening.md)                 | Unit, integration, E2E, iPhone QA                    |
 | 16    | [phase-16-production-launch.md](./phase-16-production-launch.md)                 | Production deploy, launch checklist                  |
+| 17    | [phase-17-legality-symbols-search-filters.md](./phase-17-legality-symbols-search-filters.md) | Legality tabs, mana symbols, search filters (v1.1) |
 
 ---
 
@@ -74,6 +77,7 @@ flowchart TD
   P13 --> P14
   P14 --> P15[Phase15_Testing]
   P15 --> P16[Phase16_Launch]
+  P16 --> P17[Phase17_LegalitySymbolsFilters]
 ```
 
 Phases 6–7 can partially overlap after Phase 5. Phases 8–13 are largely parallelizable once Phase 5 is complete, but **Phase 14 (Polish) should wait for all feature phases**.
@@ -83,7 +87,7 @@ Phases 6–7 can partially overlap after Phase 5. Phases 8–13 are largely para
 ## Recommended Build Order
 
 ```text
-0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11 → 12 → 13 → 14 → 15 → 16
+0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11 → 12 → 13 → 14 → 15 → 16 → 17
 ```
 
 **First milestone** (after Phase 7): Create decks locally, search Scryfall, mark ADD/CUT/CONSIDER, reopen app with data intact.

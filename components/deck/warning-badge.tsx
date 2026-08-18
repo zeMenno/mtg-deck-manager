@@ -3,11 +3,10 @@
 import { Check, AlertTriangle, X, Info } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import type { DeckWarning, WarningSeverity } from "@/types/deck-validation";
+import type { WarningSeverity } from "@/types/deck-validation";
 
 type WarningBadgeProps = {
   severity: WarningSeverity;
-  category?: DeckWarning["category"];
   count?: number;
   className?: string;
 };

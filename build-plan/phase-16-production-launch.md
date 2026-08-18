@@ -520,9 +520,9 @@ Reference: [`automation-strategy.md`](./automation-strategy.md) — Phase 16 mat
 
 ## Handoff to Next Phase
 
-**There is no Phase 17 in the MVP build plan.**
+Phase 16 completes the **MVP**. The first post-launch improvement phase is [`phase-17-legality-symbols-search-filters.md`](./phase-17-legality-symbols-search-filters.md) (v1.1.0) — card legality tabs with banned-card warnings, real MTG mana symbols, and faceted card search filters.
 
-Post-launch, refer to master plan **§64 Post-MVP Roadmap** for Version 1.1+ features:
+Beyond that, refer to master plan **§64 Post-MVP Roadmap** for Version 1.1+ features:
 
 - Better deck importers (Moxfield, Archidekt)
 - More format rules

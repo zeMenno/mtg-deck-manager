@@ -1,0 +1,23 @@
+{
+  "backupVersion": 99,
+  "appSchemaVersion": 3,
+  "exportedAt": "2026-08-18T12:00:00.000Z",
+  "exportedFrom": { "appVersion": "9.9.9" },
+  "metadata": {
+    "deckCount": 0,
+    "cardCount": 0,
+    "versionCount": 0,
+    "wishlistItemCount": 0
+  },
+  "data": {
+    "decks": [],
+    "deckCards": [],
+    "deckVersions": [],
+    "cards": [],
+    "cardPrices": [],
+    "tags": [],
+    "wishlistItems": [],
+    "settings": [],
+    "appMeta": []
+  }
+}

@@ -3,8 +3,8 @@ import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitest/config";
 
 /**
- * Phase 1 ships a single `unit` project so `test:unit --project unit` is stable
- * from the start. Phase 3 adds an `integration` project (fake-indexeddb) here.
+ * Unit + integration projects (Phase 3).
+ * `vitest.workspace.ts` re-exports this config for tools that look for a workspace file.
  */
 export default defineConfig({
   resolve: {
@@ -24,6 +24,19 @@ export default defineConfig({
           name: "unit",
           environment: "node",
           include: ["tests/unit/**/*.test.ts"],
+          setupFiles: ["tests/setup/vitest.setup.ts"],
+        },
+      },
+      {
+        resolve: {
+          alias: {
+            "@": fileURLToPath(new URL("./", import.meta.url)),
+          },
+        },
+        test: {
+          name: "integration",
+          environment: "node",
+          include: ["tests/integration/**/*.test.ts"],
           setupFiles: ["tests/setup/vitest.setup.ts"],
         },
       },

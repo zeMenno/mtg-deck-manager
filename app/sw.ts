@@ -22,6 +22,8 @@ declare const self: ServiceWorkerGlobalScope;
 const CACHE_VERSION = "v1";
 const APP_SHELL_CACHE = `app-shell-${CACHE_VERSION}`;
 const STATIC_CACHE = `static-${CACHE_VERSION}`;
+/** Scryfall card art — shared with client prefetch (Phase 9). ~100×50KB ≈ 5MB. */
+const CARD_IMAGES_CACHE = `card-images-${CACHE_VERSION}`;
 
 const runtimeCaching: RuntimeCaching[] = [
   {
@@ -42,6 +44,22 @@ const runtimeCaching: RuntimeCaching[] = [
         new ExpirationPlugin({
           maxEntries: 64,
           maxAgeSeconds: 60 * 60 * 24 * 365,
+        }),
+      ],
+    }),
+  },
+  {
+    // Scryfall CDN card images — cache-first; prefer offline deck art.
+    matcher: ({ url }) =>
+      url.hostname === "cards.scryfall.io" ||
+      url.hostname === "c1.scryfall.com" ||
+      url.hostname.endsWith(".scryfall.io"),
+    handler: new CacheFirst({
+      cacheName: CARD_IMAGES_CACHE,
+      plugins: [
+        new ExpirationPlugin({
+          maxEntries: 400,
+          maxAgeSeconds: 60 * 60 * 24 * 30,
         }),
       ],
     }),
@@ -75,3 +93,28 @@ const serwist = new Serwist({
 });
 
 serwist.addEventListeners();
+
+/**
+ * Prefetch handler: cache Scryfall image URLs in chunks (Phase 9).
+ * Client also writes via Cache API; this keeps SW warm for fetch interception.
+ */
+self.addEventListener("message", (event) => {
+  const data = event.data as { type?: string; urls?: string[] } | undefined;
+  if (!data || data.type !== "PREFETCH_CARD_IMAGES") return;
+  const urls = Array.isArray(data.urls) ? data.urls : [];
+  if (urls.length === 0) return;
+
+  event.waitUntil(
+    (async () => {
+      const cache = await caches.open(CARD_IMAGES_CACHE);
+      for (const url of urls) {
+        try {
+          if (await cache.match(url)) continue;
+          await cache.add(url);
+        } catch {
+          // Per-URL failure — continue
+        }
+      }
+    })(),
+  );
+});

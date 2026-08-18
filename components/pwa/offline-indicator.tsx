@@ -1,31 +1,36 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { WifiOff } from "lucide-react";
+import { toast } from "sonner";
+
+import { useOnlineStatus } from "@/lib/hooks/use-online-status";
+import { cn } from "@/lib/utils";
+
+type OfflineIndicatorProps = {
+  className?: string;
+};
 
 /**
- * Phase 2 stub: a plain online/offline bar. Phase 14 owns the polished version
- * (transitions, retry affordance, per-screen degraded states).
+ * Global offline banner. Persistent while offline; "Back online" toast on reconnect.
+ * Mounted in the app header — do not duplicate per-screen.
  */
-export function OfflineIndicator() {
-  const [offline, setOffline] = useState(false);
+export function OfflineIndicator({ className }: OfflineIndicatorProps) {
+  const online = useOnlineStatus();
+  const wasOffline = useRef(false);
 
   useEffect(() => {
-    const sync = () => {
-      setOffline(!navigator.onLine);
-    };
+    if (!online) {
+      wasOffline.current = true;
+      return;
+    }
+    if (wasOffline.current) {
+      wasOffline.current = false;
+      toast.success("Back online", { duration: 3000 });
+    }
+  }, [online]);
 
-    sync();
-    window.addEventListener("online", sync);
-    window.addEventListener("offline", sync);
-
-    return () => {
-      window.removeEventListener("online", sync);
-      window.removeEventListener("offline", sync);
-    };
-  }, []);
-
-  if (!offline) {
+  if (online) {
     return null;
   }
 
@@ -33,10 +38,16 @@ export function OfflineIndicator() {
     <div
       role="status"
       data-testid="offline-indicator"
-      className="border-border bg-foreground text-background flex items-center justify-center gap-2 border-t-4 px-4 py-2 text-xs font-bold uppercase"
+      className={cn(
+        "border-border bg-status-consider text-status-consider-foreground flex items-center justify-center gap-2 border-t-4 px-4 py-2 text-xs font-bold",
+        className,
+      )}
     >
-      <WifiOff aria-hidden="true" className="size-4" />
-      <span>Offline — saved decks are still available</span>
+      <WifiOff aria-hidden="true" className="size-4 shrink-0" />
+      <span className="uppercase">You&apos;re offline</span>
+      <span className="font-normal normal-case">
+        — saved decks still available
+      </span>
     </div>
   );
 }

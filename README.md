@@ -151,7 +151,7 @@ The worker source is [`app/sw.ts`](./app/sw.ts), bundled by `@serwist/next` to `
 | `pages`, `pages-rsc`, `pages-rsc-prefetch` | HTML documents and RSC payloads of visited routes    | NetworkFirst (Serwist default) |
 | `static-*-assets`, `next-image`, `others`  | Remaining same-origin requests                       | Serwist `defaultCache`         |
 | —                                          | `/api/*`                                             | NetworkOnly, never cached      |
-| _(deferred)_                               | Scryfall card images                                 | Phase 9                        |
+| _(Phase 9)_                                | Scryfall card images (`card-images-v1`)              | CacheFirst + offline prefetch  |
 
 Route documents are cached on visit rather than precached, which is why offline navigation works for routes the user has already opened and falls back to `/offline` for ones they have not.
 

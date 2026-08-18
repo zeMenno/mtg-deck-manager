@@ -13,3 +13,6 @@ public
 docs
 plans
 build-plan
+
+# Intentionally invalid JSON fixtures for import corruption tests
+tests/fixtures/backups/truncated.json

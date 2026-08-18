@@ -344,7 +344,7 @@ Known setting keys (extend deliberately, document here):
 | Key                      | Type                   | Default     | Owning phase |
 | ------------------------ | ---------------------- | ----------- | ------------ |
 | `imagesEnabled`          | `boolean`              | `true`      | 9            |
-| `densityMode`            | `DisplayDensity`       | `'compact'` | 9            |
+| `densityMode`            | `DisplayDensity`       | `'comfortable'` | 9         |
 | `currency`               | `Currency`             | `'USD'`     | 8            |
 | `priceFreshnessHours`    | `number`               | `24`        | 8            |
 | `lastBackupAt`           | `string \| null`       | `null`      | 10           |

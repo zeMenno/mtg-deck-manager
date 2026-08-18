@@ -34,7 +34,8 @@ export function BottomNav() {
   return (
     <nav
       aria-label="Primary"
-      className="pb-safe border-border bg-background fixed inset-x-0 bottom-0 z-50 border-t-4"
+      data-testid="bottom-nav"
+      className="pb-safe border-border bg-background fixed inset-x-0 bottom-0 z-50 border-t-4 md:hidden"
     >
       <ul className="mx-auto flex h-(--bottom-nav-height) max-w-3xl items-stretch">
         {navItems.map((item) => {
@@ -46,6 +47,7 @@ export function BottomNav() {
               <Link
                 href={item.href}
                 aria-current={active ? "page" : undefined}
+                data-testid={`nav-${item.label.toLowerCase()}`}
                 className={cn(
                   "border-border flex h-full min-h-11 w-full flex-col items-center justify-center gap-1 text-[0.6875rem] font-bold uppercase transition-colors",
                   active

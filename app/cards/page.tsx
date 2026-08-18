@@ -1,16 +1,18 @@
-import { Search } from "lucide-react";
+import type { Metadata } from "next";
+import { Suspense } from "react";
 
-import { EmptyState } from "@/components/shared/empty-state";
+import { CardsPageClient } from "@/components/cards/cards-page-client";
+
+export const metadata: Metadata = {
+  title: "Search Cards",
+};
 
 export default function CardsPage() {
   return (
-    <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-black uppercase">Cards</h1>
-      <EmptyState
-        icon={Search}
-        title="Search coming soon"
-        description="Scryfall card search is added in Phase 4."
-      />
-    </div>
+    <Suspense
+      fallback={<p className="font-mono text-sm uppercase">Loading search…</p>}
+    >
+      <CardsPageClient />
+    </Suspense>
   );
 }

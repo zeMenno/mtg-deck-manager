@@ -21,4 +21,21 @@ jobs:
       # Report-only until Phase 15, when knip becomes a blocking gate.
       - run: npm run knip || true
       - run: npm run test:unit
+      - run: npm run test:integration
       - run: npm run build
+
+  # Optional / non-blocking until Phase 15.
+  e2e-smoke:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm run start &
+      - run: npx wait-on http://localhost:3000
+      - run: npm run test:e2e:smoke

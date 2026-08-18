@@ -1,9 +1,8 @@
 /**
- * Shared domain unions, mirrored from `docs/data-model.md` §1.
+ * Shared domain types — mirrored from `docs/data-model.md`.
  *
- * Phase 1 only needs the enums that the app shell and theme tokens refer to.
- * Phase 3 owns the entity interfaces (`Deck`, `DeckCard`, `Card`, …) alongside
- * the Dexie schema, and must keep this file in sync with the data model doc.
+ * Enums live here; entity interfaces live in sibling modules and are
+ * re-exported for a single import surface (`@/types`).
  */
 
 /** Deck formats. Only `commander` is validated in the MVP; the rest are stubs. */
@@ -35,3 +34,65 @@ export type Currency = "USD" | "EUR";
 
 /** Card list density. */
 export type DisplayDensity = "compact" | "comfortable" | "image";
+
+export type {
+  Deck,
+  DeckCard,
+  DeckCardWithCard,
+  DeckVersion,
+  DeckSnapshot,
+  DeckCardSnapshot,
+} from "@/types/deck";
+
+export type {
+  Card,
+  CardFace,
+  CardLegality,
+  CardPrice,
+  Tag,
+  WishlistItem,
+  AppSetting,
+  AppMeta,
+  AppSettings,
+  SettingKey,
+} from "@/types/card";
+
+export {
+  WISHLIST_PRIORITY_ORDER,
+  DEFAULT_APP_SETTINGS,
+  SETTING_KEYS,
+} from "@/types/card";
+
+export type {
+  Wishlist,
+  WishlistSortKey,
+  WishlistPriorityFilter,
+  WishlistItemFilters,
+} from "@/types/wishlist";
+
+export {
+  PRIORITY_WEIGHT,
+  PRIORITY_LABELS,
+  ALL_PRIORITIES,
+  DEFAULT_WISHLIST_ID,
+  DEFAULT_WISHLIST_NAME,
+} from "@/types/wishlist";
+
+export type { AppBackup, DeckExport } from "@/types/backup";
+
+export type {
+  WarningCategory,
+  WarningSeverity,
+  DeckWarning,
+  ProjectedDeck,
+  RecommendationConfig,
+  CardLookup,
+  DeckValidationContext,
+  DeckValidationMode,
+  DeckValidationSummary,
+} from "@/types/deck-validation";
+
+export {
+  DEFAULT_RECOMMENDATION_CONFIG,
+  VALIDATION_ROLE_IDS,
+} from "@/types/deck-validation";
