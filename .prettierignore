@@ -1,0 +1,15 @@
+node_modules
+.next
+out
+build
+coverage
+package-lock.json
+next-env.d.ts
+public
+.husky
+
+# Planning and product documentation is authored by hand and owned by the phase
+# docs, not by the formatter.
+docs
+plans
+build-plan
