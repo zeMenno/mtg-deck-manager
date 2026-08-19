@@ -26,7 +26,7 @@ export function DeckListToolbar({ className }: DeckListToolbarProps) {
     <div
       data-testid="deck-list-toolbar"
       className={cn(
-        "border-border bg-background/95 sticky top-[calc(env(safe-area-inset-top,0px)+3.5rem)] z-20 -mx-4 flex flex-wrap items-center gap-2 border-y-2 px-4 py-2 backdrop-blur",
+        "border-border bg-background sticky top-[calc(env(safe-area-inset-top,0px)+3.5rem)] z-20 -mx-4 flex flex-wrap items-center gap-2 border-y-2 px-4 py-2",
         className,
       )}
     >

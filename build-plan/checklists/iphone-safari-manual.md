@@ -12,7 +12,8 @@ Device: iPhone model ______ iOS version ______ Production URL: ______
 
 | Phase | Sections in play                                          | State                                                                                                                                                                |
 | ----- | --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 2     | Installation & Standalone, Offline (shell only), Service Worker | **Not run — blocked on hosting.** The manifest, icons, iOS meta tags, service worker, install guide, and update prompt all ship. They were verified at build/HTTP level against `npm start`: icons and `/manifest.webmanifest` serve correctly, `/sw.js` is generated with the expected cache names and precache manifest, and the iOS meta tags are present in the served HTML. Add to Home Screen needs an HTTPS origin, and the repository has no remote and no Vercel deployment yet. Run these three sections against the first deployed URL. |
+| 2     | Installation & Standalone, Offline (shell only), Service Worker | **Not run — blocked on hosting.** Ready to execute against first HTTPS/Vercel URL. |
+| 16    | Full checklist below (persistence #1, offline, import/export, SW update, safe-area) **on production URL** | **Not signed off.** Production: `https://mtg-deck-manager-two.vercel.app`. In-repo Phase 16 docs ready; physical Home Screen persistence + §70 still required. |
 
 Do not tick boxes below without a device. Rows above record what is ready to test, not what passed.
 

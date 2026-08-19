@@ -25,8 +25,6 @@ import { deckValidationService } from "@/lib/services/deck-validation-service";
 import type { DeckWarning } from "@/types/deck-validation";
 import type { Deck, DeckCard, DeckCardWithCard } from "@/types/deck";
 
-export { canApply };
-
 export type ValidateBeforeApplyInput = {
   deck: Deck;
   deckCards: DeckCard[];

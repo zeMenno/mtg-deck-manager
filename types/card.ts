@@ -15,6 +15,47 @@ import { DEFAULT_RECOMMENDATION_CONFIG } from "@/types/deck-validation";
 
 export type CardLegality = "legal" | "not_legal" | "banned" | "restricted";
 
+/** Scryfall legality keys retained on Card (superset of DeckFormat minus `other`). */
+export type LegalityFormat =
+  | "standard"
+  | "future"
+  | "historic"
+  | "timeless"
+  | "gladiator"
+  | "pioneer"
+  | "explorer"
+  | "modern"
+  | "legacy"
+  | "pauper"
+  | "vintage"
+  | "penny"
+  | "commander"
+  | "oathbreaker"
+  | "standardbrawl"
+  | "brawl"
+  | "alchemy"
+  | "paupercommander"
+  | "duel"
+  | "oldschool"
+  | "premodern"
+  | "predh";
+
+export type ColorMode = "exact" | "including" | "atMost";
+
+/** Faceted card search filters (Phase 17) — shared online + offline. */
+export type CardSearchFilters = {
+  colors?: string[];
+  colorMode?: ColorMode;
+  colorIdentity?: string[];
+  types?: string[];
+  rarities?: string[];
+  manaValueMin?: number;
+  manaValueMax?: number;
+  setCode?: string;
+  /** Deck format for `legal:` filter; `other` is ignored. */
+  legalIn?: DeckFormat;
+};
+
 export interface CardFace {
   name: string;
   manaCost?: string;
@@ -47,9 +88,19 @@ export interface Card {
   imageLarge?: string;
   scryfallUri?: string;
   tcgplayerUri?: string;
-  legalities?: Partial<Record<DeckFormat, CardLegality>>;
+  legalities?: Partial<Record<LegalityFormat, CardLegality>>;
   faces?: CardFace[];
   layout?: string;
+  updatedAt: string;
+}
+
+/** Cached Scryfall symbology row (Dexie `symbols` table). */
+export interface MtgSymbol {
+  symbol: string;
+  svgUri: string;
+  english: string;
+  representsMana: boolean;
+  colors: string[];
   updatedAt: string;
 }
 
@@ -116,6 +167,8 @@ export interface AppSettings {
   installBannerDismissed: boolean;
   activeDeckId: string | null;
   recommendationConfig: RecommendationConfig;
+  /** Last-used card search filters (Phase 17). */
+  searchFilters: CardSearchFilters | null;
 }
 
 export const DEFAULT_APP_SETTINGS: AppSettings = {
@@ -127,6 +180,7 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   installBannerDismissed: false,
   activeDeckId: null,
   recommendationConfig: { ...DEFAULT_RECOMMENDATION_CONFIG },
+  searchFilters: null,
 };
 
 /** Known setting keys (docs/data-model.md §9). */
@@ -141,4 +195,5 @@ export const SETTING_KEYS: SettingKey[] = [
   "installBannerDismissed",
   "activeDeckId",
   "recommendationConfig",
+  "searchFilters",
 ];

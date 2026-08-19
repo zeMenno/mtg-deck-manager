@@ -12,6 +12,7 @@ export {
   cardsCollectionUrl,
   autocompleteUrl,
   namedCardUrl,
+  symbologyUrl,
   resolveScryfallUrl,
 } from "@/lib/scryfall/endpoints";
 export type {
@@ -48,7 +49,14 @@ export type {
 export {
   normalizeScryfallCard,
   normalizeScryfallCards,
+  mapLegalities,
 } from "@/lib/scryfall/normalize";
+
+export {
+  fetchSymbology,
+  ensureSymbologyCached,
+  normalizeSymbologySymbol,
+} from "@/lib/scryfall/symbology";
 
 export type {
   ScryfallCard,

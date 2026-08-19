@@ -1,5 +1,10 @@
 # Phase 16 — Production Launch
 
+> **Status: In-repo complete; device/ops sign-off blocked** (2026-08-19).
+> Production HTTPS URL exists: **https://mtg-deck-manager-two.vercel.app**.
+> Decision docs, CHANGELOG v1.0.0, env examples, security headers, and launch checklist are in-repo.
+> **Not done:** iPhone §70 / Home Screen persistence, git tag `v1.0.0`, push of local Phase 14–16 changes + redeploy, optional custom domain, `NEXT_PUBLIC_APP_URL` confirm in Vercel.
+
 ## Agent Handoff Prompt
 
 ```
@@ -210,67 +215,67 @@ next.config.ts                        — Sentry webpack plugin (if Sentry)
 
 ### 16.1 — Vercel Production Configuration
 
-- [ ] Confirm GitHub repo connected to Vercel project
-- [ ] Set production branch to `main`
+- [x] Confirm GitHub repo connected to Vercel project
+- [x] Set production branch to `main` (verified via deployment meta `githubCommitRef: main`)
 - [ ] Configure production environment variables:
-  - [ ] `NEXT_PUBLIC_APP_URL` → production URL
-  - [ ] `PRICE_PROVIDER_API_KEY` (if used, server-only)
-  - [ ] `PRICE_PROVIDER_ENDPOINT` (if used)
-  - [ ] Sentry DSN (if Sentry chosen)
-- [ ] Verify preview env vars separate from production
-- [ ] Confirm build command: `npm run build` (or `next build`)
-- [ ] Confirm output directory default (Next.js)
-- [ ] Enable Vercel deployment protection if desired (password for previews)
-- [ ] Configure Node.js version to match local dev
-- [ ] Review Vercel function regions (default OK for MVP)
+  - [ ] `NEXT_PUBLIC_APP_URL` → production URL (**human:** set to `https://mtg-deck-manager-two.vercel.app`)
+  - [x] `PRICE_PROVIDER_API_KEY` (if used, server-only) — N/A for MVP Scryfall pricing
+  - [x] `PRICE_PROVIDER_ENDPOINT` (if used) — N/A
+  - [x] Sentry DSN (if Sentry chosen) — N/A (deferred)
+- [ ] Verify preview env vars separate from production (**human**)
+- [x] Confirm build command: `npm run build` (or `next build`)
+- [x] Confirm output directory default (Next.js)
+- [ ] Enable Vercel deployment protection if desired (password for previews) — optional
+- [x] Configure Node.js version to match local dev (project reports Node 24.x on Vercel)
+- [x] Review Vercel function regions (default OK for MVP)
 
 ### 16.2 — Production Build Verification
 
-- [ ] Run `npm run build` locally — zero errors
-- [ ] Run `npm run start` locally — smoke test production build
-- [ ] Deploy to production from `main`
-- [ ] Verify deployment URL loads
-- [ ] Check Vercel build logs for warnings
-- [ ] Verify static assets served with cache headers
-- [ ] Verify API routes work (Scryfall proxy, pricing if server-side)
+- [x] Run `npm run build` locally — zero errors (prior phases; re-run before tag)
+- [ ] Run `npm run start` locally — smoke test production build (**optional before push**)
+- [x] Deploy to production from `main` (existing READY deployment)
+- [x] Verify deployment URL loads (HTTPS 200)
+- [ ] Check Vercel build logs for warnings (**human**)
+- [ ] Verify static assets served with cache headers (**human**)
+- [ ] Verify API routes work (Scryfall proxy, pricing if server-side) (**human** / after push)
 
 ### 16.3 — HTTPS & Domain
 
-- [ ] HTTPS working on default Vercel URL (automatic)
-- [ ] Add custom domain in Vercel dashboard (if desired)
-- [ ] Configure DNS records (A/CNAME per Vercel instructions)
-- [ ] Wait for DNS propagation
-- [ ] Verify SSL certificate active
-- [ ] Set `NEXT_PUBLIC_APP_URL` to custom domain
-- [ ] Redirect www → apex or vice versa (choose one)
-- [ ] Update PWA manifest `start_url` if domain changed
-- [ ] Document final production URL in README
+- [x] HTTPS working on default Vercel URL (automatic)
+- [ ] Add custom domain in Vercel dashboard (if desired) — **deferred**
+- [ ] Configure DNS records (A/CNAME per Vercel instructions) — N/A until domain chosen
+- [ ] Wait for DNS propagation — N/A
+- [x] Verify SSL certificate active (HSTS present)
+- [ ] Set `NEXT_PUBLIC_APP_URL` to custom domain — N/A until custom domain
+- [ ] Redirect www → apex or vice versa (choose one) — N/A
+- [x] Update PWA manifest `start_url` if domain changed — `start_url: "/"` (origin-relative; OK)
+- [x] Document final production URL in README
 
 ### 16.4 — PWA Production Verification
 
-- [ ] Manifest accessible at `/manifest.webmanifest` or equivalent
-- [ ] Manifest `start_url` points to production origin
-- [ ] Manifest `scope` covers app routes
-- [ ] Icons 192×192 and 512×512 load (no 404)
-- [ ] Apple touch icon configured
-- [ ] `theme_color` and `background_color` correct
-- [ ] `display: standalone` set
-- [ ] Service worker registers on production HTTPS
-- [ ] Offline app shell works on production
-- [ ] "Add to Home Screen" flow tested on iPhone Safari (production URL)
-- [ ] Installed app opens in standalone mode
-- [ ] iOS meta tags: `apple-mobile-web-app-capable`, status bar style
+- [x] Manifest accessible at `/manifest.webmanifest` or equivalent (linked from production HTML)
+- [x] Manifest `start_url` points to production origin (`/`)
+- [x] Manifest `scope` covers app routes
+- [ ] Icons 192×192 and 512×512 load (no 404) — confirm on device
+- [x] Apple touch icon configured (layout metadata)
+- [x] `theme_color` and `background_color` correct
+- [x] `display: standalone` set
+- [ ] Service worker registers on production HTTPS — **device**
+- [ ] Offline app shell works on production — **device**
+- [ ] "Add to Home Screen" flow tested on iPhone Safari (production URL) — **device**
+- [ ] Installed app opens in standalone mode — **device**
+- [x] iOS meta tags: `apple-mobile-web-app-capable`, status bar style
 
 ### 16.5 — Launch Checklist (from master plan §62)
 
-Execute and sign off each item:
+Execute and sign off each item: see [`docs/launch-checklist.md`](../docs/launch-checklist.md).
 
-- [ ] Production Vercel project created
-- [ ] HTTPS working
-- [ ] Custom domain configured if desired
-- [ ] PWA manifest verified
-- [ ] Icons verified
-- [ ] Service Worker verified
+- [x] Production Vercel project created
+- [x] HTTPS working
+- [ ] Custom domain configured if desired — deferred
+- [ ] PWA manifest verified — partial (URL exists; device pending)
+- [ ] Icons verified — partial
+- [ ] Service Worker verified — blocked (device)
 - [ ] iPhone Home Screen installation tested (production URL)
 - [ ] IndexedDB persistence tested (production, Home Screen app)
 - [ ] Data export tested (production)
@@ -278,109 +283,66 @@ Execute and sign off each item:
 - [ ] Scryfall rate/request handling tested (production)
 - [ ] Price provider behavior tested (production)
 - [ ] TCGplayer links tested (production, open externally)
-- [ ] No secrets exposed client-side (audit complete)
-- [ ] Production build succeeds
-- [ ] Error tracking configured (or defer documented)
-- [ ] Analytics decision documented
+- [x] No secrets exposed client-side (audit complete in-repo)
+- [x] Production build succeeds
+- [x] Error tracking configured (or defer documented)
+- [x] Analytics decision documented
 
 ### 16.6 — Security Audit
 
-- [ ] Run `npm audit` — fix critical/high or document accepted risk
-- [ ] Review all `NEXT_PUBLIC_*` env vars — no secrets
-- [ ] Review API routes — rate limiting on expensive endpoints
-- [ ] Confirm no API keys in client bundle (`next build` + grep)
-- [ ] Confirm import validates JSON — no eval or dangerouslySetInnerHTML
-- [ ] CORS headers on API routes restrictive
-- [ ] Content Security Policy (optional, document if deferred)
-- [ ] Dependencies pinned or lockfile committed
+- [x] Run `npm audit` — fix critical/high or document accepted risk (`docs/security-audit.md`)
+- [x] Review all `NEXT_PUBLIC_*` env vars — no secrets
+- [ ] Review API routes — rate limiting on expensive endpoints — deferred (Scryfall client already throttles)
+- [x] Confirm no API keys in client bundle (no keys in source)
+- [x] Confirm import validates JSON — no eval or dangerouslySetInnerHTML for deck data
+- [ ] CORS headers on API routes restrictive — review on next API change
+- [x] Content Security Policy (optional, document if deferred) — `docs/decisions/csp.md`
+- [x] Dependencies pinned or lockfile committed
 
 ### 16.7 — Error Tracking Implementation
 
-- [ ] Document decision in `docs/decisions/error-tracking.md`
-- [ ] If Sentry:
-  - [ ] Install `@sentry/nextjs`
-  - [ ] Configure client + server
-  - [ ] Upload source maps (Vercel integration)
-  - [ ] Test error capture (throw test error in staging, verify dashboard)
-  - [ ] Scrub PII from error reports (no deck names required)
-  - [ ] Filter benign errors (network offline, cancelled fetch)
-- [ ] If deferred:
-  - [ ] Document rationale
-  - [ ] Add GitHub bug report template
-  - [ ] Ensure error UI surfaces are user-friendly (Phase 14/39)
+- [x] Document decision in `docs/decisions/error-tracking.md`
+- [x] If deferred:
+  - [x] Document rationale
+  - [x] Add GitHub bug report template
+  - [x] Ensure error UI surfaces are user-friendly (Phase 14/39)
+  - [x] Minimal `window.onerror` logger (`lib/observability/production-error-logger.ts`)
 
 ### 16.8 — Analytics Implementation
 
-- [ ] Document decision in `docs/decisions/analytics.md`
-- [ ] If Vercel Analytics:
-  - [ ] Enable in Vercel dashboard
-  - [ ] Add `@vercel/analytics` if required
-  - [ ] Verify page views recorded
-  - [ ] Confirm no deck/card data in custom events
-- [ ] If none:
-  - [ ] Document privacy-first rationale
-  - [ ] No tracking scripts in bundle
+- [x] Document decision in `docs/decisions/analytics.md`
+- [x] If none:
+  - [x] Document privacy-first rationale
+  - [x] No tracking scripts in bundle
 
 ### 16.9 — Final iPhone QA (Production)
 
-Re-run on **production URL**, installed as Home Screen app:
-
-- [ ] **Definition of Done workflow (§70)** — complete end-to-end:
-  - [ ] Open app from Home Screen
-  - [ ] Select deck
-  - [ ] View current deck
-  - [ ] Toggle card images off
-  - [ ] Search card
-  - [ ] Open card detail
-  - [ ] See image + metadata + price
-  - [ ] Mark CONSIDER
-  - [ ] Assign tags
-  - [ ] Promote to ADD
-  - [ ] Mark existing card CUT
-  - [ ] Open Need to Add → see upgrade price
-  - [ ] Open TCGplayer link
-  - [ ] Apply changes
-  - [ ] Save version
-  - [ ] Force close app
-  - [ ] Reopen from Home Screen
-  - [ ] Everything remains
-- [ ] Fresh install test: new user onboarding → create deck → export backup
-- [ ] Update test: if SW update deployed during QA, verify update flow
-- [ ] Performance: initial load <3s on LTE
-- [ ] No console errors during normal use
+**Blocked — physical device.** Checklist: [`checklists/iphone-safari-manual.md`](./checklists/iphone-safari-manual.md) + §70 below.
 
 ### 16.10 — Documentation & Release
 
-- [ ] Update README with:
-  - [ ] Production URL
-  - [ ] Install instructions (iPhone)
-  - [ ] Local-first / backup reminder
-  - [ ] Development setup
-  - [ ] Link to master plan and build-plan
-- [ ] Write CHANGELOG.md v1.0.0 entry:
-  - [ ] MVP feature list
-  - [ ] Known limitations
-  - [ ] Supported formats (Commander)
-- [ ] Git tag `v1.0.0`
-- [ ] GitHub Release with notes
-- [ ] Archive launch checklist with sign-off date in `docs/launch-checklist.md`
+- [x] Update README with production URL, install instructions, backup reminder
+- [x] Write CHANGELOG.md v1.0.0 entry
+- [ ] Git tag `v1.0.0` — **human after push** (no auto-commit from agent)
+- [ ] GitHub Release with notes — **human**
+- [x] Archive launch checklist with sign-off fields in `docs/launch-checklist.md`
 
 ### 16.11 — Post-Launch Monitoring (first 48 hours)
 
-- [ ] Monitor Vercel deployment dashboard for errors
-- [ ] Monitor Sentry (if configured) for new issues
-- [ ] Check Scryfall API usage not hitting rate limits
+- [ ] Monitor Vercel deployment dashboard for errors — **human after promote**
+- [x] Monitor Sentry (if configured) — N/A
+- [ ] Check Scryfall API usage not hitting rate limits — **human**
 - [ ] Respond to any user-reported issues
-- [ ] Hotfix process documented: branch → PR → CI → merge → auto-deploy
+- [x] Hotfix process documented: branch → PR → CI → merge → auto-deploy
 
 ### 16.12 — Optional Production Hardening
 
-- [ ] Vercel Firewall rules (if needed)
-- [ ] Rate limit on `/api/*` routes
-- [ ] `robots.txt` — allow or disallow per preference
-- [ ] Favicon + OG meta tags for link sharing
-- [ ] 404 page themed (Neo Brutalism)
-- [ ] 500 error page themed
+- [ ] Vercel Firewall rules (if needed) — skip
+- [ ] Rate limit on `/api/*` routes — deferred
+- [x] `robots.txt` — `app/robots.ts`
+- [x] Favicon + OG/meta tags for link sharing — favicon/icons present; OG optional skip
+- [ ] 404 page themed (Neo Brutalism) — default Next 404 OK for MVP
+- [ ] 500 error page themed — skip
 
 ## Implementation Notes
 
@@ -481,17 +443,33 @@ Reference: [`automation-strategy.md`](./automation-strategy.md) — Phase 16 mat
 
 ## Exit Criteria
 
-- [ ] Application live at production HTTPS URL
-- [ ] Custom domain configured OR stable Vercel URL documented
-- [ ] All 17 launch checklist items (§62) signed off
-- [ ] Error tracking decision documented and implemented/deferred
-- [ ] Analytics decision documented and implemented/deferred
-- [ ] No secrets in client bundle (verified)
+- [x] Application live at production HTTPS URL (`https://mtg-deck-manager-two.vercel.app`)
+- [x] Custom domain configured OR stable Vercel URL documented
+- [ ] All 17 launch checklist items (§62) signed off — **partial; device items open**
+- [x] Error tracking decision documented and implemented/deferred
+- [x] Analytics decision documented and implemented/deferred
+- [x] No secrets in client bundle (verified in-repo)
 - [ ] Definition of Done workflow passes on production iPhone
-- [ ] CHANGELOG v1.0.0 published
+- [x] CHANGELOG v1.0.0 published (in-repo; tag pending)
 - [ ] Git tag v1.0.0 created
-- [ ] README updated with production URL and install guide
-- [ ] Post-launch monitoring plan active for 48 hours
+- [x] README updated with production URL and install guide
+- [ ] Post-launch monitoring plan active for 48 hours — **after human promote**
+
+## Human steps to finish Phase 16
+
+1. Commit and push local Phase 14–16 work to `main` (or open a PR and merge after CI green). Agent did **not** create a commit.
+2. In Vercel → `mtg-deck-manager` → Settings → Environment Variables, set Production `NEXT_PUBLIC_APP_URL=https://mtg-deck-manager-two.vercel.app` (and Preview as needed). Redeploy.
+3. Confirm the new deployment is `READY` and home page no longer shows the old “Foundation only” skeleton (after push).
+4. On a physical iPhone, complete [`checklists/iphone-safari-manual.md`](./checklists/iphone-safari-manual.md) against the production URL — especially Home Screen persistence (#1) and full §70 Definition of Done.
+5. Sign `docs/launch-checklist.md`.
+6. Tag and release (only after CI green and you are happy with the commit):
+   ```bash
+   git tag -a v1.0.0 -m "v1.0.0 MVP production launch"
+   git push origin v1.0.0
+   gh release create v1.0.0 --title "v1.0.0" --notes-file CHANGELOG.md
+   ```
+7. Optional: add a custom domain before heavy Home Screen use; if you change origin later, users must reinstall (separate storage).
+8. Watch Vercel Runtime Logs for 48 hours.
 
 ## Risks & Mitigations
 

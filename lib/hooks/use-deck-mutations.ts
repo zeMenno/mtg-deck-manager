@@ -200,13 +200,38 @@ export function useBulkSetStatus() {
 export function useBulkRemove() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({
+    mutationFn: async ({
       deckCardIds,
       deckId,
     }: {
       deckCardIds: string[];
       deckId: string;
-    }) => deckCardService.bulkRemove(deckCardIds).then(() => deckId),
-    onSuccess: (deckId) => invalidateDeckQueries(queryClient, deckId),
+    }) => {
+      const removed = await deckCardService.bulkRemove(deckCardIds);
+      return { deckId, removed };
+    },
+    onSuccess: ({ deckId }) => invalidateDeckQueries(queryClient, deckId),
+  });
+}
+
+export function useRestoreDeckCard() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (deckCard: DeckCard) =>
+      deckCardService.restoreDeckCard(deckCard),
+    onSuccess: (card) => invalidateDeckQueries(queryClient, card.deckId),
+  });
+}
+
+export function useRestoreDeckCards() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (deckCards: DeckCard[]) => {
+      await deckCardService.restoreDeckCards(deckCards);
+      return deckCards[0]?.deckId;
+    },
+    onSuccess: (deckId) => {
+      if (deckId) invalidateDeckQueries(queryClient, deckId);
+    },
   });
 }

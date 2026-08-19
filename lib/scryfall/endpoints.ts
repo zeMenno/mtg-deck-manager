@@ -85,4 +85,9 @@ export function namedCardUrl(
   return withBase(`/cards/named?${params.toString()}`);
 }
 
+/** `/symbology` — unpaginated card symbols list. */
+export function symbologyUrl(): string {
+  return withBase("/symbology");
+}
+
 export { withBase as resolveScryfallUrl };

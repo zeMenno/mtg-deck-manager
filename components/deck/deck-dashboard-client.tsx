@@ -12,6 +12,8 @@ import { DeckDashboard } from "@/components/deck/deck-dashboard";
 import { DeckHeader } from "@/components/deck/deck-header";
 import { SaveVersionDialog } from "@/components/deck/save-version-dialog";
 import { DeckTabs } from "@/components/navigation/deck-tabs";
+import { PageTransition } from "@/components/shared/page-transition";
+import { DeckDashboardSkeleton } from "@/components/shared/skeletons";
 import { Button } from "@/components/ui/button";
 import { getCardsByIdsBatched } from "@/lib/cards/get-cards-by-ids-batched";
 import { useDeck } from "@/lib/hooks/use-deck";
@@ -57,11 +59,7 @@ export function DeckDashboardClient({ params }: DeckDashboardClientProps) {
   }, [deck?.commanderId]);
 
   if (isLoading) {
-    return (
-      <p className="font-mono text-sm uppercase" data-testid="deck-loading">
-        Loading deck…
-      </p>
-    );
+    return <DeckDashboardSkeleton />;
   }
 
   if (!deck) {
@@ -78,66 +76,68 @@ export function DeckDashboardClient({ params }: DeckDashboardClientProps) {
   const cardCount = stats?.counts.total ?? 0;
 
   return (
-    <div className="flex flex-col gap-6">
-      <DeckHeader
-        deck={deck}
-        cardCount={cardCount}
-        commander={commander}
-        imagesEnabled={imagesEnabled}
-        onAddCard={() => setAddOpen(true)}
-        onSettings={() => setSettingsOpen(true)}
-        onPickCommander={() => setCommanderOpen(true)}
-      />
+    <PageTransition transitionKey={`deck-dashboard-${deckId}`}>
+      <div className="flex flex-col gap-6">
+        <DeckHeader
+          deck={deck}
+          cardCount={cardCount}
+          commander={commander}
+          imagesEnabled={imagesEnabled}
+          onAddCard={() => setAddOpen(true)}
+          onSettings={() => setSettingsOpen(true)}
+          onPickCommander={() => setCommanderOpen(true)}
+        />
 
-      <DeckTabs deckId={deckId} />
+        <DeckTabs deckId={deckId} />
 
-      <DeckDashboard
-        deckId={deckId}
-        onAddCard={() => setAddOpen(true)}
-        onSaveVersion={() => setSaveVersionOpen(true)}
-      />
+        <DeckDashboard
+          deckId={deckId}
+          onAddCard={() => setAddOpen(true)}
+          onSaveVersion={() => setSaveVersionOpen(true)}
+        />
 
-      {commander ? (
-        <Button
-          type="button"
-          variant="ghost"
-          className="justify-start"
-          onClick={() => setDetailCard(commander)}
-        >
-          View commander details
-        </Button>
-      ) : null}
+        {commander ? (
+          <Button
+            type="button"
+            variant="ghost"
+            className="justify-start"
+            onClick={() => setDetailCard(commander)}
+          >
+            View commander details
+          </Button>
+        ) : null}
 
-      <DeckAddCardSheet
-        deckId={deckId}
-        open={addOpen}
-        onOpenChange={setAddOpen}
-        imagesEnabled={imagesEnabled}
-      />
-      <CommanderPicker
-        deckId={deckId}
-        open={commanderOpen}
-        onOpenChange={setCommanderOpen}
-        imagesEnabled={imagesEnabled}
-      />
-      <DeckActionsSheet
-        deck={deck}
-        open={settingsOpen}
-        onOpenChange={setSettingsOpen}
-      />
-      <SaveVersionDialog
-        deckId={deckId}
-        open={saveVersionOpen}
-        onOpenChange={setSaveVersionOpen}
-      />
-      <CardDetailSheet
-        card={detailCard}
-        open={Boolean(detailCard)}
-        onOpenChange={(open) => {
-          if (!open) setDetailCard(null);
-        }}
-        deckId={deckId}
-      />
-    </div>
+        <DeckAddCardSheet
+          deckId={deckId}
+          open={addOpen}
+          onOpenChange={setAddOpen}
+          imagesEnabled={imagesEnabled}
+        />
+        <CommanderPicker
+          deckId={deckId}
+          open={commanderOpen}
+          onOpenChange={setCommanderOpen}
+          imagesEnabled={imagesEnabled}
+        />
+        <DeckActionsSheet
+          deck={deck}
+          open={settingsOpen}
+          onOpenChange={setSettingsOpen}
+        />
+        <SaveVersionDialog
+          deckId={deckId}
+          open={saveVersionOpen}
+          onOpenChange={setSaveVersionOpen}
+        />
+        <CardDetailSheet
+          card={detailCard}
+          open={Boolean(detailCard)}
+          onOpenChange={(open) => {
+            if (!open) setDetailCard(null);
+          }}
+          deckId={deckId}
+        />
+      </div>
+    </PageTransition>
   );
 }

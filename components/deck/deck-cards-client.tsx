@@ -13,6 +13,8 @@ import { DeckCardList } from "@/components/deck/deck-card-list";
 import { DeckListToolbar } from "@/components/deck/deck-list-toolbar";
 import { DeckTabs } from "@/components/navigation/deck-tabs";
 import { MultiSelectBar } from "@/components/shared/multi-select-bar";
+import { PageTransition } from "@/components/shared/page-transition";
+import { DeckCardListSkeleton } from "@/components/shared/skeletons";
 import { Button } from "@/components/ui/button";
 import type { DeckCardFilters } from "@/lib/deck/deck-queries";
 import { useDeck } from "@/lib/hooks/use-deck";
@@ -20,13 +22,15 @@ import { useDeckCards } from "@/lib/hooks/use-deck-cards";
 import {
   useBulkRemove,
   useBulkSetStatus,
+  useRestoreDeckCards,
 } from "@/lib/hooks/use-deck-mutations";
 import { useDisplayPreferences } from "@/lib/hooks/use-display-preferences";
 import { useTags } from "@/lib/hooks/use-tags";
+import { useUndoAction } from "@/lib/hooks/use-undo-action";
 import { useDeckUiStore } from "@/store/deck-ui-store";
 import type { DeckCardStatus } from "@/types";
 import type { Tag } from "@/types/card";
-import type { DeckCardWithCard } from "@/types/deck";
+import type { DeckCard, DeckCardWithCard } from "@/types/deck";
 
 const STATUS_FILTERS: Array<DeckCardStatus | "all"> = [
   "all",
@@ -35,6 +39,25 @@ const STATUS_FILTERS: Array<DeckCardStatus | "all"> = [
   "cut",
   "consider",
 ];
+
+function toDeckCardSnapshot(item: DeckCardWithCard): DeckCard {
+  return {
+    id: item.id,
+    deckId: item.deckId,
+    cardId: item.cardId,
+    quantity: item.quantity,
+    zone: item.zone,
+    status: item.status,
+    foil: item.foil,
+    owned: item.owned,
+    notes: item.notes,
+    roles: item.roles,
+    synergies: item.synergies,
+    replacesDeckCardId: item.replacesDeckCardId,
+    addedAt: item.addedAt,
+    updatedAt: item.updatedAt,
+  };
+}
 
 type DeckCardsClientProps = {
   params: Promise<{ deckId: string }>;
@@ -70,6 +93,8 @@ export function DeckCardsClient({ params }: DeckCardsClientProps) {
 
   const bulkSetStatus = useBulkSetStatus();
   const bulkRemove = useBulkRemove();
+  const restoreDeckCards = useRestoreDeckCards();
+  const { showUndo } = useUndoAction();
 
   const filters: DeckCardFilters = useMemo(
     () => ({ status: statusFilter, sort }),
@@ -86,7 +111,7 @@ export function DeckCardsClient({ params }: DeckCardsClientProps) {
   }, [tags]);
 
   if (deckLoading) {
-    return <p className="font-mono text-sm uppercase">Loading…</p>;
+    return <DeckCardListSkeleton />;
   }
 
   if (!deck) {
@@ -101,157 +126,202 @@ export function DeckCardsClient({ params }: DeckCardsClientProps) {
   }
 
   return (
-    <div className="flex flex-col gap-4 pb-24">
-      <div className="flex items-center gap-2">
-        <Button asChild variant="ghost" size="icon" aria-label="Back">
-          <Link href={`/decks/${deckId}`}>
-            <ArrowLeft className="size-5" />
-          </Link>
-        </Button>
-        <div className="min-w-0 flex-1">
-          <h1 className="truncate text-xl font-black uppercase">{deck.name}</h1>
-          <p className="text-muted-foreground font-mono text-xs uppercase">
-            Cards
-          </p>
-        </div>
-        <Button
-          type="button"
-          size="icon"
-          aria-label="Add card"
-          data-testid="deck-add-card-btn"
-          onClick={() => setAddOpen(true)}
-        >
-          <Plus className="size-5" />
-        </Button>
-      </div>
-
-      <DeckTabs deckId={deckId} />
-
-      <div className="flex flex-wrap gap-2" data-testid="status-filter-chips">
-        {STATUS_FILTERS.map((status) => (
-          <Button
-            key={status}
-            type="button"
-            size="sm"
-            variant={statusFilter === status ? "default" : "outline"}
-            data-testid={`filter-status-${status}`}
-            onClick={() => setStatusFilter(status)}
-          >
-            {status}
+    <PageTransition transitionKey={`deck-cards-${deckId}`}>
+      <div className="flex flex-col gap-4 pb-24">
+        <div className="flex items-center gap-2">
+          <Button asChild variant="ghost" size="icon" aria-label="Back">
+            <Link href={`/decks/${deckId}`}>
+              <ArrowLeft className="size-5" />
+            </Link>
           </Button>
-        ))}
-      </div>
+          <div className="min-w-0 flex-1">
+            <h1 className="truncate text-xl font-black uppercase">
+              {deck.name}
+            </h1>
+            <p className="text-muted-foreground font-mono text-xs uppercase">
+              Cards
+            </p>
+          </div>
+          <Button
+            type="button"
+            size="icon"
+            aria-label="Add card"
+            data-testid="deck-add-card-btn"
+            onClick={() => setAddOpen(true)}
+          >
+            <Plus className="size-5" />
+          </Button>
+        </div>
 
-      <div className="flex gap-2">
-        <label className="sr-only" htmlFor="deck-sort">
-          Sort
-        </label>
-        <select
-          id="deck-sort"
-          data-testid="deck-sort-select"
-          value={sort}
-          onChange={(e) =>
-            setSort(e.target.value as NonNullable<DeckCardFilters["sort"]>)
-          }
-          className="border-border bg-background h-11 flex-1 border-2 px-3 font-bold uppercase"
-        >
-          <option value="name">Name</option>
-          <option value="mv">Mana value</option>
-          <option value="type">Type</option>
-          <option value="status">Status</option>
-          <option value="price">Price</option>
-        </select>
-      </div>
+        <DeckTabs deckId={deckId} />
 
-      <DeckListToolbar />
+        <div className="flex flex-wrap gap-2" data-testid="status-filter-chips">
+          {STATUS_FILTERS.map((status) => (
+            <Button
+              key={status}
+              type="button"
+              size="sm"
+              variant={statusFilter === status ? "default" : "outline"}
+              data-testid={`filter-status-${status}`}
+              onClick={() => setStatusFilter(status)}
+            >
+              {status}
+            </Button>
+          ))}
+        </div>
 
-      {isLoading ? (
-        <p className="font-mono text-sm uppercase">Loading cards…</p>
-      ) : (
-        <DeckCardList
-          cards={cards}
-          density={effectiveDensity}
-          imagesEnabled={imagesEnabled}
-          tagsById={tagsById}
-          selectedIds={selectedIds}
-          multiSelectMode={multiSelectMode}
-          onPress={(item) => {
-            if (multiSelectMode) {
-              toggleSelected(item.id);
-              return;
+        <div className="flex gap-2">
+          <label className="sr-only" htmlFor="deck-sort">
+            Sort
+          </label>
+          <select
+            id="deck-sort"
+            data-testid="deck-sort-select"
+            value={sort}
+            onChange={(e) =>
+              setSort(e.target.value as NonNullable<DeckCardFilters["sort"]>)
             }
-            setActiveItem(item);
-            setActionsOpen(true);
-          }}
-          onLongPress={(item) => {
-            enterMultiSelect(item.id);
-            toast.message("Multi-select on");
+            className="border-border bg-background h-11 flex-1 border-2 px-3 font-bold uppercase"
+          >
+            <option value="name">Name</option>
+            <option value="mv">Mana value</option>
+            <option value="type">Type</option>
+            <option value="status">Status</option>
+            <option value="price">Price</option>
+          </select>
+        </div>
+
+        <DeckListToolbar />
+
+        {isLoading ? (
+          <DeckCardListSkeleton />
+        ) : (
+          <DeckCardList
+            cards={cards}
+            density={effectiveDensity}
+            imagesEnabled={imagesEnabled}
+            tagsById={tagsById}
+            selectedIds={selectedIds}
+            multiSelectMode={multiSelectMode}
+            deckFormat={deck?.format}
+            onPress={(item) => {
+              if (multiSelectMode) {
+                toggleSelected(item.id);
+                return;
+              }
+              setActiveItem(item);
+              setActionsOpen(true);
+            }}
+            onLongPress={(item) => {
+              enterMultiSelect(item.id);
+              toast.message("Multi-select on");
+            }}
+          />
+        )}
+
+        {multiSelectMode ? (
+          <MultiSelectBar
+            count={selectedIds.length}
+            onMarkAdd={() => {
+              const ids = [...selectedIds];
+              const previous = cards
+                .filter((c) => ids.includes(c.id))
+                .map((c) => ({ id: c.id, status: c.status }));
+              void bulkSetStatus
+                .mutateAsync({
+                  deckCardIds: ids,
+                  status: "add",
+                  deckId,
+                })
+                .then(() => {
+                  exitMultiSelect();
+                  showUndo({
+                    message: `Marked ${ids.length} ADD`,
+                    undo: async () => {
+                      for (const row of previous) {
+                        await bulkSetStatus.mutateAsync({
+                          deckCardIds: [row.id],
+                          status: row.status,
+                          deckId,
+                        });
+                      }
+                    },
+                  });
+                });
+            }}
+            onMarkCut={() => {
+              const ids = [...selectedIds];
+              const previous = cards
+                .filter((c) => ids.includes(c.id))
+                .map((c) => ({ id: c.id, status: c.status }));
+              void bulkSetStatus
+                .mutateAsync({
+                  deckCardIds: ids,
+                  status: "cut",
+                  deckId,
+                })
+                .then(() => {
+                  exitMultiSelect();
+                  showUndo({
+                    message: `Marked ${ids.length} CUT`,
+                    undo: async () => {
+                      for (const row of previous) {
+                        await bulkSetStatus.mutateAsync({
+                          deckCardIds: [row.id],
+                          status: row.status,
+                          deckId,
+                        });
+                      }
+                    },
+                  });
+                });
+            }}
+            onRemove={() => {
+              const ids = [...selectedIds];
+              const snapshots = cards
+                .filter((c) => ids.includes(c.id))
+                .map(toDeckCardSnapshot);
+              void bulkRemove
+                .mutateAsync({ deckCardIds: ids, deckId })
+                .then(({ removed }) => {
+                  exitMultiSelect();
+                  const restoreRows = removed.length > 0 ? removed : snapshots;
+                  showUndo({
+                    message: `Removed ${restoreRows.length} cards`,
+                    undo: async () => {
+                      await restoreDeckCards.mutateAsync(restoreRows);
+                    },
+                  });
+                });
+            }}
+            onDone={exitMultiSelect}
+          />
+        ) : null}
+
+        <DeckAddCardSheet
+          deckId={deckId}
+          open={addOpen}
+          onOpenChange={setAddOpen}
+          imagesEnabled={imagesEnabled}
+        />
+
+        <DeckCardActionsSheet
+          item={activeItem}
+          open={actionsOpen}
+          onOpenChange={setActionsOpen}
+          onViewDetails={() => {
+            setActionsOpen(false);
+            setDetailOpen(true);
           }}
         />
-      )}
 
-      {multiSelectMode ? (
-        <MultiSelectBar
-          count={selectedIds.length}
-          onMarkAdd={() => {
-            void bulkSetStatus
-              .mutateAsync({
-                deckCardIds: selectedIds,
-                status: "add",
-                deckId,
-              })
-              .then(() => {
-                toast.success("Marked ADD");
-                exitMultiSelect();
-              });
-          }}
-          onMarkCut={() => {
-            void bulkSetStatus
-              .mutateAsync({
-                deckCardIds: selectedIds,
-                status: "cut",
-                deckId,
-              })
-              .then(() => {
-                toast.success("Marked CUT");
-                exitMultiSelect();
-              });
-          }}
-          onRemove={() => {
-            void bulkRemove
-              .mutateAsync({ deckCardIds: selectedIds, deckId })
-              .then(() => {
-                toast.success("Removed");
-                exitMultiSelect();
-              });
-          }}
-          onDone={exitMultiSelect}
+        <CardDetailSheet
+          card={activeItem?.card ?? null}
+          open={detailOpen}
+          onOpenChange={setDetailOpen}
+          deckId={deckId}
         />
-      ) : null}
-
-      <DeckAddCardSheet
-        deckId={deckId}
-        open={addOpen}
-        onOpenChange={setAddOpen}
-        imagesEnabled={imagesEnabled}
-      />
-
-      <DeckCardActionsSheet
-        item={activeItem}
-        open={actionsOpen}
-        onOpenChange={setActionsOpen}
-        onViewDetails={() => {
-          setActionsOpen(false);
-          setDetailOpen(true);
-        }}
-      />
-
-      <CardDetailSheet
-        card={activeItem?.card ?? null}
-        open={detailOpen}
-        onOpenChange={setDetailOpen}
-        deckId={deckId}
-      />
-    </div>
+      </div>
+    </PageTransition>
   );
 }

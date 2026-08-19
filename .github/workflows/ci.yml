@@ -18,16 +18,21 @@ jobs:
       - run: npm run lint
       - run: npm run format:check
       - run: npm run typecheck
-      # Report-only until Phase 15, when knip becomes a blocking gate.
-      - run: npm run knip || true
-      - run: npm run test:unit
-      - run: npm run test:integration
+      # Phase 15: knip is a blocking gate (no || true).
+      - run: npm run knip
+      - run: npm run test:ci
       - run: npm run build
+      - name: Upload coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-lcov
+          path: coverage/lcov.info
+          if-no-files-found: ignore
 
-  # Optional / non-blocking until Phase 15.
-  e2e-smoke:
+  e2e:
     runs-on: ubuntu-latest
-    continue-on-error: true
+    needs: quality
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -38,4 +43,11 @@ jobs:
       - run: npm run build
       - run: npm run start &
       - run: npx wait-on http://localhost:3000
-      - run: npm run test:e2e:smoke
+      - run: npm run test:e2e
+      - name: Upload TestCafe screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-screenshots
+          path: tests/e2e/screenshots
+          if-no-files-found: ignore

@@ -151,13 +151,38 @@ export interface Card {
   imageLarge?: string;
   scryfallUri?: string; // human-facing Scryfall page
   tcgplayerUri?: string; // outbound purchase link, may be absent
-  /** Format legality, straight from Scryfall. Used by Phase 13. */
-  legalities?: Partial<Record<DeckFormat, CardLegality>>;
+  /** Format legality from Scryfall — `LegalityFormat` keys (Phase 17). */
+  legalities?: Partial<Record<LegalityFormat, CardLegality>>;
   /** Faces of a double-faced / split / modal card. Absent for normal cards. */
   faces?: CardFace[];
   layout?: string; // Scryfall `layout`, e.g. 'transform', 'modal_dfc'
   updatedAt: string; // when this local copy was refreshed
 }
+
+/** Scryfall legality formats (superset of DeckFormat minus `other`). Phase 17. */
+export type LegalityFormat =
+  | "standard"
+  | "future"
+  | "historic"
+  | "timeless"
+  | "gladiator"
+  | "pioneer"
+  | "explorer"
+  | "modern"
+  | "legacy"
+  | "pauper"
+  | "vintage"
+  | "penny"
+  | "commander"
+  | "oathbreaker"
+  | "standardbrawl"
+  | "brawl"
+  | "alchemy"
+  | "paupercommander"
+  | "duel"
+  | "oldschool"
+  | "premodern"
+  | "predh";
 
 export type CardLegality = "legal" | "not_legal" | "banned" | "restricted";
 
@@ -351,6 +376,7 @@ Known setting keys (extend deliberately, document here):
 | `installBannerDismissed` | `boolean`              | `false`     | 2            |
 | `activeDeckId`           | `string \| null`       | `null`      | 5            |
 | `recommendationConfig`   | `RecommendationConfig` | see §11     | 13           |
+| `searchFilters`          | `CardSearchFilters \| null` | `null` | 17           |
 
 Known appMeta keys: `schemaVersion` (number), `firstRunAt` (ISO string), `tagsSeededVersion` (number).
 
@@ -365,6 +391,18 @@ export interface AppSettings {
   lastBackupAt: string | null;
   installBannerDismissed: boolean;
   activeDeckId: string | null;
+  recommendationConfig: RecommendationConfig;
+  searchFilters: CardSearchFilters | null;
+}
+
+/** Cached Scryfall symbology (Dexie `symbols` table) — Phase 17. Not in backups. */
+export interface MtgSymbol {
+  symbol: string;
+  svgUri: string;
+  english: string;
+  representsMana: boolean;
+  colors: string[];
+  updatedAt: string;
 }
 ```
 
@@ -594,8 +632,11 @@ this.version(1).stores({
 | `wishlistItems` | `WishlistItem` | `id`                     |
 | `settings`      | `AppSetting`   | `key`                    |
 | `appMeta`       | `AppMeta`      | `key`                    |
+| `symbols`       | `MtgSymbol`    | `symbol` (Phase 17; cache only) |
 
 `setMetadata` from master plan §28 is **not** created in v1.0 — nothing in the MVP reads set-level metadata beyond what is denormalised onto `Card`. Add it in a later Dexie version if needed.
+
+Schema **v5** adds `symbols: "symbol, updatedAt"` for Scryfall symbology. It is rebuildable from the network and **must not** appear in `AppBackup` export/import.
 
 Access rule (mandatory, from master plan §2): UI → hooks → services → repositories → Dexie. No component or page may reference `db.<table>` directly.
 

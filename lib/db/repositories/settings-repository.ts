@@ -66,6 +66,9 @@ export class SettingsRepository {
       recommendationConfig:
         (map.get("recommendationConfig") as RecommendationConfig | undefined) ??
         DEFAULT_APP_SETTINGS.recommendationConfig,
+      searchFilters: map.has("searchFilters")
+        ? (map.get("searchFilters") as AppSettings["searchFilters"])
+        : DEFAULT_APP_SETTINGS.searchFilters,
     };
   }
 }

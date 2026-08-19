@@ -1,8 +1,9 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
+import { installProductionErrorLogger } from "@/lib/observability/production-error-logger";
 import { configureScryfallClient } from "@/lib/scryfall";
 
 function createQueryClient(): QueryClient {
@@ -40,6 +41,12 @@ export function AppProviders({ children }: AppProvidersProps) {
     applyScryfallProxyFlag();
     return createQueryClient();
   });
+
+  useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      installProductionErrorLogger();
+    }
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>

@@ -7,7 +7,7 @@ import { DeckCardRow } from "@/components/deck/deck-card-row";
 import { DeckZoneGroup } from "@/components/deck/deck-zone-group";
 import { IMAGE_MODE_VIRTUALIZE_THRESHOLD } from "@/lib/display/constants";
 import { estimateRowHeight } from "@/lib/display/density-classes";
-import type { DisplayDensity, DeckCardZone } from "@/types";
+import type { DisplayDensity, DeckCardZone, DeckFormat } from "@/types";
 import type { Tag } from "@/types/card";
 import type { DeckCardWithCard } from "@/types/deck";
 
@@ -25,6 +25,7 @@ type DeckCardListProps = {
   tagsById?: Map<string, Tag>;
   selectedIds?: string[];
   multiSelectMode?: boolean;
+  deckFormat?: DeckFormat;
   onPress: (item: DeckCardWithCard) => void;
   onLongPress: (item: DeckCardWithCard) => void;
   groupByZone?: boolean;
@@ -37,6 +38,7 @@ export function DeckCardList({
   tagsById,
   selectedIds = [],
   multiSelectMode,
+  deckFormat,
   onPress,
   onLongPress,
   groupByZone = true,
@@ -87,6 +89,7 @@ export function DeckCardList({
         synergyTags={resolveTags(item.synergies)}
         showPrice
         priorityImage={item.zone === "commander"}
+        deckFormat={deckFormat}
         onPress={() => onPress(item)}
         onLongPress={() => onLongPress(item)}
       />

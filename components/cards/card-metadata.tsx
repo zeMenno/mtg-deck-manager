@@ -1,5 +1,7 @@
 "use client";
 
+import { ColorIdentityPips } from "@/components/cards/color-identity-pips";
+import { ManaCost } from "@/components/cards/mana-cost";
 import { Badge } from "@/components/ui/badge";
 import type { Card, CardFace } from "@/types/card";
 
@@ -18,7 +20,9 @@ export function CardMetadata({ card, face }: CardMetadataProps) {
     <div className="flex flex-col gap-3" data-testid="card-metadata">
       <div>
         <h2 className="font-heading text-xl font-black uppercase">{name}</h2>
-        {manaCost ? <p className="font-mono text-sm">{manaCost}</p> : null}
+        {manaCost ? (
+          <ManaCost cost={manaCost} size="md" className="mt-1" />
+        ) : null}
       </div>
 
       <p className="text-sm font-bold">{typeLine}</p>
@@ -28,6 +32,13 @@ export function CardMetadata({ card, face }: CardMetadataProps) {
           {oracleText}
         </p>
       ) : null}
+
+      <ColorIdentityPips colors={card.colors} label="Colors" />
+      <ColorIdentityPips
+        colors={card.colorIdentity}
+        label="Color identity"
+        testId="color-identity-pips"
+      />
 
       <dl className="grid grid-cols-2 gap-2 text-xs">
         {card.setName || card.setCode ? (

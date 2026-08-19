@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 
 import { VersionComparePageClient } from "@/components/deck/versions/version-compare-page-client";
+import { DeckDashboardSkeleton } from "@/components/shared/skeletons";
 
 type PageProps = {
   params: Promise<{ deckId: string }>;
@@ -8,9 +9,7 @@ type PageProps = {
 
 export default function VersionComparePage({ params }: PageProps) {
   return (
-    <Suspense
-      fallback={<p className="font-mono text-sm uppercase">Loading compare…</p>}
-    >
+    <Suspense fallback={<DeckDashboardSkeleton />}>
       <VersionComparePageClient params={params} />
     </Suspense>
   );

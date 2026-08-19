@@ -6,6 +6,7 @@ import { ArrowLeft } from "lucide-react";
 
 import { ChangesHub } from "@/components/changes/changes-hub";
 import { DeckTabs } from "@/components/navigation/deck-tabs";
+import { DeckDashboardSkeleton } from "@/components/shared/skeletons";
 import { Button } from "@/components/ui/button";
 import { useDeck } from "@/lib/hooks/use-deck";
 
@@ -18,7 +19,7 @@ export function ChangesPageClient({ params }: ChangesPageClientProps) {
   const { deck, isLoading } = useDeck(deckId);
 
   if (isLoading) {
-    return <p className="font-mono text-sm uppercase">Loading…</p>;
+    return <DeckDashboardSkeleton />;
   }
 
   if (!deck) {

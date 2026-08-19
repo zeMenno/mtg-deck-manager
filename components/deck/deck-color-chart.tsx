@@ -64,11 +64,12 @@ export function DeckColorChart({
           <span
             key={color}
             className={cn(
-              "border-border inline-flex min-w-8 items-center justify-center border-2 px-1.5 py-0.5 font-mono text-xs font-bold",
+              "border-border inline-flex min-w-8 items-center justify-center gap-1 border-2 px-1.5 py-0.5 font-mono text-xs font-bold",
               COLOR_STYLES[color],
             )}
           >
-            {color} {distribution.pips[color]}
+            <span aria-hidden>{color}</span>
+            <span>{distribution.pips[color]}</span>
           </span>
         ))}
       </div>

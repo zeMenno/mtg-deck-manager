@@ -27,6 +27,10 @@ Format: each record states Context → Decision → Consequences → Alternative
 | [ADR-018](#adr-018--replacement-links-are-stored-one-way-add--cut)         | Replacement link stored ADD → CUT only          | Accepted | 7                   |
 | [ADR-019](#adr-019--separate-warning-category-from-warning-severity)       | Warning category ≠ severity                     | Accepted | 6, 13               |
 | [ADR-020](#adr-020--example-deck-commander-is-isshin-two-heavens-as-one)   | Example commander = Isshin                      | Accepted | 0                   |
+| [ADR-021](#adr-021--scryfall-symbology-over-icon-font)                     | Scryfall symbology cache over icon fonts        | Accepted | 17                  |
+| [ADR-022](#adr-022--warn-not-block-on-illegal-adds)                        | Warn, never block illegal card adds             | Accepted | 17                  |
+
+Phase 16 operational decisions (not ADR-numbered): [`docs/decisions/error-tracking.md`](./decisions/error-tracking.md), [`docs/decisions/analytics.md`](./decisions/analytics.md), [`docs/decisions/csp.md`](./decisions/csp.md).
 
 ---
 
@@ -296,6 +300,26 @@ Format: each record states Context → Decision → Consequences → Alternative
 **Decision.** The colour requirement wins. The example deck's commander is **Isshin, Two Heavens as One** — a genuine Mardu legend whose "if an attacking creature would cause a trigger, it triggers an additional time" text is a natural fit for a go-wide Soldier deck. _Adeline, Resplendent Cathar_ is retained in the list as a CURRENT mainboard card.
 
 **Consequences.** The fixture exercises a three-colour identity, which is a better test of colour-identity validation (Phase 13) than a two-colour or mono-colour commander would be.
+
+---
+
+## ADR-021 — Scryfall symbology over icon font
+
+**Context.** Mana costs were rendered as raw `{2}{W}{U}` strings. Bundling `mana-font` would add ~80 KB and drift from Scryfall’s symbol set.
+
+**Decision.** Fetch `/symbology` once, cache in Dexie `symbols` (schema v5), render via `<img>` to `svgs.scryfall.io`, with letter-pip / raw-text degradation. Exclude `symbols` from backups.
+
+**Consequences.** First online boot hydrates the cache; offline uses Dexie + SW CacheFirst for `*.scryfall.io`. Oracle-text inline symbols remain out of scope.
+
+---
+
+## ADR-022 — Warn, not block, on illegal adds
+
+**Context.** Users may proxy / kitchen-table banned cards. Hard-blocking adds would fight the product’s personal-use model.
+
+**Decision.** When adding to a deck whose format marks the card `banned` / `restricted` / `not_legal`, show a confirmation (“Add anyway”) and a warning toast after confirm. Skip when format is `other` or legality is unknown.
+
+**Consequences.** Deck-level Phase 13 validation still surfaces legality errors; add flow never silently refuses.
 
 ---
 

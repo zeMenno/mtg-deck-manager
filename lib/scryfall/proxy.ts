@@ -1,5 +1,4 @@
 import {
-  SCRYFALL_BASE,
   USER_AGENT,
   searchCardsUrl,
   cardByIdUrl,
@@ -46,5 +45,3 @@ export function buildNamedUpstream(
 ): string {
   return namedCardUrl(name, options);
 }
-
-export { SCRYFALL_BASE };

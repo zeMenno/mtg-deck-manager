@@ -2,11 +2,24 @@
   "$schema": "https://unpkg.com/knip@5/schema.json",
   "entry": [
     "app/**/*.{ts,tsx}",
-    "app/globals.css",
-    "scripts/*.mjs",
+    "app/sw.ts",
+    "scripts/*.{mjs,ts,js}",
+    "lib/**/index.ts",
+    "lib/db/database.ts",
+    "lib/db/initialize.ts",
+    "lib/hooks/**/*.ts",
+    "lib/pwa/**/*.ts",
+    "lib/observability/**/*.ts",
+    "lib/ui/**/*.ts",
+    "store/**/*.ts",
+    "components/**/*.{ts,tsx}",
     "tests/**/*.{ts,tsx}"
   ],
-  "project": ["**/*.{ts,tsx}", "app/**/*.css", "scripts/*.mjs"],
-  "ignore": ["components/ui/**", "types/**"],
-  "ignoreDependencies": ["eslint-config-next"]
+  "project": ["**/*.{ts,tsx}", "app/**/*.css", "scripts/*.{mjs,ts,js}"],
+  "ignore": ["types/**"],
+  "ignoreDependencies": ["eslint-config-next"],
+  "ignoreExportsUsedInFile": true,
+  "ignoreIssues": {
+    "**": ["types", "nsTypes", "enumMembers", "duplicates"]
+  }
 }

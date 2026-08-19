@@ -109,6 +109,7 @@ export function MoveToDeckSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="bottom"
+        snap="half"
         className="overflow-y-auto"
         data-testid="move-to-deck-sheet"
       >

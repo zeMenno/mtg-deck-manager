@@ -15,6 +15,7 @@ import { DeckSizeBadge } from "@/components/deck/deck-size-badge";
 import { DeckStatusSummary } from "@/components/deck/deck-status-summary";
 import { DeckCheckSummary } from "@/components/deck/deck-check-summary";
 import { DeckWarningList } from "@/components/deck/deck-warning-list";
+import { DeckDashboardSkeleton } from "@/components/shared/skeletons";
 import { Button } from "@/components/ui/button";
 import type { StatsMode } from "@/lib/deck/stats";
 import { useDeck } from "@/lib/hooks/use-deck";
@@ -33,11 +34,7 @@ export function DeckStatsPage({ deckId }: DeckStatsPageProps) {
   const { warnings, summary } = useDeckWarnings(deckId, mode);
 
   if (deckLoading || isLoading) {
-    return (
-      <p className="font-mono text-sm uppercase" data-testid="stats-loading">
-        Loading stats…
-      </p>
-    );
+    return <DeckDashboardSkeleton />;
   }
 
   if (!deck) {

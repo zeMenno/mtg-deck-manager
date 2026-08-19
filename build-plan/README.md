@@ -1,8 +1,8 @@
 # MTG Deck Builder — Phase-by-Phase Build Plan
 
-This folder contains **18 executable phase documents** (Phase 0–17) derived from the master product plan at [`plans/mtg-deck-builder-web-app-build-plan.md`](../plans/mtg-deck-builder-web-app-build-plan.md).
+This folder contains **19 executable phase documents** (Phase 0–18) derived from the master product plan at [`plans/mtg-deck-builder-web-app-build-plan.md`](../plans/mtg-deck-builder-web-app-build-plan.md).
 
-Phases 0–16 are the MVP build. **Phase 17 is the first post-launch improvement phase** and is optional for reaching v1.0.0.
+Phases 0–16 are the MVP build. **Phases 17–18 are post-launch improvement phases** and are optional for reaching v1.0.0. Phase 18 supersedes the Neo Brutalism visual-system decision after Phase 17 is complete.
 
 Each phase is designed to be executed by a **new, independent agent** with no prior conversation context.
 
@@ -46,6 +46,7 @@ Do not skip phases — later phases assume earlier deliverables exist.
 | 15    | [phase-15-testing-hardening.md](./phase-15-testing-hardening.md)                 | Unit, integration, E2E, iPhone QA                    |
 | 16    | [phase-16-production-launch.md](./phase-16-production-launch.md)                 | Production deploy, launch checklist                  |
 | 17    | [phase-17-legality-symbols-search-filters.md](./phase-17-legality-symbols-search-filters.md) | Legality tabs, mana symbols, search filters (v1.1) |
+| 18    | [phase-18-solar-dusk-theme.md](./phase-18-solar-dusk-theme.md)                   | Solar Dusk migration, dark-default appearance        |
 
 ---
 
@@ -78,6 +79,7 @@ flowchart TD
   P14 --> P15[Phase15_Testing]
   P15 --> P16[Phase16_Launch]
   P16 --> P17[Phase17_LegalitySymbolsFilters]
+  P17 --> P18[Phase18_SolarDuskTheme]
 ```
 
 Phases 6–7 can partially overlap after Phase 5. Phases 8–13 are largely parallelizable once Phase 5 is complete, but **Phase 14 (Polish) should wait for all feature phases**.
@@ -87,12 +89,18 @@ Phases 6–7 can partially overlap after Phase 5. Phases 8–13 are largely para
 ## Recommended Build Order
 
 ```text
-0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11 → 12 → 13 → 14 → 15 → 16 → 17
+0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11 → 12 → 13 → 14 → 15 → 16 → 17 → 18
 ```
 
 **First milestone** (after Phase 7): Create decks locally, search Scryfall, mark ADD/CUT/CONSIDER, reopen app with data intact.
 
 **MVP complete** (after Phase 16): Full Definition of Done workflow on iPhone against production URL.
+
+**Phase 16 status (2026-08-19):** In-repo launch artifacts + production HTTPS URL ready; iPhone §70 / tag `v1.0.0` still human-blocked. See [`phase-16-production-launch.md`](./phase-16-production-launch.md).
+
+**Phase 17 status (2026-08-19):** In-repo **v1.1.0** complete (legality tabs, mana symbols, search filters). See [`phase-17-legality-symbols-search-filters.md`](./phase-17-legality-symbols-search-filters.md).
+
+**Current post-launch visual system** (after Phase 18): tweakcn Solar Dusk with deterministic dark default. Completed Phase 0–17 documents retain Neo Brutalism references as historical implementation context.
 
 ---
 
@@ -107,7 +115,7 @@ Phases 6–7 can partially overlap after Phase 5. Phases 8–13 are largely para
 - Roles, synergies, projected deck, upgrade cost
 - Pricing (Scryfall-first), TCGplayer links
 - Import/export backups, deck versions, wishlist
-- Basic Commander validation, Neo Brutalism theme
+- Basic Commander validation and the original Neo Brutalism launch theme (superseded post-launch by Phase 18)
 
 ### Explicitly out of scope
 
@@ -139,7 +147,7 @@ Each `phase-XX-*.md` file follows the same template:
 3. **One deck-card model** — statuses filter views; no separate add/cut tables.
 4. **Provider-agnostic pricing** — TCGplayer links yes; TCGplayer API not required.
 5. **Mobile-first iPhone** — bottom nav, bottom sheets, large tap targets.
-6. **Neo Brutalism theme** — zero-radius, hard borders, offset shadows; do not dilute.
+6. **Phase-aware visual system** — Neo Brutalism governs Phases 0–17; Phase 18 supersedes it with tweakcn Solar Dusk and a deterministic dark default. All later phases must follow Phase 18.
 
 ---
 
@@ -158,5 +166,6 @@ Each `phase-XX-*.md` file follows the same template:
 
 - [Master build plan](../plans/mtg-deck-builder-web-app-build-plan.md)
 - [Neo Brutalism theme JSON](https://tweakcn.com/r/themes/neo-brutalism.json)
+- [Solar Dusk theme JSON](https://tweakcn.com/r/themes/solar-dusk.json) — active after Phase 18
 - [Next.js PWA Guide](https://nextjs.org/docs/app/guides/progressive-web-apps)
 - [Scryfall API](https://scryfall.com/docs/api)

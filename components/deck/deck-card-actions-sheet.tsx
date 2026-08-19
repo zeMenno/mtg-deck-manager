@@ -16,14 +16,15 @@ import {
 } from "@/components/ui/sheet";
 import { DECK_CARD_STATUSES, DECK_CARD_ZONES } from "@/lib/deck/constants";
 import {
-  useAddCard,
   useRemoveCard,
+  useRestoreDeckCard,
   useSetQuantity,
   useSetStatus,
   useSetZone,
   useUpdateDeckCard,
 } from "@/lib/hooks/use-deck-mutations";
-import type { DeckCardStatus, DeckCardZone } from "@/types";
+import { useUndoAction } from "@/lib/hooks/use-undo-action";
+import type { DeckCardZone } from "@/types";
 import type { DeckCardWithCard } from "@/types/deck";
 
 type DeckCardActionsSheetProps = {
@@ -44,12 +45,14 @@ export function DeckCardActionsSheet({
   const setZone = useSetZone();
   const updateCard = useUpdateDeckCard();
   const removeCard = useRemoveCard();
-  const addCard = useAddCard();
+  const restoreDeckCard = useRestoreDeckCard();
+  const { showUndo } = useUndoAction();
 
   const [notes, setNotes] = useState("");
   const [roles, setRoles] = useState<string[]>([]);
   const [synergies, setSynergies] = useState<string[]>([]);
   const [confirmRemove, setConfirmRemove] = useState(false);
+  const [statusPulse, setStatusPulse] = useState(false);
 
   useEffect(() => {
     if (!item) return;
@@ -67,13 +70,14 @@ export function DeckCardActionsSheet({
       <Sheet open={open} onOpenChange={onOpenChange}>
         <SheetContent
           side="bottom"
+          snap="detail"
           className="overflow-y-auto"
           data-testid="deck-card-actions-sheet"
         >
           <SheetHeader>
             <SheetTitle>{item.card.name}</SheetTitle>
             <SheetDescription className="flex items-center gap-2">
-              <DeckStatusBadge status={item.status} />
+              <DeckStatusBadge status={item.status} pulse={statusPulse} />
               <span className="font-mono text-xs uppercase">{item.zone}</span>
             </SheetDescription>
           </SheetHeader>
@@ -90,9 +94,23 @@ export function DeckCardActionsSheet({
                     variant={item.status === status ? "default" : "outline"}
                     data-testid={`status-${status}-btn`}
                     onClick={() => {
+                      if (item.status === status) return;
+                      const previous = item.status;
                       void setStatus
                         .mutateAsync({ deckCardId: item.id, status })
-                        .then(() => toast.success(`Marked ${status}`));
+                        .then(() => {
+                          setStatusPulse(true);
+                          window.setTimeout(() => setStatusPulse(false), 200);
+                          showUndo({
+                            message: `Marked ${status.toUpperCase()}`,
+                            undo: async () => {
+                              await setStatus.mutateAsync({
+                                deckCardId: item.id,
+                                status: previous,
+                              });
+                            },
+                          });
+                        });
                     }}
                   >
                     {status}
@@ -282,26 +300,17 @@ export function DeckCardActionsSheet({
         destructive
         pending={removeCard.isPending}
         onConfirm={async () => {
-          const snapshot = item;
-          await removeCard.mutateAsync(item.id);
+          const snapshot = { ...item };
+          const removed = await removeCard.mutateAsync(item.id);
           onOpenChange(false);
-          toast.success(`Removed ${snapshot.card.name}`, {
-            action: {
-              label: "Undo",
-              onClick: () => {
-                void addCard.mutateAsync({
-                  deckId: snapshot.deckId,
-                  cardId: snapshot.cardId,
-                  quantity: snapshot.quantity,
-                  zone: snapshot.zone,
-                  status: snapshot.status as DeckCardStatus,
-                  foil: snapshot.foil,
-                  owned: snapshot.owned,
-                  notes: snapshot.notes,
-                  roles: snapshot.roles,
-                  synergies: snapshot.synergies,
-                });
-              },
+          if (!removed) {
+            toast.error("Could not remove card");
+            return;
+          }
+          showUndo({
+            message: `Removed ${snapshot.card.name}`,
+            undo: async () => {
+              await restoreDeckCard.mutateAsync(removed);
             },
           });
         }}

@@ -9,11 +9,18 @@ import { DatabaseProvider } from "@/components/providers/database-provider";
 import { OfflineIndicator } from "@/components/pwa/offline-indicator";
 import { UpdatePrompt } from "@/components/pwa/update-prompt";
 import { AppToaster } from "@/components/shared/app-toaster";
+import { SafeAreaWrapper } from "@/components/shared/safe-area-wrapper";
 import { UndoProvider } from "@/components/shared/undo-provider";
+import { useSymbologyBootstrap } from "@/lib/hooks/use-symbology";
 
 type AppLayoutProps = {
   children: ReactNode;
 };
+
+function SymbologyBoot() {
+  useSymbologyBootstrap();
+  return null;
+}
 
 export function AppLayout({ children }: AppLayoutProps) {
   return (
@@ -35,8 +42,13 @@ export function AppLayout({ children }: AppLayoutProps) {
             <OfflineIndicator />
           </header>
 
-          <main className="mb-safe-nav md:mb-0 mx-auto w-full max-w-7xl flex-1 px-4 py-6 md:px-6">
-            <DatabaseProvider>{children}</DatabaseProvider>
+          <main className="mb-safe-nav mx-auto w-full max-w-7xl flex-1 px-4 py-6 md:mb-0 md:px-6">
+            <SafeAreaWrapper x>
+              <DatabaseProvider>
+                <SymbologyBoot />
+                {children}
+              </DatabaseProvider>
+            </SafeAreaWrapper>
           </main>
 
           <UpdatePrompt />

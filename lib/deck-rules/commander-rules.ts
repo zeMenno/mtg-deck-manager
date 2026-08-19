@@ -11,7 +11,6 @@ import {
 import type { FormatRules } from "@/lib/format/format-rules";
 import type { FormatRulesInput } from "@/lib/deck-rules/types";
 import type { DeckRuleThresholds } from "@/lib/deck-rules/thresholds";
-import { DEFAULT_THRESHOLDS } from "@/lib/deck-rules/thresholds";
 import type {
   DeckWarning,
   RecommendationConfig,
@@ -81,5 +80,3 @@ export function getDeckWarnings(
     config,
   );
 }
-
-export { DEFAULT_THRESHOLDS };

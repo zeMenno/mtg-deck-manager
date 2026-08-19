@@ -4,7 +4,13 @@
  */
 export {
   DeckCardService,
-  deckCardService,
   type AddCardToDeckInput,
   type AddCardToDeckResult,
 } from "@/lib/deck/deck-service";
+
+import { deckCardService as deckCardServiceSingleton } from "@/lib/deck/deck-service";
+
+/** Convenience singleton — prefer injecting DeckCardService in new code. */
+export function getDeckCardService() {
+  return deckCardServiceSingleton;
+}

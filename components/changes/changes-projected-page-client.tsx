@@ -6,6 +6,7 @@ import { ArrowLeft } from "lucide-react";
 
 import { ProjectedDeckView } from "@/components/changes/projected-deck-view";
 import { DeckTabs } from "@/components/navigation/deck-tabs";
+import { DeckDashboardSkeleton } from "@/components/shared/skeletons";
 import { Button } from "@/components/ui/button";
 import { useDeck } from "@/lib/hooks/use-deck";
 
@@ -16,7 +17,7 @@ export function ChangesProjectedPageClient({ params }: Props) {
   const { deck, isLoading } = useDeck(deckId);
 
   if (isLoading) {
-    return <p className="font-mono text-sm uppercase">Loading…</p>;
+    return <DeckDashboardSkeleton />;
   }
   if (!deck) {
     return <p className="font-bold">Deck not found</p>;

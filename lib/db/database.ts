@@ -5,6 +5,7 @@
  * Schema v2 adds `archived` / `favorite` indexes on decks (Phase 5).
  * Schema v3 adds `replacesDeckCardId` index on deckCards (Phase 7).
  * Schema v4 adds wishlist item indexes (wishlistId, addedAt, updatedAt) — Phase 12.
+ * Schema v5 adds `symbols` symbology cache — Phase 17.
  */
 
 import Dexie, { type EntityTable } from "dexie";
@@ -14,13 +15,14 @@ import type {
   AppSetting,
   Card,
   CardPrice,
+  MtgSymbol,
   Tag,
   WishlistItem,
 } from "@/types/card";
 import type { Deck, DeckCard, DeckVersion } from "@/types/deck";
 
 /** Current shipped Dexie schema version. */
-export const APP_SCHEMA_VERSION = 4;
+export const APP_SCHEMA_VERSION = 5;
 
 export const DB_NAME = "DeckBuilderDB";
 
@@ -34,6 +36,8 @@ export class DeckBuilderDatabase extends Dexie {
   wishlistItems!: EntityTable<WishlistItem, "id">;
   settings!: EntityTable<AppSetting, "key">;
   appMeta!: EntityTable<AppMeta, "key">;
+  /** Scryfall symbology cache (Phase 17) — excluded from backups. */
+  symbols!: EntityTable<MtgSymbol, "symbol">;
 
   constructor(name = DB_NAME) {
     super(name);
@@ -65,6 +69,11 @@ export class DeckBuilderDatabase extends Dexie {
     this.version(4).stores({
       wishlistItems:
         "id, wishlistId, cardId, priority, targetDeckId, addedAt, updatedAt",
+    });
+
+    // Phase 17: Scryfall symbology cache (rebuildable; not in backups).
+    this.version(5).stores({
+      symbols: "symbol, updatedAt",
     });
   }
 }

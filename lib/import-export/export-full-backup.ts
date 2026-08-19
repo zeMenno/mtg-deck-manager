@@ -67,7 +67,7 @@ export async function exportFullBackup(
     appSchemaVersion: APP_SCHEMA_VERSION,
     exportedAt: nowIso(),
     exportedFrom: {
-      appVersion: options.appVersion ?? "0.1.0",
+      appVersion: options.appVersion ?? "1.1.0",
       ...(options.userAgent !== undefined
         ? { userAgent: options.userAgent }
         : typeof navigator !== "undefined"

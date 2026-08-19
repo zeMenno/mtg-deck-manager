@@ -2,6 +2,7 @@
 
 import { DeckEmptyState } from "@/components/deck/deck-empty-state";
 import { DeckListItem } from "@/components/deck/deck-list-item";
+import { DeckListSkeleton } from "@/components/shared/skeletons";
 import type { Deck } from "@/types/deck";
 
 type DeckListProps = {
@@ -20,14 +21,7 @@ export function DeckList({
   loading,
 }: DeckListProps) {
   if (loading) {
-    return (
-      <p
-        className="font-mono text-sm uppercase"
-        data-testid="deck-list-loading"
-      >
-        Loading decks…
-      </p>
-    );
+    return <DeckListSkeleton />;
   }
 
   if (decks.length === 0) {

@@ -4,6 +4,8 @@ import { memo } from "react";
 
 import { LazyCardImage } from "@/components/cards/lazy-card-image";
 import { CardPriceDisplay } from "@/components/cards/card-price";
+import { IllegalInFormatBadge } from "@/components/cards/illegal-in-format-badge";
+import { ManaCost } from "@/components/cards/mana-cost";
 import { ReplacementLinkBadge } from "@/components/changes/replacement-link-badge";
 import { DeckStatusBadge } from "@/components/deck/deck-status-badge";
 import { Badge } from "@/components/ui/badge";
@@ -12,7 +14,7 @@ import {
   getDensityRowClass,
 } from "@/lib/display/density-classes";
 import { cn } from "@/lib/utils";
-import type { DisplayDensity } from "@/types";
+import type { DisplayDensity, DeckFormat } from "@/types";
 import type { Tag } from "@/types/card";
 import type { DeckCardWithCard } from "@/types/deck";
 
@@ -28,6 +30,8 @@ type DeckCardRowProps = {
   showPrice?: boolean;
   /** Commander / above-fold: eager image load. */
   priorityImage?: boolean;
+  /** Deck format — shows illegal badge when card is banned/not legal. */
+  deckFormat?: DeckFormat;
   onPress?: () => void;
   onLongPress?: () => void;
   onPickReplacement?: () => void;
@@ -69,6 +73,7 @@ function DeckCardRowComponent({
   replacementName,
   showPrice = false,
   priorityImage = false,
+  deckFormat,
   onPress,
   onLongPress,
   onPickReplacement,
@@ -102,7 +107,7 @@ function DeckCardRowComponent({
       className={cn(
         "border-border bg-card shadow-brutal-sm flex w-full items-center border-2 text-left transition-all",
         getDensityRowClass(density),
-        selected && "bg-primary/10 ring-primary ring-2",
+        selected && "border-primary bg-primary/10 border-4",
       )}
     >
       {showThumb ? (
@@ -121,7 +126,12 @@ function DeckCardRowComponent({
             {quantity > 1 ? `${quantity}× ` : null}
             {card.name}
           </span>
-          <DeckStatusBadge status={status} />
+          <div className="flex shrink-0 items-center gap-1">
+            {deckFormat ? (
+              <IllegalInFormatBadge card={card} format={deckFormat} />
+            ) : null}
+            <DeckStatusBadge status={status} />
+          </div>
         </div>
 
         {density === "compact" ? (
@@ -131,9 +141,12 @@ function DeckCardRowComponent({
             MV {card.manaValue}
           </p>
         ) : density === "comfortable" ? (
-          <p className="text-muted-foreground truncate text-xs">
-            {card.typeLine}
-          </p>
+          <div className="flex flex-wrap items-center gap-2">
+            <p className="text-muted-foreground truncate text-xs">
+              {card.typeLine}
+            </p>
+            {card.manaCost ? <ManaCost cost={card.manaCost} size="sm" /> : null}
+          </div>
         ) : null}
 
         <div className="mt-1 flex flex-wrap items-center gap-1">

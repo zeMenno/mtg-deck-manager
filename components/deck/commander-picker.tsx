@@ -55,6 +55,7 @@ export function CommanderPicker({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="bottom"
+        snap="tall"
         className="overflow-y-auto"
         data-testid="commander-picker"
       >

@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/sheet";
 import { useCardSearch } from "@/lib/hooks/use-card-search";
 import { useAddCard, useRemoveCard } from "@/lib/hooks/use-deck-mutations";
+import { useUndoAction } from "@/lib/hooks/use-undo-action";
 import type { Card } from "@/types/card";
 import type { DeckCardStatus } from "@/types";
 
@@ -38,6 +39,7 @@ export function DeckAddCardSheet({
   const search = useCardSearch(debouncedQuery);
   const addCard = useAddCard();
   const removeCard = useRemoveCard();
+  const { showUndo } = useUndoAction();
 
   const onDebouncedChange = useCallback((value: string) => {
     setDebouncedQuery(value);
@@ -55,12 +57,10 @@ export function DeckAddCardSheet({
       if (result.warnings.length > 0) {
         toast.warning(result.warnings[0]!.message);
       }
-      toast.success(`Added ${name}`, {
-        action: {
-          label: "Undo",
-          onClick: () => {
-            void removeCard.mutateAsync(deckCardId);
-          },
+      showUndo({
+        message: `Added ${name}`,
+        undo: async () => {
+          await removeCard.mutateAsync(deckCardId);
         },
       });
     } catch (err) {
@@ -72,6 +72,7 @@ export function DeckAddCardSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="bottom"
+        snap="tall"
         className="overflow-y-auto"
         data-testid="deck-add-card-sheet"
       >

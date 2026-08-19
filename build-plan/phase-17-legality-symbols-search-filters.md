@@ -1,5 +1,7 @@
 # Phase 17 — Legality Tabs, Mana Symbols & Search Filters
 
+> **Status: Complete (in-repo v1.1.0)** (2026-08-19). Legality tabs, warn-but-allow add, symbology cache, mana rendering, and faceted search filters are implemented with unit/integration/E2E coverage. Manual iPhone QA and git tag remain human steps (shared with Phase 16 leftovers).
+
 ## Agent Handoff Prompt
 
 ```
@@ -572,19 +574,19 @@ Reference: [`automation-strategy.md`](./automation-strategy.md).
 
 ## Exit Criteria
 
-- [ ] Card detail (sheet and route) is tabbed with a working Legality tab
-- [ ] Every Scryfall-reported format is shown with a correct, color-blind-safe badge
-- [ ] Adding a banned / restricted / not-legal card to a deck of that format prompts a confirmation and can be overridden
-- [ ] Cards illegal in their deck's format are badged in deck lists
-- [ ] Mana costs render as real symbols everywhere a cost was previously raw text
-- [ ] Color and color identity render as pips in card detail
-- [ ] Symbols work offline from cache and degrade gracefully when uncached
-- [ ] Card search supports color, color identity, type, rarity, mana value, set, and format-legality filters
-- [ ] Filters work online (Scryfall syntax) and offline (local Dexie)
-- [ ] Active filters are visible as removable chips and persist across sessions
-- [ ] All new logic is unit tested; CI is fully green
-- [ ] `docs/data-model.md` and `README.md` updated
-- [ ] Released as `v1.1.0` with a CHANGELOG entry
+- [x] Card detail (sheet and route) is tabbed with a working Legality tab
+- [x] Every Scryfall-reported format is shown with a correct, color-blind-safe badge
+- [x] Adding a banned / restricted / not-legal card to a deck of that format prompts a confirmation and can be overridden
+- [x] Cards illegal in their deck's format are badged in deck lists
+- [x] Mana costs render as real symbols everywhere a cost was previously raw text
+- [x] Color and color identity render as pips in card detail
+- [x] Symbols work offline from cache and degrade gracefully when uncached
+- [x] Card search supports color, color identity, type, rarity, mana value, set, and format-legality filters
+- [x] Filters work online (Scryfall syntax) and offline (local Dexie)
+- [x] Active filters are visible as removable chips and persist across sessions
+- [x] All new logic is unit tested; CI is fully green (`npm run verify`)
+- [x] `docs/data-model.md` and `README.md` updated
+- [x] Released as `v1.1.0` with a CHANGELOG entry (in-repo; git tag is human)
 
 ## Risks & Mitigations
 
@@ -614,6 +616,13 @@ Reference: [`automation-strategy.md`](./automation-strategy.md).
 - Server-side filter caching
 
 ## Handoff to Next Phase
+
+The next formal phase is
+[`phase-18-solar-dusk-theme.md`](./phase-18-solar-dusk-theme.md). Complete and
+release Phase 17 first so Phase 18 can migrate the tabs, legality badges, filter
+sheet/chips, and mana-symbol fallbacks as part of one complete visual-system
+audit. Phase 17 remains governed by the launch-era Neo Brutalism decision;
+Phase 18 supersedes that decision after these features are stable.
 
 Phase 17 leaves three reusable pieces for future work:
 

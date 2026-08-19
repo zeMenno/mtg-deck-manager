@@ -10,7 +10,11 @@ import {
   type WishlistSummary,
 } from "@/lib/wishlist";
 import type { WishlistPriority } from "@/types";
-import type { WishlistItemFilters, WishlistSortKey } from "@/types/wishlist";
+import type {
+  WishlistItem,
+  WishlistItemFilters,
+  WishlistSortKey,
+} from "@/types/wishlist";
 import type { WishlistItemWithCard } from "@/lib/wishlist/types";
 
 export { wishlistKeys };
@@ -141,6 +145,28 @@ export function useRemoveWishlistItems() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (ids: string[]) => getWishlistService().removeItems(ids),
+    onSuccess: () => {
+      invalidateWishlist(queryClient);
+    },
+  });
+}
+
+export function useRestoreWishlistItem() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (item: WishlistItem) =>
+      getWishlistService().restoreWishlistItem(item),
+    onSuccess: (item) => {
+      invalidateWishlist(queryClient, item.cardId);
+    },
+  });
+}
+
+export function useRestoreWishlistItems() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (items: WishlistItem[]) =>
+      getWishlistService().restoreWishlistItems(items),
     onSuccess: () => {
       invalidateWishlist(queryClient);
     },

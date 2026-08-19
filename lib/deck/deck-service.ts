@@ -425,15 +425,14 @@ export class DeckCardService {
     }
   }
 
-  async bulkRemove(deckCardIds: string[]): Promise<void> {
-    if (deckCardIds.length === 0) return;
+  async bulkRemove(deckCardIds: string[]): Promise<DeckCard[]> {
+    if (deckCardIds.length === 0) return [];
     const first = await this.deckCards.getById(deckCardIds[0]!);
     const rows = await Promise.all(
       deckCardIds.map((id) => this.deckCards.getById(id)),
     );
-    const cutIds = rows
-      .filter((r): r is DeckCard => Boolean(r) && r!.status === "cut")
-      .map((r) => r!.id);
+    const existing = rows.filter((r): r is DeckCard => Boolean(r));
+    const cutIds = existing.filter((r) => r.status === "cut").map((r) => r.id);
     if (cutIds.length > 0) {
       await this.deckCards.clearReplacementsPointingTo(cutIds);
     }
@@ -441,6 +440,7 @@ export class DeckCardService {
     if (first) {
       await this.decks.update(first.deckId, {});
     }
+    return existing;
   }
 
   async listByDeck(

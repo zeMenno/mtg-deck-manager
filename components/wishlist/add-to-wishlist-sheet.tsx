@@ -20,6 +20,7 @@ import {
   useAddToWishlist,
   useRemoveFromWishlist,
 } from "@/lib/hooks/use-wishlist";
+import { useUndoAction } from "@/lib/hooks/use-undo-action";
 import {
   WishlistCardNotCachedError,
   type AddToWishlistOptions,
@@ -44,6 +45,7 @@ export function AddToWishlistSheet({
   const { tags: roleTags } = useTagsByCategory("role");
   const addToWishlist = useAddToWishlist();
   const removeFromWishlist = useRemoveFromWishlist();
+  const { showUndo } = useUndoAction();
 
   const [quantity, setQuantity] = useState(1);
   const [priority, setPriority] = useState<WishlistPriority>("medium");
@@ -95,12 +97,10 @@ export function AddToWishlistSheet({
       }
 
       onOpenChange(false);
-      toast.success("Added to wishlist", {
-        action: {
-          label: "Undo",
-          onClick: () => {
-            void removeFromWishlist.mutateAsync(result.item.id);
-          },
+      showUndo({
+        message: "Added to wishlist",
+        undo: async () => {
+          await removeFromWishlist.mutateAsync(result.item.id);
         },
       });
     } catch (err) {
@@ -118,6 +118,7 @@ export function AddToWishlistSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="bottom"
+        snap="detail"
         className="overflow-y-auto"
         data-testid="add-to-wishlist-sheet"
       >

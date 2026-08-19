@@ -8,7 +8,8 @@ Mobile-first, local-first Progressive Web App for maintaining Magic: The Gatheri
 - **Build plan:** [`build-plan/README.md`](./build-plan/README.md)
 - **Automation strategy:** [`build-plan/automation-strategy.md`](./build-plan/automation-strategy.md)
 
-> **Current status: Phase 2 (PWA Foundation) complete.** The app is installable to an iPhone Home Screen, launches standalone, and its shell survives going offline. There is still no local database, card search, or deck editing; those arrive in Phases 3, 4, and 5.
+> **Current status: Phase 17 (Legality / mana symbols / search filters) complete in-repo as v1.1.0.**  
+> Production HTTPS from Phase 16: **https://mtg-deck-manager-two.vercel.app**. Human leftovers: push/redeploy, iPhone §70 QA, tag `v1.0.0`/`v1.1.0` as desired.
 
 ---
 
@@ -46,26 +47,30 @@ The app runs at <http://localhost:3000>. Design against a 390 × 844 viewport (i
 
 ### npm scripts
 
-| Script                   | What it does                                                         |
-| ------------------------ | -------------------------------------------------------------------- |
-| `npm run dev`            | Next dev server on port 3000                                         |
-| `npm run build`          | Production build                                                     |
-| `npm start`              | Serve the production build                                           |
-| `npm run lint`           | ESLint over the repo, `--max-warnings 0`                             |
-| `npm run lint:fix`       | ESLint with autofix                                                  |
-| `npm run format`         | Prettier write                                                       |
-| `npm run format:check`   | Prettier check (CI gate)                                             |
-| `npm run typecheck`      | `tsc --noEmit`                                                       |
-| `npm run knip`           | Unused files, exports, and dependencies (report-only until Phase 15) |
-| `npm run icons:generate` | Regenerates `public/icons/*.png` from `scripts/generate-icons.mjs`   |
-| `npm test`               | Vitest in watch mode                                                 |
-| `npm run test:unit`      | Vitest unit project, single run                                      |
-| `npm run test:ci`        | Vitest with coverage                                                 |
-| `npm run verify`         | `typecheck` → `lint` → `test:unit`. Run this before every commit.    |
+| Script                     | What it does                                                       |
+| -------------------------- | ------------------------------------------------------------------ |
+| `npm run dev`              | Next dev server on port 3000                                       |
+| `npm run build`            | Production build                                                   |
+| `npm start`                | Serve the production build                                         |
+| `npm run lint`             | ESLint over the repo, `--max-warnings 0`                           |
+| `npm run lint:fix`         | ESLint with autofix                                                |
+| `npm run format`           | Prettier write                                                     |
+| `npm run format:check`     | Prettier check (CI gate)                                           |
+| `npm run typecheck`        | `tsc --noEmit`                                                     |
+| `npm run knip`             | Unused files/exports/deps (**blocking** in CI since Phase 15)      |
+| `npm run icons:generate`   | Regenerates `public/icons/*.png` from `scripts/generate-icons.mjs` |
+| `npm test`                 | Vitest in watch mode                                               |
+| `npm run test:unit`        | Vitest unit + unit-dom projects, single run                        |
+| `npm run test:integration` | Vitest integration project                                         |
+| `npm run test:ci`          | Vitest with coverage + thresholds                                  |
+| `npm run test:e2e`         | Full TestCafe suite (requires `npm run build && npm start`)        |
+| `npm run test:e2e:smoke`   | TestCafe create-deck smoke                                         |
+| `npm run test:all`         | typecheck → lint → knip → test:ci → build → e2e                    |
+| `npm run verify`           | typecheck → lint → knip → unit → integration. Run before commits.  |
 
 ### Quality gates
 
-`npm run verify` is the local gate. CI ([`.github/workflows/ci.yml`](./.github/workflows/ci.yml)) additionally runs `format:check`, `knip` (non-blocking), and `build` on every push to `main` and every pull request.
+`npm run verify` is the local gate. CI ([`.github/workflows/ci.yml`](./.github/workflows/ci.yml)) runs `format:check`, **blocking** `knip`, `test:ci` (coverage), `build`, and a required `e2e` job on every push to `main` and every pull request.
 
 Husky installs a pre-commit hook that runs `lint-staged` (ESLint `--fix` + Prettier) on staged files. It is installed automatically by `npm install` via the `prepare` script.
 
@@ -188,25 +193,48 @@ npm run build && npm start
 
 Deck data never leaves the device, so there is nothing to provision beyond the static/SSR host.
 
-**Manual steps — these require an interactive login and have not been performed automatically:**
+| Environment    | URL                                         |
+| -------------- | ------------------------------------------- |
+| **Production** | **https://mtg-deck-manager-two.vercel.app** |
+| Preview        | per pull request (`*.vercel.app`)           |
 
-1. Push this repository to GitHub (`git remote add origin …` then `git push -u origin main`).
-2. In the Vercel dashboard, **Add New → Project** and import the repository. Framework preset: Next.js. Build command, output directory, and install command are auto-detected; no overrides are needed.
-3. Under **Settings → Environment Variables**, add `NEXT_PUBLIC_APP_URL` for Production (the production URL) and Preview (`$VERCEL_URL` or the preview URL).
-4. Confirm **Production Branch** is `main`. Preview deployments for pull requests are enabled by default.
-5. Recommended — GitHub **Settings → Branches → Add rule** for `main`: require the `quality` status check to pass before merging.
-6. Record the deployment URL below and verify the theme on a physical iPhone in mobile Safari.
-7. **Phase 2 follow-up:** with the HTTPS URL live, install the app to an iPhone Home Screen and complete the Installation & Standalone, Offline, and Service Worker sections of [`build-plan/checklists/iphone-safari-manual.md`](./build-plan/checklists/iphone-safari-manual.md). Deploy a second time to confirm the update prompt appears.
+Project: Vercel `mtg-deck-manager` on team `zemennos-projects`, GitHub `zeMenno/mtg-deck-manager`, production branch `main`.
 
-| Environment | URL                |
-| ----------- | ------------------ |
-| Production  | _not yet deployed_ |
-| Preview     | per pull request   |
+### Install on iPhone (production)
 
-`[OPEN-02]` in the decision log is still open: a custom domain should be chosen before Phase 16, because reinstalling the Home Screen app from a new domain starts from empty storage.
+1. Open the production URL in **Safari** (not Chrome).
+2. Follow **Settings → Install** (or `/settings/install`): Share → Add to Home Screen.
+3. Launch from the Home Screen icon (standalone — no Safari URL bar).
+4. Build decks only in the installed app; export backups from **Settings → Data**.
 
----
+Safari tabs and the Home Screen app use **separate** IndexedDB. Changing the production origin later requires a fresh install (and export/import to migrate).
 
-## Out of scope in Phase 2
+### Production env (Vercel dashboard)
 
-Dexie/IndexedDB and offline deck persistence (Phase 3), Scryfall integration and its offline fallback (Phase 4), deck features (Phase 5+), card image prefetching (Phase 9), polished offline and loading states (Phase 14), automated service worker tests (Phase 15).
+See [`.env.production.example`](./.env.production.example). Required for Production:
+
+- `NEXT_PUBLIC_APP_URL=https://mtg-deck-manager-two.vercel.app`
+
+Optional: `NEXT_PUBLIC_USE_SCRYFALL_PROXY=true`. Do **not** put secrets in `NEXT_PUBLIC_*`. MVP pricing uses public Scryfall data (no `PRICE_PROVIDER_*` keys).
+
+### Decisions & launch docs
+
+- Error tracking: deferred — [`docs/decisions/error-tracking.md`](./docs/decisions/error-tracking.md)
+- Analytics: none — [`docs/decisions/analytics.md`](./docs/decisions/analytics.md)
+- Launch checklist: [`docs/launch-checklist.md`](./docs/launch-checklist.md)
+- Security notes: [`docs/security-audit.md`](./docs/security-audit.md)
+- Release notes: [`CHANGELOG.md`](./CHANGELOG.md)
+
+### Human steps remaining (Phase 16)
+
+1. Commit/push local Phase 14–16 changes; wait for CI + Vercel production deploy.
+2. Confirm `NEXT_PUBLIC_APP_URL` is set; redeploy if needed.
+3. Sign off [`build-plan/checklists/iphone-safari-manual.md`](./build-plan/checklists/iphone-safari-manual.md) on the production URL (Home Screen persistence is #1).
+4. Tag `v1.0.0` and create a GitHub Release from `CHANGELOG.md` (commands in `build-plan/phase-16-production-launch.md`).
+5. Optional custom domain before heavy daily use.
+
+Hotfix: branch → PR → CI → merge `main` → Vercel auto-deploys → verify on iPhone.
+
+### Branch protection (recommended)
+
+GitHub **Settings → Branches → Add rule** for `main`: require CI status checks (`quality` / e2e) before merging.

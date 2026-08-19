@@ -6,6 +6,12 @@ import type {
 } from "serwist";
 import { CacheFirst, ExpirationPlugin, NetworkOnly, Serwist } from "serwist";
 
+import {
+  APP_SHELL_CACHE,
+  CARD_IMAGES_CACHE,
+  STATIC_CACHE,
+} from "@/lib/pwa/cache-names";
+
 declare global {
   interface WorkerGlobalScope extends SerwistGlobalConfig {
     // Replaced at build time by @serwist/next with the precache manifest.
@@ -14,16 +20,6 @@ declare global {
 }
 
 declare const self: ServiceWorkerGlobalScope;
-
-/**
- * Bump when a cache's contents or strategy change in a way that must invalidate
- * what is already on a device. See README "Service worker & cache versions".
- */
-const CACHE_VERSION = "v1";
-const APP_SHELL_CACHE = `app-shell-${CACHE_VERSION}`;
-const STATIC_CACHE = `static-${CACHE_VERSION}`;
-/** Scryfall card art — shared with client prefetch (Phase 9). ~100×50KB ≈ 5MB. */
-const CARD_IMAGES_CACHE = `card-images-${CACHE_VERSION}`;
 
 const runtimeCaching: RuntimeCaching[] = [
   {

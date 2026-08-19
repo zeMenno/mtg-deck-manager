@@ -29,10 +29,12 @@ import { useTags } from "@/lib/hooks/use-tags";
 import {
   useBulkUpdateWishlistPriority,
   useRemoveWishlistItems,
+  useRestoreWishlistItems,
   useWishlist,
   useWishlistSummary,
   wishlistKeys,
 } from "@/lib/hooks/use-wishlist";
+import { useUndoAction } from "@/lib/hooks/use-undo-action";
 import { getWishlistService } from "@/lib/wishlist";
 import { getPricingService } from "@/lib/pricing/pricing-service";
 import { priceKeys } from "@/lib/hooks/use-card-price";
@@ -44,6 +46,9 @@ import type {
 } from "@/types";
 import type { WishlistItemWithCard } from "@/lib/wishlist/types";
 import type { Card } from "@/types/card";
+import type { WishlistItem } from "@/types/wishlist";
+import { PageTransition } from "@/components/shared/page-transition";
+import { WishlistSkeleton } from "@/components/shared/skeletons";
 
 export function WishlistPage() {
   const router = useRouter();
@@ -79,7 +84,9 @@ export function WishlistPage() {
   const { items: rawItems, isLoading } = useWishlist(listFilters);
   const { summary, refetch: refetchSummary } = useWishlistSummary();
   const removeItems = useRemoveWishlistItems();
+  const restoreItems = useRestoreWishlistItems();
   const bulkPriorityMutation = useBulkUpdateWishlistPriority();
+  const { showUndo } = useUndoAction();
 
   const currencyQuery = useQuery({
     queryKey: ["settings", "currency"],
@@ -186,225 +193,240 @@ export function WishlistPage() {
   const selectedItems = items.filter((i) => selectedIds.has(i.id));
 
   return (
-    <div className="flex flex-col gap-4" data-testid="wishlist-page">
-      <div className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-black uppercase">Wishlist</h1>
-          <p className="text-muted-foreground font-mono text-xs uppercase">
-            {summary?.totalItems ?? 0} items
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <Button
-            type="button"
-            size="sm"
-            variant="outline"
-            data-testid="wishlist-select-toggle"
-            onClick={() => {
-              setSelectionMode((v) => !v);
-              setSelectedIds(new Set());
-            }}
-          >
-            {selectionMode ? "Cancel select" : "Select"}
-          </Button>
-        </div>
-      </div>
-
-      <WishlistSummaryBar
-        summary={summary}
-        isRefreshing={refreshMutation.isPending}
-        canRefresh={online && rawItems.length > 0}
-        onRefreshPrices={() => refreshMutation.mutate()}
-      />
-
-      <WishlistFilters
-        priority={priority}
-        onPriorityChange={setPriority}
-        targetDeckId={targetDeckFilter}
-        onTargetDeckChange={setTargetDeckFilter}
-        sort={sort}
-        onSortChange={setSort}
-        search={search}
-        onSearchChange={setSearch}
-        decks={decks}
-      />
-
-      {isLoading ? (
-        <div
-          className="flex flex-col gap-2"
-          data-testid="wishlist-loading"
-          aria-busy="true"
-        >
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div
-              key={i}
-              className="border-border bg-muted/40 h-20 animate-pulse border-2"
-            />
-          ))}
-        </div>
-      ) : items.length === 0 ? (
-        <WishlistEmptyState
-          filtered={hasActiveFilters || rawItems.length > 0}
-        />
-      ) : (
-        <ul className="flex flex-col gap-2" data-testid="wishlist-item-list">
-          {items.map((item) => (
-            <li key={item.id}>
-              <WishlistItemRow
-                item={item}
-                density={effectiveDensity}
-                imagesEnabled={imagesEnabled}
-                selected={selectedIds.has(item.id)}
-                selectionMode={selectionMode}
-                deckName={
-                  item.targetDeckId
-                    ? deckNameById.get(item.targetDeckId)
-                    : undefined
-                }
-                roleTag={
-                  item.targetRole ? tagById.get(item.targetRole) : undefined
-                }
-                onPress={() => {
-                  setEditItem(item);
-                  setEditOpen(true);
-                }}
-                onToggleSelect={() => toggleSelect(item.id)}
-                onConsider={() => openMove([item], "consider")}
-                onAdd={() => openMove([item], "add")}
-              />
-            </li>
-          ))}
-        </ul>
-      )}
-
-      {selectionMode && selectedIds.size > 0 ? (
-        <div
-          data-testid="wishlist-bulk-bar"
-          className="pb-safe border-border bg-background fixed inset-x-0 bottom-[var(--bottom-nav-height)] z-40 border-t-4 px-4 py-3"
-        >
-          <div className="mx-auto flex max-w-3xl flex-col gap-2">
-            <p className="font-mono text-xs uppercase">
-              {selectedIds.size} selected
+    <PageTransition transitionKey="wishlist">
+      <div className="flex flex-col gap-4" data-testid="wishlist-page">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h1 className="text-2xl font-black uppercase">Wishlist</h1>
+            <p className="text-muted-foreground font-mono text-xs uppercase">
+              {summary?.totalItems ?? 0} items
             </p>
-            <div className="flex flex-wrap gap-2">
-              <Button
-                type="button"
-                size="sm"
-                data-testid="wishlist-bulk-consider"
-                onClick={() => openMove(selectedItems, "consider")}
-              >
-                CONSIDER
-              </Button>
-              <Button
-                type="button"
-                size="sm"
-                data-testid="wishlist-bulk-add"
-                onClick={() => openMove(selectedItems, "add")}
-              >
-                ADD
-              </Button>
-              <Button
-                type="button"
-                size="sm"
-                variant="outline"
-                data-testid="wishlist-bulk-priority"
-                onClick={() => setBulkPriorityOpen(true)}
-              >
-                Priority
-              </Button>
-              <Button
-                type="button"
-                size="sm"
-                variant="destructive"
-                data-testid="wishlist-bulk-remove"
-                onClick={() => {
-                  void removeItems.mutateAsync([...selectedIds]).then(() => {
-                    setSelectedIds(new Set());
-                    setSelectionMode(false);
-                    toast.success("Removed from wishlist");
-                  });
-                }}
-              >
-                Remove
-              </Button>
-            </div>
           </div>
-        </div>
-      ) : null}
-
-      <EditWishlistItemSheet
-        item={editItem}
-        open={editOpen}
-        onOpenChange={setEditOpen}
-        onViewCard={() => {
-          if (!editItem?.card) return;
-          setDetailCard(editItem.card);
-          setDetailOpen(true);
-        }}
-        onMoveConsider={() => {
-          if (!editItem) return;
-          setEditOpen(false);
-          openMove([editItem], "consider");
-        }}
-        onMoveAdd={() => {
-          if (!editItem) return;
-          setEditOpen(false);
-          openMove([editItem], "add");
-        }}
-      />
-
-      <MoveToDeckSheet
-        items={moveItems}
-        open={moveOpen}
-        onOpenChange={setMoveOpen}
-        status={moveStatus}
-        onSuccess={(deckId) => {
-          setSelectionMode(false);
-          setSelectedIds(new Set());
-          if (moveStatus === "add") {
-            router.push(`/decks/${deckId}/changes/add`);
-          } else {
-            router.push(`/decks/${deckId}/changes/consider`);
-          }
-        }}
-      />
-
-      <CardDetailSheet
-        card={detailCard}
-        open={detailOpen}
-        onOpenChange={setDetailOpen}
-      />
-
-      <Sheet open={bulkPriorityOpen} onOpenChange={setBulkPriorityOpen}>
-        <SheetContent side="bottom" data-testid="wishlist-bulk-priority-sheet">
-          <SheetHeader>
-            <SheetTitle>Set priority</SheetTitle>
-          </SheetHeader>
-          <div className="px-4">
-            <PriorityPicker value={bulkPriority} onChange={setBulkPriority} />
-          </div>
-          <SheetFooter>
+          <div className="flex flex-wrap gap-2">
             <Button
               type="button"
-              data-testid="wishlist-bulk-priority-save"
-              disabled={bulkPriorityMutation.isPending}
+              size="sm"
+              variant="outline"
+              data-testid="wishlist-select-toggle"
               onClick={() => {
-                void bulkPriorityMutation
-                  .mutateAsync({
-                    ids: [...selectedIds],
-                    priority: bulkPriority,
-                  })
-                  .then(() => {
-                    setBulkPriorityOpen(false);
-                    toast.success("Priority updated");
-                  });
+                setSelectionMode((v) => !v);
+                setSelectedIds(new Set());
               }}
             >
-              Apply
+              {selectionMode ? "Cancel select" : "Select"}
             </Button>
-          </SheetFooter>
-        </SheetContent>
-      </Sheet>
-    </div>
+          </div>
+        </div>
+
+        <WishlistSummaryBar
+          summary={summary}
+          isRefreshing={refreshMutation.isPending}
+          canRefresh={online && rawItems.length > 0}
+          onRefreshPrices={() => refreshMutation.mutate()}
+        />
+
+        <WishlistFilters
+          priority={priority}
+          onPriorityChange={setPriority}
+          targetDeckId={targetDeckFilter}
+          onTargetDeckChange={setTargetDeckFilter}
+          sort={sort}
+          onSortChange={setSort}
+          search={search}
+          onSearchChange={setSearch}
+          decks={decks}
+        />
+
+        {isLoading ? (
+          <WishlistSkeleton />
+        ) : items.length === 0 ? (
+          <WishlistEmptyState
+            filtered={hasActiveFilters || rawItems.length > 0}
+          />
+        ) : (
+          <ul className="flex flex-col gap-2" data-testid="wishlist-item-list">
+            {items.map((item) => (
+              <li key={item.id}>
+                <WishlistItemRow
+                  item={item}
+                  density={effectiveDensity}
+                  imagesEnabled={imagesEnabled}
+                  selected={selectedIds.has(item.id)}
+                  selectionMode={selectionMode}
+                  deckName={
+                    item.targetDeckId
+                      ? deckNameById.get(item.targetDeckId)
+                      : undefined
+                  }
+                  roleTag={
+                    item.targetRole ? tagById.get(item.targetRole) : undefined
+                  }
+                  onPress={() => {
+                    setEditItem(item);
+                    setEditOpen(true);
+                  }}
+                  onToggleSelect={() => toggleSelect(item.id)}
+                  onConsider={() => openMove([item], "consider")}
+                  onAdd={() => openMove([item], "add")}
+                />
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {selectionMode && selectedIds.size > 0 ? (
+          <div
+            data-testid="wishlist-bulk-bar"
+            className="pb-safe border-border bg-background fixed inset-x-0 bottom-[var(--bottom-nav-height)] z-40 border-t-4 px-4 py-3"
+          >
+            <div className="mx-auto flex max-w-3xl flex-col gap-2">
+              <p className="font-mono text-xs uppercase">
+                {selectedIds.size} selected
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  type="button"
+                  size="sm"
+                  data-testid="wishlist-bulk-consider"
+                  onClick={() => openMove(selectedItems, "consider")}
+                >
+                  CONSIDER
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  data-testid="wishlist-bulk-add"
+                  onClick={() => openMove(selectedItems, "add")}
+                >
+                  ADD
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  data-testid="wishlist-bulk-priority"
+                  onClick={() => setBulkPriorityOpen(true)}
+                >
+                  Priority
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="destructive"
+                  data-testid="wishlist-bulk-remove"
+                  onClick={() => {
+                    const ids = [...selectedIds];
+                    const snapshots: WishlistItem[] = selectedItems.map(
+                      (item) => ({
+                        id: item.id,
+                        wishlistId: item.wishlistId,
+                        cardId: item.cardId,
+                        quantity: item.quantity,
+                        priority: item.priority,
+                        targetDeckId: item.targetDeckId,
+                        targetRole: item.targetRole,
+                        notes: item.notes,
+                        addedAt: item.addedAt,
+                        updatedAt: item.updatedAt,
+                      }),
+                    );
+                    void removeItems.mutateAsync(ids).then(() => {
+                      setSelectedIds(new Set());
+                      setSelectionMode(false);
+                      showUndo({
+                        message: `Removed ${snapshots.length} from wishlist`,
+                        undo: async () => {
+                          await restoreItems.mutateAsync(snapshots);
+                        },
+                      });
+                    });
+                  }}
+                >
+                  Remove
+                </Button>
+              </div>
+            </div>
+          </div>
+        ) : null}
+
+        <EditWishlistItemSheet
+          item={editItem}
+          open={editOpen}
+          onOpenChange={setEditOpen}
+          onViewCard={() => {
+            if (!editItem?.card) return;
+            setDetailCard(editItem.card);
+            setDetailOpen(true);
+          }}
+          onMoveConsider={() => {
+            if (!editItem) return;
+            setEditOpen(false);
+            openMove([editItem], "consider");
+          }}
+          onMoveAdd={() => {
+            if (!editItem) return;
+            setEditOpen(false);
+            openMove([editItem], "add");
+          }}
+        />
+
+        <MoveToDeckSheet
+          items={moveItems}
+          open={moveOpen}
+          onOpenChange={setMoveOpen}
+          status={moveStatus}
+          onSuccess={(deckId) => {
+            setSelectionMode(false);
+            setSelectedIds(new Set());
+            if (moveStatus === "add") {
+              router.push(`/decks/${deckId}/changes/add`);
+            } else {
+              router.push(`/decks/${deckId}/changes/consider`);
+            }
+          }}
+        />
+
+        <CardDetailSheet
+          card={detailCard}
+          open={detailOpen}
+          onOpenChange={setDetailOpen}
+        />
+
+        <Sheet open={bulkPriorityOpen} onOpenChange={setBulkPriorityOpen}>
+          <SheetContent
+            side="bottom"
+            snap="half"
+            data-testid="wishlist-bulk-priority-sheet"
+          >
+            <SheetHeader>
+              <SheetTitle>Set priority</SheetTitle>
+            </SheetHeader>
+            <div className="px-4">
+              <PriorityPicker value={bulkPriority} onChange={setBulkPriority} />
+            </div>
+            <SheetFooter>
+              <Button
+                type="button"
+                data-testid="wishlist-bulk-priority-save"
+                disabled={bulkPriorityMutation.isPending}
+                onClick={() => {
+                  void bulkPriorityMutation
+                    .mutateAsync({
+                      ids: [...selectedIds],
+                      priority: bulkPriority,
+                    })
+                    .then(() => {
+                      setBulkPriorityOpen(false);
+                      toast.success("Priority updated");
+                    });
+                }}
+              >
+                Apply
+              </Button>
+            </SheetFooter>
+          </SheetContent>
+        </Sheet>
+      </div>
+    </PageTransition>
   );
 }

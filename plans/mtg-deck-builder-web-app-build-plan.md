@@ -2272,6 +2272,16 @@ The first production-capable release should contain:
 - Advanced search.
 - Favorite cards.
 
+## Planned Visual-System Migration
+
+After the Phase 17 post-launch feature work is stable, execute
+[`build-plan/phase-18-solar-dusk-theme.md`](../build-plan/phase-18-solar-dusk-theme.md)
+to replace Neo Brutalism with tweakcn Solar Dusk and make dark mode the
+deterministic default. Phase 18 includes the ADR supersession, token/font and
+shared-primitive migration, PWA colour/icon updates, and a full audit of Phase
+17's new surfaces. This execution phase does not replace or renumber the
+feature roadmap below; assign its release number when implementation starts.
+
 ## Version 1.2
 
 - Cloud backup.

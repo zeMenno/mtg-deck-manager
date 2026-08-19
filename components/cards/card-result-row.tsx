@@ -5,6 +5,7 @@ import { Heart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CardImage } from "@/components/cards/card-image";
+import { ManaCost } from "@/components/cards/mana-cost";
 import { cn } from "@/lib/utils";
 import type { Card } from "@/types/card";
 
@@ -57,7 +58,7 @@ export function CardResultRow({
             {card.typeLine}
           </p>
           {card.manaCost ? (
-            <p className="font-mono text-xs">{card.manaCost}</p>
+            <ManaCost cost={card.manaCost} size="sm" className="mt-0.5" />
           ) : null}
         </div>
       </button>

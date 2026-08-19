@@ -19,8 +19,10 @@ import { useDecks } from "@/lib/hooks/use-decks";
 import { useTagsByCategory } from "@/lib/hooks/use-tags";
 import {
   useRemoveFromWishlist,
+  useRestoreWishlistItem,
   useUpdateWishlistItem,
 } from "@/lib/hooks/use-wishlist";
+import { useUndoAction } from "@/lib/hooks/use-undo-action";
 import type { WishlistPriority } from "@/types";
 import type { WishlistItemWithCard } from "@/lib/wishlist/types";
 
@@ -45,6 +47,8 @@ export function EditWishlistItemSheet({
   const { tags: roleTags } = useTagsByCategory("role");
   const updateItem = useUpdateWishlistItem();
   const removeItem = useRemoveFromWishlist();
+  const restoreItem = useRestoreWishlistItem();
+  const { showUndo } = useUndoAction();
 
   const [quantity, setQuantity] = useState(1);
   const [priority, setPriority] = useState<WishlistPriority>("medium");
@@ -87,9 +91,26 @@ export function EditWishlistItemSheet({
   async function handleRemove() {
     if (!item) return;
     try {
+      const snapshot = {
+        id: item.id,
+        wishlistId: item.wishlistId,
+        cardId: item.cardId,
+        quantity: item.quantity,
+        priority: item.priority,
+        targetDeckId: item.targetDeckId,
+        targetRole: item.targetRole,
+        notes: item.notes,
+        addedAt: item.addedAt,
+        updatedAt: item.updatedAt,
+      };
       await removeItem.mutateAsync(item.id);
-      toast.success("Removed from wishlist");
       onOpenChange(false);
+      showUndo({
+        message: "Removed from wishlist",
+        undo: async () => {
+          await restoreItem.mutateAsync(snapshot);
+        },
+      });
     } catch (err) {
       toast.error(
         err instanceof Error ? err.message : "Could not remove wishlist item",
@@ -102,6 +123,7 @@ export function EditWishlistItemSheet({
       <Sheet open={open} onOpenChange={onOpenChange}>
         <SheetContent
           side="bottom"
+          snap="detail"
           className="overflow-y-auto"
           data-testid="edit-wishlist-item-sheet"
         >

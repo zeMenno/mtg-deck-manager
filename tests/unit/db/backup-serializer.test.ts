@@ -40,7 +40,7 @@ describe("backup serializer JSON shape", () => {
 
     expect(isAppBackupShape(backup)).toBe(true);
     expect(backup.backupVersion).toBe(1);
-    expect(backup.appSchemaVersion).toBe(4);
+    expect(backup.appSchemaVersion).toBe(5);
     expect(backup.exportedFrom.appVersion).toBe("0.1.0");
     expect(backup.metadata.deckCount).toBe(1);
     expect(backup.metadata.cardCount).toBe(1);
@@ -51,6 +51,10 @@ describe("backup serializer JSON shape", () => {
     expect(Array.isArray(backup.data.appMeta)).toBe(true);
     expect(Array.isArray(backup.data.tags)).toBe(true);
     expect(backup.data.tags.length).toBe(49);
+    // Symbology cache must never be part of backups
+    expect(Object.prototype.hasOwnProperty.call(backup.data, "symbols")).toBe(
+      false,
+    );
 
     await closeAndDelete(database);
   });

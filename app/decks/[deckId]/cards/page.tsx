@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 
 import { DeckCardsClient } from "@/components/deck/deck-cards-client";
+import { DeckCardListSkeleton } from "@/components/shared/skeletons";
 
 type PageProps = {
   params: Promise<{ deckId: string }>;
@@ -8,9 +9,7 @@ type PageProps = {
 
 export default function DeckCardsPage({ params }: PageProps) {
   return (
-    <Suspense
-      fallback={<p className="font-mono text-sm uppercase">Loading cards…</p>}
-    >
+    <Suspense fallback={<DeckCardListSkeleton />}>
       <DeckCardsClient params={params} />
     </Suspense>
   );

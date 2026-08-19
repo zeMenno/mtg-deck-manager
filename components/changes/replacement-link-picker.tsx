@@ -57,6 +57,7 @@ export function ReplacementLinkPicker({
     >
       <SheetContent
         side="bottom"
+        snap="tall"
         className="overflow-y-auto"
         data-testid="replacement-link-picker"
       >

@@ -9,8 +9,13 @@
  */
 
 import type { ScryfallCard, ScryfallCardFace } from "@/lib/scryfall/types";
-import type { Card, CardFace, CardLegality } from "@/types/card";
-import type { DeckFormat } from "@/types/index";
+import { KNOWN_LEGALITY_FORMAT_SET } from "@/lib/cards/legality";
+import type {
+  Card,
+  CardFace,
+  CardLegality,
+  LegalityFormat,
+} from "@/types/card";
 
 const MULTI_FACE_LAYOUTS = new Set([
   "transform",
@@ -49,20 +54,23 @@ function primaryFace(raw: ScryfallCard): ScryfallCardFace | undefined {
   return raw.card_faces?.[0];
 }
 
-function mapLegalities(
+const ALLOWED_LEGALITIES: CardLegality[] = [
+  "legal",
+  "not_legal",
+  "banned",
+  "restricted",
+];
+
+/** Exported for unit tests. */
+export function mapLegalities(
   legalities: ScryfallCard["legalities"],
 ): Card["legalities"] | undefined {
   if (!legalities) return undefined;
-  const out: Partial<Record<DeckFormat, CardLegality>> = {};
-  const allowed: CardLegality[] = [
-    "legal",
-    "not_legal",
-    "banned",
-    "restricted",
-  ];
+  const out: Partial<Record<LegalityFormat, CardLegality>> = {};
   for (const [format, value] of Object.entries(legalities)) {
-    if (allowed.includes(value as CardLegality)) {
-      out[format as DeckFormat] = value as CardLegality;
+    if (!KNOWN_LEGALITY_FORMAT_SET.has(format)) continue;
+    if (ALLOWED_LEGALITIES.includes(value as CardLegality)) {
+      out[format as LegalityFormat] = value as CardLegality;
     }
   }
   return Object.keys(out).length > 0 ? out : undefined;

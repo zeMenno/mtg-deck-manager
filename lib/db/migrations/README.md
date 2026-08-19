@@ -12,15 +12,18 @@
 
 ## Version history
 
-| Version | Status  | Notes                                                |
-| ------- | ------- | ---------------------------------------------------- |
-| 1       | Shipped | Initial MVP schema — see `docs/data-model.md` §13.   |
-| 2       | Current | Phase 5: `archived` + `favorite` indexes on `decks`. |
+| Version | Status  | Notes                                                                      |
+| ------- | ------- | -------------------------------------------------------------------------- |
+| 1       | Shipped | Initial MVP schema — see `docs/data-model.md` §13.                         |
+| 2       | Shipped | Phase 5: `archived` + `favorite` indexes on `decks`.                       |
+| 3       | Shipped | Phase 7: `replacesDeckCardId` index on `deckCards`.                        |
+| 4       | Shipped | Phase 12: richer `wishlistItems` indexes.                                  |
+| 5       | Current | Phase 17: `symbols` symbology cache (`symbol, updatedAt`). Not in backups. |
 
 ## Adding a migration
 
 ```ts
-this.version(2)
+this.version(n)
   .stores({
     // declare changed / new indexes; unchanged tables may be omitted
   })
@@ -30,4 +33,4 @@ this.version(2)
 ```
 
 Dexie applies versions in order on open. Keep upgrades idempotent where
-practical. Integration coverage lives in `tests/integration/migration-v1.test.ts`.
+practical. Integration coverage: `tests/integration/db-migrations.test.ts`.

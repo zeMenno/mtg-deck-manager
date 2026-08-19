@@ -58,6 +58,11 @@ export async function readJsonFile<T = unknown>(
   maxBytes = MAX_IMPORT_FILE_BYTES,
 ): Promise<T> {
   const text = await readFileAsText(file, maxBytes);
+  return parseJsonText<T>(text);
+}
+
+/** Parse JSON text; throws ImportJsonParseError on syntax errors. */
+export function parseJsonText<T = unknown>(text: string): T {
   try {
     return JSON.parse(text) as T;
   } catch (err) {

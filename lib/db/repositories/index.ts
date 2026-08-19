@@ -23,3 +23,5 @@ export { CardPriceRepository } from "@/lib/db/repositories/card-price-repository
 
 export { DeckVersionRepository } from "@/lib/db/repositories/deck-version-repository";
 export type { ListVersionsOptions } from "@/lib/db/repositories/deck-version-repository";
+
+export { SymbolRepository } from "@/lib/db/repositories/symbol-repository";

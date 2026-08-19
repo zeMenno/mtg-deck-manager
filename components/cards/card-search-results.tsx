@@ -3,12 +3,15 @@
 import { CardResultRow } from "@/components/cards/card-result-row";
 import { EmptyState } from "@/components/shared/empty-state";
 import { OfflineSearchBanner } from "@/components/shared/offline-search-banner";
+import { CardSearchSkeleton } from "@/components/shared/skeletons";
+import { Button } from "@/components/ui/button";
 import type { CardSearchErrorKind } from "@/lib/hooks/use-card-search";
 import type { Card } from "@/types/card";
 import { Search } from "lucide-react";
 
 type CardSearchResultsProps = {
   query: string;
+  hasFilters?: boolean;
   cards: Card[];
   isLoading: boolean;
   fromCache: boolean;
@@ -17,6 +20,7 @@ type CardSearchResultsProps = {
   errorMessage?: string | null;
   onSelect: (card: Card) => void;
   onAddToWishlist?: (card: Card) => void;
+  onClearFilters?: () => void;
   imagesEnabled?: boolean;
 };
 
@@ -39,6 +43,7 @@ function errorCopy(kind: CardSearchErrorKind | null): string | null {
 
 export function CardSearchResults({
   query,
+  hasFilters = false,
   cards,
   isLoading,
   fromCache,
@@ -47,16 +52,18 @@ export function CardSearchResults({
   errorMessage,
   onSelect,
   onAddToWishlist,
+  onClearFilters,
   imagesEnabled = true,
 }: CardSearchResultsProps) {
   const trimmed = query.trim();
+  const canSearch = trimmed.length >= 2 || hasFilters;
 
-  if (trimmed.length < 2) {
+  if (!canSearch) {
     return (
       <EmptyState
         icon={Search}
         title="Type at least 2 characters"
-        description="Search Scryfall by card name. Results are cached locally for offline use."
+        description="Search Scryfall by card name, or open Filters to search by color, type, and more."
       />
     );
   }
@@ -66,7 +73,9 @@ export function CardSearchResults({
       <OfflineSearchBanner
         message={
           !online
-            ? "Searching cached cards only."
+            ? hasFilters
+              ? "Searching cached cards only — filters apply to local cache."
+              : "Searching cached cards only."
             : "Showing cached results (network unavailable)."
         }
       />
@@ -78,9 +87,7 @@ export function CardSearchResults({
     return (
       <div className="flex flex-col gap-3">
         {banner}
-        <p className="text-muted-foreground font-mono text-sm uppercase">
-          Searching…
-        </p>
+        <CardSearchSkeleton />
       </div>
     );
   }
@@ -100,9 +107,24 @@ export function CardSearchResults({
         {banner}
         <EmptyState
           icon={Search}
-          title="No results"
-          description={`Nothing matched “${trimmed}”. Try a different name.`}
+          title="No cards match"
+          description={
+            hasFilters
+              ? "Try clearing filters or broadening your search."
+              : `Nothing matched “${trimmed}”. Try a different name.`
+          }
         />
+        {hasFilters && onClearFilters ? (
+          <Button
+            type="button"
+            variant="outline"
+            className="mx-auto w-fit"
+            data-testid="search-empty-clear-filters"
+            onClick={onClearFilters}
+          >
+            Clear filters
+          </Button>
+        ) : null}
       </div>
     );
   }
