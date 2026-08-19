@@ -1,11 +1,12 @@
 "use client";
 
 import { DisplayDensityPicker } from "@/components/settings/display-density-picker";
+import { ThemePicker } from "@/components/settings/theme-picker";
 import { Button } from "@/components/ui/button";
 import { useDisplayPreferences } from "@/lib/hooks/use-display-preferences";
 
 /**
- * Settings → Appearance: images master toggle + density picker.
+ * Settings → Appearance: color theme, images, and list density.
  */
 export function AppearanceSettings() {
   const {
@@ -19,7 +20,7 @@ export function AppearanceSettings() {
 
   return (
     <section
-      className="border-border bg-card shadow-brutal-sm flex flex-col gap-4 border-2 p-4"
+      className="border-border bg-card flex flex-col gap-5 rounded-lg border p-4 shadow-sm"
       data-testid="appearance-settings"
     >
       <div>
@@ -31,9 +32,15 @@ export function AppearanceSettings() {
       </div>
 
       <div className="flex flex-col gap-2">
-        <span className="font-mono text-[0.625rem] uppercase">
-          Card images in lists
-        </span>
+        <span className="text-xs font-semibold">Color theme</span>
+        <ThemePicker />
+        <p className="text-muted-foreground text-xs">
+          Dark is the default. Your explicit choice stays on this device.
+        </p>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <span className="text-xs font-semibold">Card images in lists</span>
         <div className="flex gap-2">
           <Button
             type="button"
@@ -61,9 +68,7 @@ export function AppearanceSettings() {
       </div>
 
       <div className="flex flex-col gap-2">
-        <span className="font-mono text-[0.625rem] uppercase">
-          List density
-        </span>
+        <span className="text-xs font-semibold">List density</span>
         <DisplayDensityPicker
           value={density}
           onChange={setDensity}
@@ -78,7 +83,7 @@ export function AppearanceSettings() {
       </div>
 
       <div
-        className="border-border bg-muted flex flex-col gap-2 border-2 p-3"
+        className="border-border bg-muted flex flex-col gap-2 rounded-md border p-3"
         aria-hidden="true"
       >
         <p className="font-mono text-[0.625rem] uppercase">Preview</p>
@@ -97,9 +102,9 @@ function DensityPreview({
 }) {
   const showThumb = images && density !== "compact";
   return (
-    <div className="border-border bg-card flex items-center gap-2 border-2 p-2">
+    <div className="border-border bg-card flex items-center gap-2 rounded-md border p-2 shadow-xs">
       {showThumb ? (
-        <div className="border-border bg-background h-14 w-10 shrink-0 border-2" />
+        <div className="border-border bg-background h-14 w-10 shrink-0 rounded-sm border" />
       ) : null}
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-bold">Sample Card Name</p>

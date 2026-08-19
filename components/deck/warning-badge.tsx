@@ -33,7 +33,7 @@ const META: Record<
   error: {
     label: "Legality",
     icon: X,
-    className: "bg-destructive text-white",
+    className: "bg-destructive text-destructive-foreground",
   },
 };
 
@@ -48,7 +48,7 @@ export function WarningBadge({
     <span
       data-testid={`warning-badge-${severity}`}
       className={cn(
-        "border-border inline-flex items-center gap-1 border-2 px-2 py-0.5 font-mono text-[10px] font-bold uppercase",
+        "border-border inline-flex items-center gap-1 border px-2 py-0.5 font-mono text-[10px] font-bold uppercase",
         meta.className,
         className,
       )}

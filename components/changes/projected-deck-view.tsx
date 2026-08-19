@@ -133,8 +133,8 @@ export function ProjectedDeckView({ deckId }: ProjectedDeckViewProps) {
                         variant="outline"
                         className={
                           row.kind === "incoming"
-                            ? "bg-status-add text-status-add-foreground border-2"
-                            : "border-2"
+                            ? "bg-status-add text-status-add-foreground border"
+                            : "border"
                         }
                         data-testid={`projected-badge-${row.kind}`}
                       >

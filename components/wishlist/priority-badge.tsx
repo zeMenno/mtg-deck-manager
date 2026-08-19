@@ -6,9 +6,9 @@ import { PRIORITY_LABELS } from "@/types/wishlist";
 import type { WishlistPriority } from "@/types";
 
 const PRIORITY_STYLES: Record<WishlistPriority, string> = {
-  essential: "bg-red-500 text-white border-red-800",
-  high: "bg-orange-500 text-white border-orange-700",
-  medium: "bg-yellow-400 text-black border-yellow-600",
+  essential: "bg-destructive text-destructive-foreground border-destructive",
+  high: "bg-status-consider text-status-consider-foreground border-border",
+  medium: "bg-warning text-warning-foreground border-border",
   low: "bg-muted text-muted-foreground border-border",
 };
 

@@ -115,7 +115,7 @@ export function ConsiderList({ deckId, onOpenActions }: ConsiderListProps) {
             {considerCards.map((item) => (
               <li
                 key={item.id}
-                className="border-border flex flex-col gap-2 border-2 p-2"
+                className="border-border flex flex-col gap-2 border p-2"
                 data-testid={`consider-row-${item.id}`}
               >
                 <label className="flex items-start gap-2">

@@ -60,9 +60,9 @@ export function SidebarNav() {
     <aside
       aria-label="Primary sidebar"
       data-testid="sidebar-nav"
-      className="border-border bg-sidebar text-sidebar-foreground fixed inset-y-0 left-0 z-40 hidden w-60 flex-col border-r-4 md:flex"
+      className="border-border bg-sidebar text-sidebar-foreground fixed inset-y-0 left-0 z-40 hidden w-60 flex-col border-r shadow-sm md:flex"
     >
-      <div className="pt-safe border-border border-b-4 px-4 py-4">
+      <div className="pt-safe border-border border-b px-4 py-4">
         <Link
           href="/"
           className="font-heading text-base font-black tracking-tight uppercase hover:underline"
@@ -88,10 +88,10 @@ export function SidebarNav() {
                   aria-current={active ? "page" : undefined}
                   data-testid={`sidebar-nav-${item.label.toLowerCase()}`}
                   className={cn(
-                    "flex min-h-11 items-center gap-3 border-2 px-3 text-sm font-bold uppercase transition-colors",
+                    "flex min-h-11 items-center gap-3 border px-3 text-sm font-bold uppercase transition-colors",
                     active
                       ? "border-border bg-primary text-primary-foreground"
-                      : "border-transparent hover:border-border hover:bg-muted",
+                      : "hover:border-border hover:bg-muted border-transparent",
                   )}
                 >
                   <Icon aria-hidden="true" className="size-4 shrink-0" />
@@ -123,10 +123,10 @@ export function SidebarNav() {
                       aria-current={active ? "page" : undefined}
                       data-testid={`sidebar-deck-${tab.label.toLowerCase()}`}
                       className={cn(
-                        "flex min-h-10 items-center border-2 px-3 text-xs font-bold uppercase transition-colors",
+                        "flex min-h-10 items-center border px-3 text-xs font-bold uppercase transition-colors",
                         active
                           ? "border-border bg-accent text-accent-foreground"
-                          : "border-transparent hover:border-border hover:bg-muted",
+                          : "hover:border-border hover:bg-muted border-transparent",
                       )}
                     >
                       {tab.label}

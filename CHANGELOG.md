@@ -5,6 +5,20 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] — 2026-08-19
+
+### Changed
+
+- Replaced the launch-era Neo Brutalism system with the exact tweakcn Solar Dusk light/dark tokens, typography, radius, and elevation scale.
+- Made dark mode the deterministic first-run default and added persistent explicit Dark / Light controls in Settings.
+- Migrated shared primitives and feature surfaces to token-driven borders, shadows, and semantic status colors.
+- Aligned PWA splash/browser colors and generated icons with Solar Dusk's dark palette.
+
+### Notes
+
+- ADR-023 supersedes ADR-010; historical Phase 0–17 documents remain unchanged.
+- Theme/provider/primitives/PWA assets are one rollback boundary and should not be reverted partially.
+
 ## [1.1.0] — 2026-08-19
 
 ### Added
@@ -48,5 +62,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Commander** (primary MVP format). Other formats may be stored but are not fully validated.
 
+[1.1.1]: https://github.com/zeMenno/mtg-deck-manager/releases/tag/v1.1.1
 [1.1.0]: https://github.com/zeMenno/mtg-deck-manager/releases/tag/v1.1.0
 [1.0.0]: https://github.com/zeMenno/mtg-deck-manager/releases/tag/v1.0.0

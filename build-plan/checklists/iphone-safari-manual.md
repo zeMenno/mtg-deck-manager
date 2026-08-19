@@ -14,6 +14,7 @@ Device: iPhone model ______ iOS version ______ Production URL: ______
 | ----- | --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 2     | Installation & Standalone, Offline (shell only), Service Worker | **Not run — blocked on hosting.** Ready to execute against first HTTPS/Vercel URL. |
 | 16    | Full checklist below (persistence #1, offline, import/export, SW update, safe-area) **on production URL** | **Not signed off.** Production: `https://mtg-deck-manager-two.vercel.app`. In-repo Phase 16 docs ready; physical Home Screen persistence + §70 still required. |
+| 18    | Dark/light appearance, cold start, splash, offline relaunch | **Not signed off.** Automated theme coverage is in-repo; physical-device visual and cold-start checks remain required. |
 
 Do not tick boxes below without a device. Rows above record what is ready to test, not what passed.
 
@@ -68,6 +69,16 @@ Do not tick boxes below without a device. Rows above record what is ready to tes
 - [ ] Bottom sheet actions reachable one-handed
 - [ ] Search keyboard does not break layout
 - [ ] Portrait mode primary experience acceptable
+
+## Appearance (Phase 18)
+
+- [ ] Fresh install opens in dark mode with matching splash/status-bar chrome
+- [ ] No white flash on cold start, navigation, or offline relaunch
+- [ ] Select Light in Settings → Appearance; force-close and reopen; Light persists
+- [ ] Return to Dark; force-close and reopen; Dark persists
+- [ ] Every route, sheet, tab, filter chip, legality badge, chart, and mana fallback is readable in both themes
+- [ ] Focus indicators and status labels remain visible in both themes
+- [ ] Airplane-mode launch is fully styled with no theme network request
 
 ## External Links
 

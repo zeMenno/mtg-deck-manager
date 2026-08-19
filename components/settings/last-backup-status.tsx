@@ -54,8 +54,8 @@ export function LastBackupStatus({ refreshKey = 0 }: LastBackupStatusProps) {
     <div
       className={
         warning
-          ? "border-border bg-warning/30 text-foreground border-2 p-3"
-          : "border-border bg-muted border-2 p-3"
+          ? "border-border bg-warning/30 text-foreground border p-3"
+          : "border-border bg-muted border p-3"
       }
       data-testid="last-backup-status"
     >

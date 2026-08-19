@@ -51,7 +51,7 @@ export function ImportPreviewDialog({
 
           {existingDeckCount > 0 ? (
             <p
-              className="border-border bg-destructive/10 text-destructive border-2 p-3 text-sm font-bold"
+              className="border-border bg-destructive/10 text-destructive border p-3 text-sm font-bold"
               data-testid="import-replace-warning"
             >
               This replaces {existingDeckCount} existing deck
@@ -60,7 +60,7 @@ export function ImportPreviewDialog({
           ) : null}
 
           <div
-            className="border-border max-h-40 overflow-y-auto border-2 p-2"
+            className="border-border max-h-40 overflow-y-auto border p-2"
             data-testid="import-deck-list"
           >
             {deckNames.length === 0 ? (

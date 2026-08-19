@@ -13,7 +13,7 @@ export function IosStorageWarning() {
 
   return (
     <aside
-      className="border-border bg-warning text-warning-foreground shadow-brutal flex flex-col gap-2 border-4 p-4"
+      className="border-border bg-warning text-warning-foreground flex flex-col gap-2 rounded-lg border p-4 shadow-md"
       data-testid="ios-storage-warning"
       role="note"
     >

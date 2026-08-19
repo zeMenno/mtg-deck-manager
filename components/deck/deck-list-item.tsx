@@ -45,7 +45,7 @@ export function DeckListItem({
   return (
     <li
       data-testid={`deck-item-${deck.id}`}
-      className="border-border bg-card shadow-brutal-sm flex items-stretch border-2"
+      className="border-border bg-card flex items-stretch rounded-md border shadow-sm"
     >
       <Link
         href={`/decks/${deck.id}`}
@@ -83,7 +83,7 @@ export function DeckListItem({
           size="icon"
           aria-label={deck.favorite ? "Unfavorite" : "Favorite"}
           data-testid={`deck-favorite-${deck.id}`}
-          className={cn("rounded-none", deck.favorite && "text-primary")}
+          className={cn("rounded-md", deck.favorite && "text-primary")}
           onClick={() =>
             void toggleFavorite.mutateAsync({
               id: deck.id,
@@ -99,7 +99,7 @@ export function DeckListItem({
           size="icon"
           aria-label="Deck actions"
           data-testid={`deck-actions-${deck.id}`}
-          className="rounded-none"
+          className="rounded-md"
           onClick={() => onOpenActions(deck)}
         >
           <MoreVertical className="size-4" />

@@ -29,8 +29,8 @@ export function UndoSnackbar({
       role="status"
       data-testid="undo-snackbar"
       className={cn(
-        "border-border bg-foreground text-background shadow-brutal",
-        "fixed inset-x-4 z-[60] mx-auto flex max-w-3xl items-center gap-3 border-4 px-4 py-3",
+        "border-border bg-foreground text-background rounded-lg shadow-md",
+        "fixed inset-x-4 z-[60] mx-auto flex max-w-3xl items-center gap-3 border px-4 py-3",
         "bottom-above-nav",
       )}
       onMouseEnter={onPause}

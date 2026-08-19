@@ -47,7 +47,7 @@ export default function InstallPage() {
         </p>
       </div>
 
-      <aside className="border-border bg-warning text-warning-foreground shadow-brutal flex items-start gap-3 border-4 p-4">
+      <aside className="border-border bg-warning text-warning-foreground flex items-start gap-3 rounded-lg border p-4 shadow-md">
         <AlertTriangle aria-hidden="true" className="mt-0.5 size-5 shrink-0" />
         <div className="flex flex-col gap-1">
           <h2 className="text-sm font-black uppercase">Install first</h2>
@@ -67,11 +67,11 @@ export default function InstallPage() {
           return (
             <li
               key={step.title}
-              className="border-border bg-card shadow-brutal-sm flex gap-3 border-2 p-4"
+              className="border-border bg-card flex gap-3 rounded-md border p-4 shadow-sm"
             >
               <span
                 aria-hidden="true"
-                className="border-border bg-primary text-primary-foreground flex size-8 shrink-0 items-center justify-center border-2 font-mono text-sm font-bold"
+                className="border-border bg-primary text-primary-foreground flex size-8 shrink-0 items-center justify-center border font-mono text-sm font-bold"
               >
                 {index + 1}
               </span>

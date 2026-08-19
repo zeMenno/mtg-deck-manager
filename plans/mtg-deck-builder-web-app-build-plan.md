@@ -5,7 +5,7 @@
 **Hosting:** Vercel
 **Primary device:** iPhone
 **Primary persistence:** Local-first storage on the device
-**UI theme:** tweakcn Neo Brutalism
+**UI theme:** tweakcn Solar Dusk (dark-default; ADR-023)
 **Recommended stack:** Next.js + React + TypeScript + Tailwind CSS + shadcn/ui + IndexedDB/Dexie
 
 ---
@@ -232,34 +232,35 @@ Vercel provides first-class Next.js support and zero-configuration deployment fo
 
 ## Required theme
 
-Use the exact tweakcn Neo Brutalism theme supplied by:
+Use the exact tweakcn Solar Dusk theme supplied by:
 
-https://tweakcn.com/r/themes/neo-brutalism.json
+https://tweakcn.com/r/themes/solar-dusk.json
 
 The theme defines, among other things:
 
-- DM Sans as the sans font.
-- Space Mono as the monospace font.
-- Zero-radius surfaces.
-- Hard black borders.
-- Hard offset shadows.
-- Strong yellow, red, blue, pink, and green accents.
-- Very high visual contrast.
+- Oxanium as the sans and heading font.
+- Fira Code as the monospace font.
+- Merriweather as the serif font.
+- A `0.3rem` radius and token-driven borders.
+- Soft, blurred elevation shadows.
+- Complete light and dark palettes.
+- Tracking and spacing tokens.
 
-Reference theme values are available directly in the supplied JSON. urlNeo Brutalism theme JSONhttps://tweakcn.com/r/themes/neo-brutalism.json
+Reference theme values are copied from the supplied JSON at build time. The app
+does not fetch it at runtime.
 
 ### Theme principles
 
-Do not dilute the theme by building a generic rounded SaaS interface on top of it.
+Dark is the deterministic server-rendered and first-run default. Offer explicit
+Dark and Light choices, not a system-following mode.
 
 Use:
 
-- Square/zero-radius controls.
-- Thick borders.
-- Offset black shadows.
-- Large bold typography.
+- Shared token-driven primitives.
+- Solar Dusk radius, borders, and elevation.
+- Oxanium for navigation and controls; Fira Code for technical metadata.
 - High-contrast call-to-actions.
-- Color-coded statuses.
+- Labelled semantic statuses with per-mode contrast.
 - Strong card imagery.
 - Dense information where appropriate.
 
@@ -1323,7 +1324,7 @@ Image mode:
 └──────────┴───────────────────────┘
 ```
 
-Use the Neo Brutalism hard border/shadow treatment.
+Use Solar Dusk token borders, radius, and elevation.
 
 ---
 
@@ -1559,7 +1560,7 @@ Requirements:
 - No status communicated solely by color.
 - Touch targets suitable for mobile.
 
-Neo Brutalism's high contrast should help, but color-coded `ADD`, `CUT`, and `CONSIDER` statuses must also include text/icons.
+Solar Dusk status pairs must meet contrast requirements, and color-coded `ADD`, `CUT`, and `CONSIDER` statuses must also include text/icons.
 
 ---
 
@@ -1757,7 +1758,7 @@ Lock the product model before implementation.
 7. Define pricing provider strategy.
 8. Define import/export formats.
 9. Define card source policy.
-10. Confirm Neo Brutalism theme.
+10. Confirm Solar Dusk in dark and light modes.
 
 ### Deliverable
 
@@ -1783,7 +1784,7 @@ Create the application skeleton.
 2. Initialize Next.js with TypeScript.
 3. Install Tailwind CSS.
 4. Install shadcn/ui.
-5. Apply tweakcn Neo Brutalism theme.
+5. Apply tweakcn Solar Dusk with deterministic dark default.
 6. Configure ESLint.
 7. Configure Prettier.
 8. Configure strict TypeScript.
@@ -2156,7 +2157,7 @@ Make the app feel intentionally designed rather than merely functional.
 7. Tune mobile bottom sheets.
 8. Tune iPhone safe areas.
 9. Tune desktop layout.
-10. Review all Neo Brutalism styles.
+10. Review all Solar Dusk surfaces in dark and light modes.
 
 ---
 
@@ -2242,7 +2243,7 @@ The first production-capable release should contain:
 - [x] Deck duplication.
 - [x] Deck versions.
 - [x] Basic validation.
-- [x] Neo Brutalism theme.
+- [x] Solar Dusk theme (superseded launch theme in Phase 18).
 - [x] Vercel deployment.
 
 ### Explicitly not required for MVP
@@ -2272,15 +2273,14 @@ The first production-capable release should contain:
 - Advanced search.
 - Favorite cards.
 
-## Planned Visual-System Migration
+## Completed Visual-System Migration
 
-After the Phase 17 post-launch feature work is stable, execute
+Phase 18,
 [`build-plan/phase-18-solar-dusk-theme.md`](../build-plan/phase-18-solar-dusk-theme.md)
-to replace Neo Brutalism with tweakcn Solar Dusk and make dark mode the
-deterministic default. Phase 18 includes the ADR supersession, token/font and
+superseded Neo Brutalism with tweakcn Solar Dusk and made dark mode the
+deterministic default in v1.1.1. It included ADR-023, token/font and
 shared-primitive migration, PWA colour/icon updates, and a full audit of Phase
-17's new surfaces. This execution phase does not replace or renumber the
-feature roadmap below; assign its release number when implementation starts.
+17 surfaces. It does not replace or renumber the feature roadmap below.
 
 ## Version 1.2
 
@@ -2527,7 +2527,7 @@ The most efficient implementation sequence is:
 
 ```text
 1. Next.js + TypeScript
-2. Neo Brutalism theme
+2. Solar Dusk dark-default theme
 3. Vercel deployment
 4. PWA manifest + iPhone shell
 5. IndexedDB/Dexie
@@ -2588,7 +2588,7 @@ Vercel hosts the Next.js application and any small server-side integration endpo
 1. **Local-first is the default.** Do not accidentally introduce a backend dependency for deck data.
 2. **IndexedDB/Dexie is the persistence layer.** Do not use localStorage as the primary deck database.
 3. **The app must be designed for iPhone first.** Desktop is an enhancement.
-4. **Use the Neo Brutalism theme directly.** Do not replace it with a generic rounded UI.
+4. **Use Solar Dusk directly.** Dark is deterministic; shared primitives own token-driven radius, borders, and elevation (ADR-023).
 5. **Use one deck-card model with statuses.** Do not create separate data structures for adds and cuts.
 6. **Roles and synergies are multi-valued.** A card can have many tags.
 7. **Pricing is provider-agnostic.** TCGplayer links are important, but the application should not break if a TCGplayer API integration is unavailable.
@@ -2600,7 +2600,8 @@ Vercel hosts the Next.js application and any small server-side integration endpo
 
 # 74. References
 
-- [Neo Brutalism theme JSON](https://tweakcn.com/r/themes/neo-brutalism.json)
+- [Solar Dusk theme JSON](https://tweakcn.com/r/themes/solar-dusk.json)
+- [Neo Brutalism theme JSON](https://tweakcn.com/r/themes/neo-brutalism.json) — historical launch reference
 - [Next.js PWA Guide](https://nextjs.org/docs/app/guides/progressive-web-apps)
 - [Vercel — Next.js on Vercel](https://vercel.com/docs/frameworks/full-stack/nextjs)
 - [Vercel — Deployment Overview](https://vercel.com/docs/deployments/overview)

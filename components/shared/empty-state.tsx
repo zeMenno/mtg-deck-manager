@@ -20,7 +20,7 @@ export function EmptyState({
     <Card>
       <CardContent className="flex flex-col items-center gap-3 py-8 text-center">
         {Icon ? (
-          <span className="border-border bg-muted flex size-14 items-center justify-center border-2">
+          <span className="border-border bg-muted flex size-14 items-center justify-center border">
             <Icon aria-hidden="true" className="size-7" />
           </span>
         ) : null}

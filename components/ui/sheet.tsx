@@ -71,7 +71,7 @@ function SheetContent({
   side?: "top" | "right" | "bottom" | "left";
   /** Approximate height snap for bottom sheets (Phase 14). */
   snap?: SheetSnap;
-  /** Show Neo Brutalism drag handle on bottom sheets. */
+  /** Show the drag handle on bottom sheets. */
   showHandle?: boolean;
 }) {
   return (
@@ -81,25 +81,25 @@ function SheetContent({
         data-slot="sheet-content"
         data-snap={side === "bottom" ? snap : undefined}
         className={cn(
-          "bg-background border-border shadow-brutal data-[state=open]:animate-in data-[state=closed]:animate-out fixed z-50 flex flex-col gap-4 border-4 transition ease-in-out data-[state=closed]:duration-200 data-[state=open]:duration-300 motion-reduce:animate-none motion-reduce:transition-none",
+          "bg-background border-border data-[state=open]:animate-in data-[state=closed]:animate-out fixed z-50 flex flex-col gap-4 border shadow-lg transition ease-in-out data-[state=closed]:duration-200 data-[state=open]:duration-300 motion-reduce:animate-none motion-reduce:transition-none",
           side === "bottom" &&
             cn(
-              "data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom inset-x-0 bottom-0 rounded-none pb-[env(safe-area-inset-bottom,0px)]",
+              "data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom inset-x-0 bottom-0 rounded-t-xl pb-[env(safe-area-inset-bottom,0px)]",
               SNAP_HEIGHT[snap],
             ),
           side === "top" &&
-            "data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top inset-x-0 top-0 max-h-[90dvh] rounded-none",
+            "data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top inset-x-0 top-0 max-h-[90dvh] rounded-b-xl",
           side === "left" &&
-            "data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left inset-y-0 left-0 h-full w-3/4 max-w-sm rounded-none",
+            "data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left inset-y-0 left-0 h-full w-3/4 max-w-sm rounded-r-xl",
           side === "right" &&
-            "data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right inset-y-0 right-0 h-full w-3/4 max-w-sm rounded-none",
+            "data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right inset-y-0 right-0 h-full w-3/4 max-w-sm rounded-l-xl",
           className,
         )}
         {...props}
       >
         {side === "bottom" && showHandle ? <SheetDragHandle /> : null}
         {children}
-        <DialogPrimitive.Close className="border-border bg-background ring-offset-background focus:ring-ring absolute top-3 right-3 inline-flex size-11 items-center justify-center border-2 opacity-90 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none">
+        <DialogPrimitive.Close className="border-border bg-background ring-offset-background focus:ring-ring hover:bg-accent hover:text-accent-foreground absolute top-3 right-3 inline-flex size-11 items-center justify-center rounded-md border opacity-90 shadow-xs transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none">
           <XIcon className="size-4" />
           <span className="sr-only">Close</span>
         </DialogPrimitive.Close>
@@ -138,7 +138,7 @@ function SheetTitle({
   return (
     <DialogPrimitive.Title
       data-slot="sheet-title"
-      className={cn("font-heading text-lg font-black uppercase", className)}
+      className={cn("font-heading text-lg font-bold", className)}
       {...props}
     />
   );

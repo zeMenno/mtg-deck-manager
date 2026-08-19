@@ -57,7 +57,7 @@ export function DeckStatsSummary({
       </div>
 
       <div
-        className="border-border bg-muted/30 flex flex-col gap-2 border-2 p-3"
+        className="border-border bg-muted/30 flex flex-col gap-2 border p-3"
         data-testid="deck-valuation-block"
       >
         {isLoading || !valuation ? (

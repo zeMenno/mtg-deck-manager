@@ -35,7 +35,7 @@ export function BottomNav() {
     <nav
       aria-label="Primary"
       data-testid="bottom-nav"
-      className="pb-safe border-border bg-background fixed inset-x-0 bottom-0 z-50 border-t-4 md:hidden"
+      className="pb-safe border-border bg-background fixed inset-x-0 bottom-0 z-50 border-t shadow-md md:hidden"
     >
       <ul className="mx-auto flex h-(--bottom-nav-height) max-w-3xl items-stretch">
         {navItems.map((item) => {

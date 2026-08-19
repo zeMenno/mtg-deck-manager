@@ -161,7 +161,7 @@ export function EditWishlistItemSheet({
                     onChange={(e) =>
                       setQuantity(Math.max(1, Number(e.target.value) || 1))
                     }
-                    className="border-border bg-background h-11 border-2 px-3"
+                    className="border-border bg-background h-11 border px-3"
                   />
                 </label>
 
@@ -180,7 +180,7 @@ export function EditWishlistItemSheet({
                     data-testid="edit-wishlist-target-deck"
                     value={targetDeckId}
                     onChange={(e) => setTargetDeckId(e.target.value)}
-                    className="border-border bg-background h-11 border-2 px-3 font-bold"
+                    className="border-border bg-background h-11 border px-3 font-bold"
                   >
                     <option value="">No deck</option>
                     {decks.map((deck) => (
@@ -199,7 +199,7 @@ export function EditWishlistItemSheet({
                     data-testid="edit-wishlist-target-role"
                     value={targetRole}
                     onChange={(e) => setTargetRole(e.target.value)}
-                    className="border-border bg-background h-11 border-2 px-3 font-bold"
+                    className="border-border bg-background h-11 border px-3 font-bold"
                   >
                     <option value="">No role</option>
                     {roleTags.map((tag) => (
@@ -219,7 +219,7 @@ export function EditWishlistItemSheet({
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
                     rows={3}
-                    className="border-border bg-background border-2 p-3"
+                    className="border-border bg-background border p-3"
                   />
                 </label>
               </div>

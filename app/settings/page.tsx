@@ -59,7 +59,7 @@ export default function SettingsPage() {
       <Link
         href="/settings/install"
         data-testid="settings-install-link"
-        className="border-border bg-card shadow-brutal-sm hover:bg-muted flex min-h-11 items-center gap-3 border-2 px-4 py-3 transition-colors"
+        className="border-border bg-card hover:bg-muted flex min-h-11 items-center gap-3 rounded-md border px-4 py-3 shadow-sm transition-colors"
       >
         <Smartphone aria-hidden="true" className="size-5 shrink-0" />
         <span className="flex flex-col">
@@ -76,7 +76,7 @@ export default function SettingsPage() {
       <Link
         href="/settings/data"
         data-testid="settings-data-link"
-        className="border-border bg-card shadow-brutal-sm hover:bg-muted flex min-h-11 items-center gap-3 border-2 px-4 py-3 transition-colors"
+        className="border-border bg-card hover:bg-muted flex min-h-11 items-center gap-3 rounded-md border px-4 py-3 shadow-sm transition-colors"
       >
         <Database aria-hidden="true" className="size-5 shrink-0" />
         <span className="flex flex-col">
@@ -91,7 +91,7 @@ export default function SettingsPage() {
       <RecommendationSettings />
 
       <section
-        className="border-border bg-card shadow-brutal-sm flex flex-col gap-3 border-2 p-4"
+        className="border-border bg-card flex flex-col gap-3 rounded-md border p-4 shadow-sm"
         data-testid="settings-pricing"
       >
         <h2 className="font-mono text-xs uppercase">Pricing currency</h2>
@@ -129,7 +129,7 @@ export default function SettingsPage() {
               return (
                 <li
                   key={section.route}
-                  className="border-border bg-muted text-muted-foreground flex min-h-11 items-center gap-3 border-2 px-3 text-sm"
+                  className="border-border bg-muted text-muted-foreground flex min-h-11 items-center gap-3 border px-3 text-sm"
                 >
                   <Icon aria-hidden="true" className="size-4" />
                   <span className="font-bold uppercase">{section.label}</span>

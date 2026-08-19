@@ -50,7 +50,7 @@ export function DeckStatsPage({ deckId }: DeckStatsPageProps) {
 
   return (
     <div className="flex flex-col gap-6" data-testid="deck-stats-page">
-      <header className="border-border sticky top-0 z-10 -mx-1 flex items-center gap-2 border-b-4 bg-[var(--background)] px-1 py-3">
+      <header className="border-border bg-background sticky top-0 z-10 -mx-1 flex items-center gap-2 border-b px-1 py-3 shadow-sm">
         <Button asChild variant="ghost" size="icon" aria-label="Back to deck">
           <Link href={`/decks/${deckId}`}>
             <ArrowLeft className="size-5" />
@@ -65,7 +65,7 @@ export function DeckStatsPage({ deckId }: DeckStatsPageProps) {
       </header>
 
       <div
-        className="border-border flex gap-1 border-2 p-1"
+        className="border-border flex gap-1 border p-1"
         role="group"
         aria-label="Stats mode"
         data-testid="stats-mode-toggle"
@@ -95,7 +95,7 @@ export function DeckStatsPage({ deckId }: DeckStatsPageProps) {
 
       {isEmpty || !stats ? (
         <div
-          className="border-border flex flex-col gap-3 border-2 p-6"
+          className="border-border flex flex-col gap-3 border p-6"
           data-testid="stats-empty"
         >
           <p className="font-bold">Add cards to see statistics</p>
@@ -109,19 +109,19 @@ export function DeckStatsPage({ deckId }: DeckStatsPageProps) {
             <h2 className="font-mono text-xs font-bold uppercase">Deck size</h2>
             <DeckSizeBadge counts={stats.counts} />
             <dl className="grid grid-cols-2 gap-2 font-mono text-xs uppercase sm:grid-cols-4">
-              <div className="border-border border-2 p-2">
+              <div className="border-border border p-2">
                 <dt className="text-muted-foreground">Commander</dt>
                 <dd className="text-lg font-black">{stats.counts.commander}</dd>
               </div>
-              <div className="border-border border-2 p-2">
+              <div className="border-border border p-2">
                 <dt className="text-muted-foreground">Mainboard</dt>
                 <dd className="text-lg font-black">{stats.counts.mainboard}</dd>
               </div>
-              <div className="border-border border-2 p-2">
+              <div className="border-border border p-2">
                 <dt className="text-muted-foreground">Sideboard</dt>
                 <dd className="text-lg font-black">{stats.counts.sideboard}</dd>
               </div>
-              <div className="border-border border-2 p-2">
+              <div className="border-border border p-2">
                 <dt className="text-muted-foreground">Maybeboard</dt>
                 <dd className="text-lg font-black">
                   {stats.counts.maybeboard}

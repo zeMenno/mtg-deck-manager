@@ -36,9 +36,9 @@ export function DeckDashboard({
   if (isLoading) {
     return (
       <div className="flex flex-col gap-4" data-testid="deck-dashboard-loading">
-        <div className="bg-muted border-border h-12 animate-pulse border-2" />
-        <div className="bg-muted border-border h-24 animate-pulse border-2" />
-        <div className="bg-muted border-border h-32 animate-pulse border-2" />
+        <div className="bg-muted border-border h-12 animate-pulse border" />
+        <div className="bg-muted border-border h-24 animate-pulse border" />
+        <div className="bg-muted border-border h-32 animate-pulse border" />
       </div>
     );
   }
@@ -46,7 +46,7 @@ export function DeckDashboard({
   if (isEmpty || !stats) {
     return (
       <div
-        className="border-border flex flex-col gap-4 border-2 p-6"
+        className="border-border flex flex-col gap-4 border p-6"
         data-testid="deck-dashboard-empty"
       >
         <p className="font-bold">Add cards to see statistics</p>

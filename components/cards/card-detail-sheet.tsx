@@ -246,7 +246,7 @@ export function CardDetailSheet({
 
                   <TabsContent value="price">
                     <div
-                      className="border-border flex flex-col gap-2 border-2 p-3"
+                      className="border-border flex flex-col gap-2 border p-3"
                       data-testid="card-detail-price"
                     >
                       <h3 className="font-mono text-xs uppercase">Price</h3>
@@ -309,7 +309,7 @@ export function CardDetailSheet({
                   <h3 className="font-mono text-xs uppercase">Add to deck</h3>
                   {legalityCallout ? (
                     <p
-                      className="border-border bg-warning/20 border-2 px-3 py-2 text-sm font-bold"
+                      className="border-border bg-warning/20 border px-3 py-2 text-sm font-bold"
                       data-testid="legality-add-callout"
                       role="status"
                     >
@@ -324,7 +324,7 @@ export function CardDetailSheet({
                       data-testid="add-to-deck-select"
                       value={targetDeckId}
                       onChange={(e) => setTargetDeckId(e.target.value)}
-                      className="border-border bg-background h-11 border-2 px-3 font-bold"
+                      className="border-border bg-background h-11 border px-3 font-bold"
                     >
                       <option value="">Select deck…</option>
                       {decks.map((deck) => (
@@ -349,7 +349,7 @@ export function CardDetailSheet({
                         onChange={(e) =>
                           setQuantity(Math.max(1, Number(e.target.value) || 1))
                         }
-                        className="border-border bg-background h-11 border-2 px-2"
+                        className="border-border bg-background h-11 border px-2"
                       />
                     </label>
                     <label className="flex flex-col gap-1">
@@ -362,7 +362,7 @@ export function CardDetailSheet({
                         onChange={(e) =>
                           setZone(e.target.value as DeckCardZone)
                         }
-                        className="border-border bg-background h-11 border-2 px-2 font-bold uppercase"
+                        className="border-border bg-background h-11 border px-2 font-bold uppercase"
                       >
                         <option value="mainboard">Main</option>
                         <option value="sideboard">Side</option>
@@ -379,7 +379,7 @@ export function CardDetailSheet({
                         onChange={(e) =>
                           setStatus(e.target.value as DeckCardStatus)
                         }
-                        className="border-border bg-background h-11 border-2 px-2 font-bold uppercase"
+                        className="border-border bg-background h-11 border px-2 font-bold uppercase"
                       >
                         <option value="current">Current</option>
                         <option value="add">Add</option>

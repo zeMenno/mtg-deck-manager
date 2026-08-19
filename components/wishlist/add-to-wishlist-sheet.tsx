@@ -145,7 +145,7 @@ export function AddToWishlistSheet({
                   onChange={(e) =>
                     setQuantity(Math.max(1, Number(e.target.value) || 1))
                   }
-                  className="border-border bg-background h-11 border-2 px-3"
+                  className="border-border bg-background h-11 border px-3"
                 />
               </label>
 
@@ -164,7 +164,7 @@ export function AddToWishlistSheet({
                   data-testid="wishlist-target-deck"
                   value={targetDeckId}
                   onChange={(e) => setTargetDeckId(e.target.value)}
-                  className="border-border bg-background h-11 border-2 px-3 font-bold"
+                  className="border-border bg-background h-11 border px-3 font-bold"
                 >
                   <option value="">No deck</option>
                   {decks.map((deck) => (
@@ -183,7 +183,7 @@ export function AddToWishlistSheet({
                   data-testid="wishlist-target-role"
                   value={targetRole}
                   onChange={(e) => setTargetRole(e.target.value)}
-                  className="border-border bg-background h-11 border-2 px-3 font-bold"
+                  className="border-border bg-background h-11 border px-3 font-bold"
                 >
                   <option value="">No role</option>
                   {roleTags.map((tag) => (
@@ -203,13 +203,13 @@ export function AddToWishlistSheet({
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   rows={3}
-                  className="border-border bg-background border-2 p-3"
+                  className="border-border bg-background border p-3"
                 />
               </label>
 
               {duplicateChoice !== null ? (
                 <div
-                  className="border-border bg-muted/40 flex flex-col gap-2 border-2 p-3"
+                  className="border-border bg-muted/40 flex flex-col gap-2 border p-3"
                   data-testid="wishlist-duplicate-prompt"
                 >
                   <p className="text-sm font-bold">

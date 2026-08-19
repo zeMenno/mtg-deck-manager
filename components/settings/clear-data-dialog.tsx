@@ -122,7 +122,7 @@ export function ClearDataDialog({
             <label className="flex items-start gap-3 text-sm">
               <input
                 type="checkbox"
-                className="border-border mt-1 size-5 border-2"
+                className="border-border mt-1 size-5 border"
                 checked={understood}
                 onChange={(e) => setUnderstood(e.target.checked)}
                 data-testid="clear-understand-checkbox"

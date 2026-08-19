@@ -22,7 +22,7 @@ export function WishlistSummaryBar({
   if (!summary) {
     return (
       <div
-        className="border-border bg-muted/40 h-16 animate-pulse border-2"
+        className="border-border bg-muted/40 h-16 animate-pulse border"
         data-testid="wishlist-summary-loading"
         aria-busy="true"
       />
@@ -45,7 +45,7 @@ export function WishlistSummaryBar({
 
   return (
     <div
-      className="border-border bg-card shadow-brutal-sm flex flex-col gap-2 border-2 p-3"
+      className="border-border bg-card flex flex-col gap-2 rounded-md border p-3 shadow-sm"
       data-testid="wishlist-summary-bar"
     >
       <p className="font-mono text-xs uppercase">

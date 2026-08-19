@@ -62,7 +62,7 @@ export function VersionComparePicker({ deckId }: VersionComparePickerProps) {
   if (versions.length === 0) {
     return (
       <p
-        className="border-border border-2 p-4 text-sm font-bold"
+        className="border-border border p-4 text-sm font-bold"
         data-testid="compare-empty"
       >
         Save at least one version to compare.
@@ -79,7 +79,7 @@ export function VersionComparePicker({ deckId }: VersionComparePickerProps) {
           </span>
           <select
             data-testid="compare-a-select"
-            className="border-input shadow-brutal-sm h-11 rounded-none border-2 bg-transparent px-3 text-sm"
+            className="border-input h-11 rounded-md border bg-transparent px-3 text-sm shadow-sm"
             value={resolvedA ?? ""}
             onChange={(e) => {
               const nextA = e.target.value;
@@ -101,7 +101,7 @@ export function VersionComparePicker({ deckId }: VersionComparePickerProps) {
           </span>
           <select
             data-testid="compare-b-select"
-            className="border-input shadow-brutal-sm h-11 rounded-none border-2 bg-transparent px-3 text-sm"
+            className="border-input h-11 rounded-md border bg-transparent px-3 text-sm shadow-sm"
             value={resolvedB ?? ""}
             onChange={(e) => {
               const nextB = e.target.value;

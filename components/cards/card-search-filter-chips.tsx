@@ -136,7 +136,7 @@ export function CardSearchFilterChips({
         <button
           key={chip.key}
           type="button"
-          className="border-border bg-secondary inline-flex min-h-9 items-center gap-1 border-2 px-2 text-xs font-bold uppercase"
+          className="border-border bg-secondary inline-flex min-h-9 items-center gap-1 border px-2 text-xs font-bold uppercase"
           onClick={() => onChange(chip.remove())}
           data-testid={`filter-chip-${chip.key}`}
         >

@@ -39,7 +39,7 @@ export function OfflineIndicator({ className }: OfflineIndicatorProps) {
       role="status"
       data-testid="offline-indicator"
       className={cn(
-        "border-border bg-status-consider text-status-consider-foreground flex items-center justify-center gap-2 border-t-4 px-4 py-2 text-xs font-bold",
+        "border-border bg-status-consider text-status-consider-foreground flex items-center justify-center gap-2 border-t px-4 py-2 text-xs font-semibold",
         className,
       )}
     >

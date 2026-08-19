@@ -40,9 +40,9 @@ export function DeckDistributionChart({
                   {item.count}
                 </span>
               </div>
-              <div className="border-border h-3 border-2">
+              <div className="border-border h-3 border">
                 <div
-                  className="bg-secondary h-full border-r border-black"
+                  className="bg-secondary border-border h-full border-r"
                   style={{ width: `${pct}%` }}
                 />
               </div>

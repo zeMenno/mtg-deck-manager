@@ -64,7 +64,7 @@ export function DatabaseProvider({ children }: DatabaseProviderProps) {
 
   if (error) {
     return (
-      <div className="border-destructive bg-background text-destructive shadow-brutal mx-auto mt-8 max-w-lg border-4 p-6">
+      <div className="border-destructive bg-background text-destructive mx-auto mt-8 max-w-lg rounded-lg border p-6 shadow-md">
         <h1 className="font-heading text-xl font-black uppercase">
           Database error
         </h1>

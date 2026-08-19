@@ -12,7 +12,7 @@ export function DeckListSkeleton() {
       {Array.from({ length: 6 }).map((_, i) => (
         <li
           key={i}
-          className="border-border shadow-brutal-sm flex items-center gap-3 border-2 p-3"
+          className="border-border flex items-center gap-3 rounded-md border p-3 shadow-sm"
         >
           <Skeleton className="size-12 shrink-0" />
           <div className="flex min-w-0 flex-1 flex-col gap-2">

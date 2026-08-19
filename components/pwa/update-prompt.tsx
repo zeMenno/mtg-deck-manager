@@ -20,7 +20,7 @@ export function UpdatePrompt() {
     <div
       role="status"
       data-testid="update-prompt"
-      className="bottom-above-nav border-border bg-primary text-primary-foreground shadow-brutal fixed inset-x-2 z-50 flex items-center gap-3 border-4 p-3"
+      className="bottom-above-nav border-border bg-primary text-primary-foreground fixed inset-x-2 z-50 flex items-center gap-3 rounded-lg border p-3 shadow-md"
     >
       <RefreshCw aria-hidden="true" className="size-5 shrink-0" />
       <p className="text-sm font-bold uppercase">New version available</p>

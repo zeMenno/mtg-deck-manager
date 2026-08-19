@@ -57,7 +57,7 @@ export function TextDecklistImport({
 
   return (
     <div
-      className="border-border bg-card shadow-brutal-sm flex flex-col gap-3 border-2 p-4"
+      className="border-border bg-card flex flex-col gap-3 rounded-md border p-4 shadow-sm"
       data-testid="text-decklist-import"
     >
       <h2 className="font-mono text-xs uppercase">Paste decklist</h2>
@@ -73,7 +73,7 @@ export function TextDecklistImport({
         rows={8}
         disabled={pending}
         placeholder={`// My Deck\n1 Sol Ring\n1 Arcane Signet`}
-        className="border-border bg-background shadow-brutal-sm w-full border-2 p-3 font-mono text-sm"
+        className="border-border bg-background w-full rounded-md border p-3 font-mono text-sm shadow-sm"
       />
       {progress ? (
         <p className="font-mono text-xs uppercase">{progress}</p>

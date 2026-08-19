@@ -225,7 +225,7 @@ export function DeckCardActionsSheet({
                 data-testid="deck-card-notes"
                 value={notes}
                 rows={3}
-                className="border-border bg-background w-full border-2 p-3 text-sm"
+                className="border-border bg-background w-full border p-3 text-sm"
                 onChange={(e) => setNotes(e.target.value)}
                 onBlur={() => {
                   if (notes !== (item.notes ?? "")) {

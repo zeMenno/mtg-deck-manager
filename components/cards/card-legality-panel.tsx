@@ -73,8 +73,9 @@ export function CardLegalityPanel({
             <li
               key={format}
               className={cn(
-                "border-border flex items-center justify-between gap-2 border-2 px-3 py-2",
-                highlighted && "border-primary bg-primary/10 shadow-brutal-sm",
+                "border-border flex items-center justify-between gap-2 border px-3 py-2",
+                highlighted &&
+                  "border-primary bg-primary/10 rounded-md shadow-sm",
               )}
               data-testid={`legality-row-${format}`}
             >

@@ -14,7 +14,7 @@ export function CardSearchSkeleton() {
         {Array.from({ length: 5 }).map((_, i) => (
           <li
             key={i}
-            className="border-border flex items-center gap-3 border-2 p-3"
+            className="border-border flex items-center gap-3 border p-3"
           >
             <Skeleton className="size-12 shrink-0" />
             <div className="flex flex-1 flex-col gap-2">

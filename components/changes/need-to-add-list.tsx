@@ -94,7 +94,7 @@ export function NeedToAddList({ deckId, onOpenActions }: NeedToAddListProps) {
             data-testid="need-to-add-price-sort"
             value={priceSort}
             onChange={(e) => setPriceSort(e.target.value as PriceSort)}
-            className="border-border bg-background h-11 flex-1 border-2 px-3 font-bold uppercase"
+            className="border-border bg-background h-11 flex-1 border px-3 font-bold uppercase"
           >
             <option value="default">Sort: name</option>
             <option value="price-asc">Price ↑</option>
@@ -115,7 +115,7 @@ export function NeedToAddList({ deckId, onOpenActions }: NeedToAddListProps) {
             return (
               <li
                 key={item.id}
-                className="border-border flex flex-col gap-2 border-2 p-2"
+                className="border-border flex flex-col gap-2 border p-2"
                 data-testid={`need-to-add-row-${item.id}`}
               >
                 <DeckCardRow

@@ -129,7 +129,7 @@ export function MoveToDeckSheet({
               data-testid="move-to-deck-select"
               value={deckId}
               onChange={(e) => setDeckId(e.target.value)}
-              className="border-border bg-background h-11 border-2 px-3 font-bold"
+              className="border-border bg-background h-11 border px-3 font-bold"
             >
               <option value="">Select deck…</option>
               {decks.map((deck) => (
@@ -152,7 +152,7 @@ export function MoveToDeckSheet({
                 onChange={(e) =>
                   setQuantity(Math.max(1, Number(e.target.value) || 1))
                 }
-                className="border-border bg-background h-11 border-2 px-3"
+                className="border-border bg-background h-11 border px-3"
               />
             </label>
           ) : null}
@@ -181,7 +181,7 @@ export function MoveToDeckSheet({
 
           {forceConflict ? (
             <p
-              className="border-border border-2 bg-yellow-100 p-3 text-sm font-bold text-black"
+              className="border-border bg-warning text-warning-foreground rounded-md border p-3 text-sm font-semibold"
               data-testid="move-to-deck-conflict"
             >
               Card is already CURRENT in this deck. Confirming will add a

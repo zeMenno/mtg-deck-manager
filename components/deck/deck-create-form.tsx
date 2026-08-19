@@ -56,7 +56,7 @@ export function DeckCreateForm({
 
   return (
     <form
-      className="border-border bg-card shadow-brutal flex flex-col gap-4 border-4 p-4"
+      className="border-border bg-card flex flex-col gap-4 rounded-lg border p-4 shadow-md"
       onSubmit={(e) => void handleSubmit(e, showSkipCommander)}
       data-testid="deck-create-form"
     >
@@ -101,7 +101,7 @@ export function DeckCreateForm({
           onChange={(e) => setDescription(e.target.value)}
           disabled={createDeck.isPending}
           rows={3}
-          className="border-border bg-background shadow-brutal-sm w-full border-2 p-3 text-sm"
+          className="border-border bg-background w-full rounded-md border p-3 text-sm shadow-sm"
         />
       </div>
 

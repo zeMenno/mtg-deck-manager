@@ -60,10 +60,7 @@ export function DisplayDensityPicker({
             }
             data-testid={`density-${option}`}
             title={imageBlocked ? "Selecting Image turns images on" : label}
-            className={cn(
-              active && "shadow-brutal-sm",
-              !active && "shadow-none",
-            )}
+            className={cn(!active && "shadow-none")}
             onClick={() => onChange(option)}
           >
             <Icon className="size-4" aria-hidden="true" />

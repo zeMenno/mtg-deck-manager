@@ -12,7 +12,7 @@ export function DeckCardListSkeleton({ rows = 10 }: { rows?: number }) {
       {Array.from({ length: rows }).map((_, i) => (
         <li
           key={i}
-          className="border-border flex min-h-11 items-center gap-3 border-2 px-3 py-2"
+          className="border-border flex min-h-11 items-center gap-3 border px-3 py-2"
         >
           <Skeleton className="h-4 w-8 shrink-0" />
           <Skeleton className="h-4 flex-1" />

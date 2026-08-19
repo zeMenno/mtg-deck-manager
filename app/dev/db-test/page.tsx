@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 export default function DevDbTestPage() {
   if (process.env.NODE_ENV === "production") {
     return (
-      <div className="border-border shadow-brutal mx-auto max-w-lg border-4 p-6">
+      <div className="border-border mx-auto max-w-lg rounded-lg border p-6 shadow-md">
         <h1 className="font-heading text-xl font-black uppercase">
           Not available
         </h1>

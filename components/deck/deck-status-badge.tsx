@@ -10,8 +10,7 @@ const STATUS_STYLES: Record<
 > = {
   current: {
     label: "Current",
-    className:
-      "bg-status-current text-status-current-foreground border-border",
+    className: "bg-status-current text-status-current-foreground border-border",
   },
   add: {
     label: "Add",

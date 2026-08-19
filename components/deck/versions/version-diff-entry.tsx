@@ -22,10 +22,10 @@ export type VersionDiffEntryProps = {
 };
 
 const KIND_STYLES: Record<VersionDiffEntryKind, string> = {
-  added: "border-l-4 border-l-green-600",
-  removed: "border-l-4 border-l-red-600",
-  quantity: "border-l-4 border-l-yellow-500",
-  status: "border-l-4 border-l-blue-600",
+  added: "border-l-2 border-l-status-add",
+  removed: "border-l-2 border-l-status-cut",
+  quantity: "border-l-2 border-l-status-consider",
+  status: "border-l-2 border-l-status-commander",
 };
 
 const KIND_PREFIX: Record<VersionDiffEntryKind, string> = {
@@ -54,7 +54,7 @@ export function VersionDiffEntry({
       data-testid={`diff-entry-${kind}-${cardId}-${zone}`}
       onClick={onPress}
       className={cn(
-        "border-border bg-card shadow-brutal-sm flex w-full items-center gap-3 border-2 p-2 text-left",
+        "border-border bg-card flex w-full items-center gap-3 rounded-md border p-2 text-left shadow-sm",
         KIND_STYLES[kind],
       )}
     >
@@ -69,7 +69,7 @@ export function VersionDiffEntry({
           className="shrink-0"
         />
       ) : (
-        <div className="bg-muted border-border size-10 shrink-0 border-2" />
+        <div className="bg-muted border-border size-10 shrink-0 border" />
       )}
       <div className="min-w-0 flex-1">
         <p className="truncate font-bold">{name}</p>

@@ -33,7 +33,7 @@ const SEVERITY_META: Record<
   error: {
     label: "Legality",
     icon: X,
-    className: "bg-destructive text-white",
+    className: "bg-destructive text-destructive-foreground",
   },
 };
 
@@ -58,7 +58,7 @@ export function DeckWarningItem({ warning }: DeckWarningItemProps) {
       data-severity={warning.severity}
       data-category={warning.category}
       data-code={warning.code}
-      className="border-border border-2"
+      className="border-border border"
     >
       <button
         type="button"
@@ -68,7 +68,7 @@ export function DeckWarningItem({ warning }: DeckWarningItemProps) {
       >
         <span
           className={cn(
-            "border-border mt-0.5 inline-flex size-6 shrink-0 items-center justify-center border-2",
+            "border-border mt-0.5 inline-flex size-6 shrink-0 items-center justify-center border",
             meta.className,
           )}
           aria-hidden

@@ -102,10 +102,7 @@ export function UndoProvider({ children }: UndoProviderProps) {
   const handlePause = useCallback(() => {
     if (!current) return;
     const elapsed = Date.now() - startedAtRef.current;
-    remainingRef.current = Math.max(
-      0,
-      remainingRef.current - elapsed,
-    );
+    remainingRef.current = Math.max(0, remainingRef.current - elapsed);
     setPaused(true);
   }, [current]);
 

@@ -65,7 +65,7 @@ Every item below must exist in the v1.0 release. The phase that owns it is liste
 | S-21 | Deck versions (full snapshots) and version comparison                    | 11           |
 | S-22 | Global wishlist with priority and optional target deck                   | 12           |
 | S-23 | Basic Commander validation, split into legality vs recommendation        | 13           |
-| S-24 | tweakcn Neo Brutalism theme, undiluted                                   | 1, 14        |
+| S-24 | tweakcn Solar Dusk, deterministic dark default, explicit light mode       | 18           |
 | S-25 | Vercel deployment with preview + production                              | 1, 16        |
 | S-26 | Image on/off toggle and compact / comfortable / image density modes      | 9            |
 | S-27 | Deck statistics: mana curve, type, color, role, synergy, land count      | 6            |
@@ -439,10 +439,18 @@ Home · Deck List · Deck Dashboard · Deck Cards · Card Search · Card Detail 
 
 ### 10.1 Theme source
 
-The single source of truth is the tweakcn Neo Brutalism theme: <https://tweakcn.com/r/themes/neo-brutalism.json>. Phase 1 imports its CSS variables into `app/globals.css`. **Do not** hand-author a second, unrelated colour system on top of it.
+The single source of truth is tweakcn Solar Dusk:
+<https://tweakcn.com/r/themes/solar-dusk.json>. Phase 18 copies its complete
+light and dark variables into `app/globals.css`; there is no runtime registry
+request and no second base colour system.
 
-Non-negotiables: zero border radius (`--radius: 0rem`), hard black borders, hard offset (non-blurred) shadows, DM Sans for sans, Space Mono for mono, large bold type, very high contrast.
-Forbidden: glassmorphism, soft floating shadows, gradient fills, rounded cards, small mobile controls.
+Non-negotiables: dark is the server-rendered and first-run default; explicit
+Dark and Light choices persist locally; system-following mode is not offered.
+Solar Dusk owns the `0.3rem` radius, token borders, soft elevation scale,
+spacing, tracking, and Oxanium / Fira Code / Merriweather typography. Shared
+primitives retain visible focus, reduced motion, safe areas, and 44px mobile
+touch targets. Feature surfaces use theme or app-semantic tokens rather than
+raw palette classes.
 
 ### 10.2 Semantic status tokens
 
@@ -542,7 +550,7 @@ Naming: lowercase kebab-case, `{domain}-{thing}-{action}`, with a suffix id for 
 - Fast app-shell load; local deck interactions feel instant (no network in the critical path).
 - Virtualize card lists beyond ~100 rows; lazy-load all images; debounce search at 300 ms.
 - Keyboard accessible on desktop, visible focus states, ARIA labels on icon-only controls.
-- Sufficient contrast (the Neo Brutalism palette helps, but verify), and no colour-only status signalling.
+- Sufficient contrast in both Solar Dusk modes, and no colour-only status signalling.
 - Touch targets ≥ 44 × 44 px.
 
 ---

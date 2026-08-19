@@ -25,7 +25,7 @@ export function ReplacementLinkBadge({
         className={cn("flex flex-wrap items-center gap-2", className)}
         data-testid="replacement-link-badge"
       >
-        <Badge variant="outline" className="border-border border-2">
+        <Badge variant="outline" className="border-border border">
           → {replacementName}
         </Badge>
         {onClear ? (
