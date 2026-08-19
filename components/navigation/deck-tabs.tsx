@@ -23,7 +23,7 @@ export function DeckTabs({ deckId }: DeckTabsProps) {
   return (
     <nav
       aria-label="Deck sections"
-      className="border-border flex gap-1 overflow-x-auto border-b-4"
+      className="border-border flex gap-1 overflow-x-auto border-b"
       data-testid="deck-tabs"
     >
       {TABS.map((tab) => {

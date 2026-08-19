@@ -28,7 +28,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="border-border shadow-brutal-sm flex flex-col gap-2 border-2 p-4">
+      <section className="border-border flex flex-col gap-2 rounded-md border p-4 shadow-sm">
         <h2 className="font-mono text-xs uppercase">Before you start</h2>
         <ol className="text-muted-foreground list-decimal space-y-1 pl-5 text-sm">
           <li>Add the app to your Home Screen (Safari → Share).</li>

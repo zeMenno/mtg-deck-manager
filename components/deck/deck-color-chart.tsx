@@ -7,12 +7,12 @@ import type { ManaColor } from "@/lib/deck/stats/color-distribution";
 const COLOR_ORDER: ManaColor[] = ["W", "U", "B", "R", "G", "C"];
 
 const COLOR_STYLES: Record<ManaColor, string> = {
-  W: "bg-[#F9FAF4] text-black",
-  U: "bg-[#0E68AB] text-white",
-  B: "bg-[#150B00] text-white",
-  R: "bg-[#D3202A] text-white",
-  G: "bg-[#00733E] text-white",
-  C: "bg-[#CBC5C0] text-black",
+  W: "bg-mana-w text-mana-w-foreground",
+  U: "bg-mana-u text-mana-u-foreground",
+  B: "bg-mana-b text-mana-b-foreground",
+  R: "bg-mana-r text-mana-r-foreground",
+  G: "bg-mana-g text-mana-g-foreground",
+  C: "bg-mana-c text-mana-c-foreground",
 };
 
 type DeckColorChartProps = {
@@ -34,7 +34,7 @@ export function DeckColorChart({
       className={cn("flex flex-col gap-2", className)}
     >
       <h3 className="font-mono text-xs font-bold uppercase">Colors</h3>
-      <div className="border-border flex h-6 w-full overflow-hidden border-2">
+      <div className="border-border flex h-6 w-full overflow-hidden border">
         {total === 0 ? (
           <div className="bg-muted h-full w-full" />
         ) : (
@@ -64,7 +64,7 @@ export function DeckColorChart({
           <span
             key={color}
             className={cn(
-              "border-border inline-flex min-w-8 items-center justify-center gap-1 border-2 px-1.5 py-0.5 font-mono text-xs font-bold",
+              "border-border inline-flex min-w-8 items-center justify-center gap-1 border px-1.5 py-0.5 font-mono text-xs font-bold",
               COLOR_STYLES[color],
             )}
           >

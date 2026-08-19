@@ -6,7 +6,7 @@ type SheetDragHandleProps = {
   className?: string;
 };
 
-/** Thick Neo Brutalism drag affordance for bottom sheets. */
+/** Token-driven drag affordance for bottom sheets. */
 export function SheetDragHandle({ className }: SheetDragHandleProps) {
   return (
     <div
@@ -14,7 +14,7 @@ export function SheetDragHandle({ className }: SheetDragHandleProps) {
       aria-hidden="true"
       className={cn("flex justify-center pt-3 pb-1", className)}
     >
-      <div className="bg-foreground h-1.5 w-12 border-2 border-black" />
+      <div className="bg-muted-foreground h-1.5 w-12 rounded-full" />
     </div>
   );
 }

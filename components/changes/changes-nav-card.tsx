@@ -27,7 +27,7 @@ export function ChangesNavCard({
       href={href}
       data-testid={testId}
       className={cn(
-        "border-border bg-card shadow-brutal-sm flex items-center justify-between gap-3 border-2 p-4",
+        "border-border bg-card flex items-center justify-between gap-3 rounded-md border p-4 shadow-sm",
         className,
       )}
     >

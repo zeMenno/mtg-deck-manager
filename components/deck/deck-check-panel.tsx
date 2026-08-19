@@ -26,7 +26,7 @@ export function DeckCheckPanel({
     return (
       <div
         className={cn(
-          "bg-muted border-border h-24 animate-pulse border-2",
+          "bg-muted border-border h-24 animate-pulse border",
           className,
         )}
         data-testid="deck-check-panel-loading"
@@ -40,7 +40,7 @@ export function DeckCheckPanel({
     <section
       data-testid="deck-check-panel"
       className={cn(
-        "border-border border-2 p-3",
+        "border-border border p-3",
         hasErrors ? "bg-destructive/10" : "bg-card",
         className,
       )}
@@ -50,7 +50,7 @@ export function DeckCheckPanel({
           <h2 className="font-mono text-xs font-bold uppercase">Deck check</h2>
           {!hasErrors && issues.length === 0 ? (
             <span
-              className="bg-status-current text-status-current-foreground border-border inline-flex size-6 items-center justify-center border-2"
+              className="bg-status-current text-status-current-foreground border-border inline-flex size-6 items-center justify-center border"
               aria-label="All checks passed"
             >
               <Check className="size-3.5" />
@@ -59,7 +59,7 @@ export function DeckCheckPanel({
           {hasErrors ? (
             <span
               data-testid="deck-check-error-badge"
-              className="bg-destructive border-border inline-flex min-w-6 items-center justify-center border-2 px-1.5 font-mono text-xs font-bold text-white"
+              className="bg-destructive text-destructive-foreground border-border inline-flex min-w-6 items-center justify-center rounded-sm border px-1.5 font-mono text-xs font-bold"
             >
               {summary.errors}
             </span>

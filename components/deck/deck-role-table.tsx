@@ -24,7 +24,7 @@ export function DeckRoleTable({
       {items.length === 0 ? (
         <p className="text-muted-foreground text-sm">{emptyMessage}</p>
       ) : (
-        <table className="border-border w-full border-2 text-left text-sm">
+        <table className="border-border w-full border text-left text-sm">
           <thead className="bg-muted font-mono text-xs uppercase">
             <tr>
               <th className="border-border border-b-2 px-3 py-2">Name</th>

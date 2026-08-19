@@ -15,7 +15,7 @@ export function ProjectedDeckHeader({
 
   return (
     <div
-      className="border-border bg-card flex flex-col gap-2 border-2 p-4"
+      className="border-border bg-card flex flex-col gap-2 border p-4"
       data-testid="projected-deck-header"
     >
       <p className="font-mono text-xs uppercase">
@@ -25,7 +25,7 @@ export function ProjectedDeckHeader({
       <p
         className={
           ok
-            ? "font-bold text-green-700 dark:text-green-400"
+            ? "text-status-add font-bold"
             : "font-bold text-amber-700 dark:text-amber-400"
         }
         data-testid="projected-deck-count"

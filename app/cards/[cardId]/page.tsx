@@ -140,7 +140,7 @@ export default function CardDetailPage({ params }: CardDetailPageProps) {
         </TabsContent>
         <TabsContent value="price">
           <div
-            className="border-border flex flex-col gap-2 border-2 p-3"
+            className="border-border flex flex-col gap-2 border p-3"
             data-testid="card-detail-price"
           >
             <CardPriceDisplay

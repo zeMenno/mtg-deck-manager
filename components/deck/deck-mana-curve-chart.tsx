@@ -26,7 +26,7 @@ export function DeckManaCurveChart({
     >
       <div
         className={cn(
-          "border-border flex items-end gap-1 border-2 p-2",
+          "border-border flex items-end gap-1 border p-2",
           heightClass,
         )}
       >

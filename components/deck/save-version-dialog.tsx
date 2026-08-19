@@ -119,14 +119,14 @@ export function SaveVersionDialog({
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={3}
-              className="border-input shadow-brutal-sm min-h-20 w-full rounded-none border-2 bg-transparent px-3 py-2 text-base outline-none md:text-sm"
+              className="border-input min-h-20 w-full rounded-md border bg-transparent px-3 py-2 text-base shadow-sm outline-none md:text-sm"
               placeholder="Playtest notes…"
             />
           </label>
 
           {limitPrompt ? (
             <p
-              className="border-border bg-destructive/10 text-destructive border-2 p-3 text-sm font-bold"
+              className="border-border bg-destructive/10 text-destructive border p-3 text-sm font-bold"
               data-testid="version-limit-warning"
             >
               This deck already has {MAX_VERSIONS_PER_DECK} versions. Delete the

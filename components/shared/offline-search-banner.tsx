@@ -18,7 +18,7 @@ export function OfflineSearchBanner({
       role="status"
       data-testid="offline-search-banner"
       className={cn(
-        "border-border bg-secondary text-secondary-foreground flex items-center gap-2 border-2 px-3 py-2 text-xs font-bold uppercase",
+        "border-border bg-secondary text-secondary-foreground flex items-center gap-2 border px-3 py-2 text-xs font-bold uppercase",
         className,
       )}
     >

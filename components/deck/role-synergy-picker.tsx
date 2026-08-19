@@ -78,7 +78,7 @@ export function RoleSynergyPicker({
         placeholder={`Search ${category}s…`}
       />
 
-      <ul className="border-border max-h-48 overflow-y-auto border-2">
+      <ul className="border-border max-h-48 overflow-y-auto border">
         {filtered.map((tag) => {
           const checked = selectedIds.includes(tag.id);
           return (

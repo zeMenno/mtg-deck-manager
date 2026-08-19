@@ -37,7 +37,7 @@ export function UpgradeSummaryBar({
     <div
       data-testid="upgrade-summary-bar"
       className={cn(
-        "border-border bg-secondary shadow-brutal sticky bottom-[calc(4.5rem+env(safe-area-inset-bottom))] z-30 border-2 p-3",
+        "border-border bg-secondary sticky bottom-[calc(4.5rem+env(safe-area-inset-bottom))] z-30 rounded-lg border p-3 shadow-md",
         className,
       )}
     >

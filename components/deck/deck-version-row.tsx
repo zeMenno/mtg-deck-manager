@@ -32,7 +32,7 @@ export function DeckVersionRow({
 
   return (
     <article
-      className="border-border bg-card shadow-brutal-sm flex flex-col gap-3 border-2 p-3"
+      className="border-border bg-card flex flex-col gap-3 rounded-md border p-3 shadow-sm"
       data-testid={`version-row-${version.id}`}
     >
       <div className="flex items-start justify-between gap-2">

@@ -1,18 +1,27 @@
 import type { Metadata, Viewport } from "next";
-import { DM_Sans, Space_Mono } from "next/font/google";
+import { Fira_Code, Merriweather, Oxanium } from "next/font/google";
 
 import { AppLayout } from "@/components/app-shell/app-layout";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 
 import "./globals.css";
 
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
+const oxanium = Oxanium({
+  variable: "--font-oxanium",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
 });
 
-const spaceMono = Space_Mono({
-  variable: "--font-space-mono",
+const firaCode = Fira_Code({
+  variable: "--font-fira-code",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
+
+const merriweather = Merriweather({
+  variable: "--font-merriweather",
   subsets: ["latin"],
   weight: ["400", "700"],
   display: "swap",
@@ -47,8 +56,8 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  // Matches manifest.theme_color: the black Neo Brutalism border colour.
-  themeColor: "#000000",
+  // Solar Dusk dark background; matches the static PWA manifest.
+  themeColor: "#1c1917",
   // Required so content can extend under the iPhone home indicator while the
   // bottom nav pads itself with env(safe-area-inset-bottom).
   viewportFit: "cover",
@@ -60,15 +69,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      className={`dark ${oxanium.variable} ${firaCode.variable} ${merriweather.variable}`}
+      suppressHydrationWarning
+    >
       <head>
         {/* Next's metadata API emits only the standardized
             mobile-web-app-capable. iOS before 16.4 ignores that name and needs
             the apple-prefixed tag to launch from the Home Screen standalone. */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
       </head>
-      <body className={`${dmSans.variable} ${spaceMono.variable} antialiased`}>
-        <AppLayout>{children}</AppLayout>
+      <body className="antialiased">
+        <ThemeProvider>
+          <AppLayout>{children}</AppLayout>
+        </ThemeProvider>
       </body>
     </html>
   );

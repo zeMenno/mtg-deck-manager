@@ -100,7 +100,7 @@ Phases 6–7 can partially overlap after Phase 5. Phases 8–13 are largely para
 
 **Phase 17 status (2026-08-19):** In-repo **v1.1.0** complete (legality tabs, mana symbols, search filters). See [`phase-17-legality-symbols-search-filters.md`](./phase-17-legality-symbols-search-filters.md).
 
-**Current post-launch visual system** (after Phase 18): tweakcn Solar Dusk with deterministic dark default. Completed Phase 0–17 documents retain Neo Brutalism references as historical implementation context.
+**Phase 18 status (2026-08-19):** In-repo **v1.1.1** implementation complete (Solar Dusk migration, deterministic dark default, explicit light mode); physical iPhone appearance/cold-start sign-off remains. Completed Phase 0–17 documents retain Neo Brutalism references as historical implementation context.
 
 ---
 
@@ -165,7 +165,7 @@ Each `phase-XX-*.md` file follows the same template:
 ## References
 
 - [Master build plan](../plans/mtg-deck-builder-web-app-build-plan.md)
-- [Neo Brutalism theme JSON](https://tweakcn.com/r/themes/neo-brutalism.json)
-- [Solar Dusk theme JSON](https://tweakcn.com/r/themes/solar-dusk.json) — active after Phase 18
+- [Solar Dusk theme JSON](https://tweakcn.com/r/themes/solar-dusk.json) — active design system
+- [Neo Brutalism theme JSON](https://tweakcn.com/r/themes/neo-brutalism.json) — historical launch reference
 - [Next.js PWA Guide](https://nextjs.org/docs/app/guides/progressive-web-apps)
 - [Scryfall API](https://scryfall.com/docs/api)

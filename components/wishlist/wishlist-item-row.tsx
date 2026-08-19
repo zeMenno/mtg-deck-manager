@@ -53,7 +53,7 @@ function WishlistItemRowComponent({
       data-testid={`wishlist-item-${item.id}`}
       data-density={density}
       className={cn(
-        "border-border bg-card shadow-brutal-sm flex w-full items-stretch border-2",
+        "border-border bg-card flex w-full items-stretch rounded-md border shadow-sm",
         getDensityRowClass(density),
         selected && "bg-primary/10 ring-primary ring-2",
       )}
@@ -64,7 +64,7 @@ function WishlistItemRowComponent({
           aria-pressed={selected}
           aria-label={selected ? "Deselect item" : "Select item"}
           data-testid={`wishlist-select-${item.id}`}
-          className="border-border mr-2 flex size-11 shrink-0 items-center justify-center border-2"
+          className="border-border mr-2 flex size-11 shrink-0 items-center justify-center border"
           onClick={onToggleSelect}
         >
           {selected ? "✓" : ""}

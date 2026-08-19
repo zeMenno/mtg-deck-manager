@@ -28,7 +28,7 @@ export function CardResultRow({
     <div
       data-testid={`card-result-${card.id}`}
       className={cn(
-        "border-border bg-card shadow-brutal-sm flex min-h-11 w-full items-center gap-2 border-2 p-2 transition-all",
+        "border-border bg-card flex min-h-11 w-full items-center gap-2 rounded-md border p-2 shadow-sm transition-all",
         className,
       )}
     >

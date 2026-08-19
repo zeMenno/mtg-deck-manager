@@ -105,9 +105,9 @@ function DeckCardRowComponent({
         if (longPressTimer) clearTimeout(longPressTimer);
       }}
       className={cn(
-        "border-border bg-card shadow-brutal-sm flex w-full items-center border-2 text-left transition-all",
+        "border-border bg-card flex w-full items-center rounded-md border text-left shadow-sm transition-all",
         getDensityRowClass(density),
-        selected && "border-primary bg-primary/10 border-4",
+        selected && "border-primary bg-primary/10 border",
       )}
     >
       {showThumb ? (

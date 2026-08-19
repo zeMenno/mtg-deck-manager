@@ -40,7 +40,7 @@ export function NeedToAddSummary({
 
   return (
     <div
-      className="border-border bg-status-add/20 sticky top-0 z-10 flex flex-col gap-2 border-2 p-3"
+      className="border-border bg-status-add/20 sticky top-0 z-10 flex flex-col gap-2 border p-3"
       data-testid="need-to-add-summary"
     >
       <p className="font-mono text-xs uppercase">
@@ -66,7 +66,7 @@ export function NeedToAddSummary({
           disabled={refreshing || !online}
           title={!online ? "Offline — refresh unavailable" : undefined}
           onClick={onRefreshPrices}
-          className="border-border bg-background disabled:text-muted-foreground min-h-11 self-start border-2 px-3 text-xs font-bold uppercase disabled:opacity-60"
+          className="border-border bg-background disabled:text-muted-foreground min-h-11 self-start border px-3 text-xs font-bold uppercase disabled:opacity-60"
         >
           {refreshing
             ? "Refreshing…"

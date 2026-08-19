@@ -76,7 +76,7 @@ export function WishlistFilters({
             onChange={(e) =>
               onTargetDeckChange(e.target.value as string | "all" | "none")
             }
-            className="border-border bg-background h-11 border-2 px-2 font-bold"
+            className="border-border bg-background h-11 border px-2 font-bold"
           >
             <option value="all">All decks</option>
             <option value="none">No deck</option>
@@ -94,7 +94,7 @@ export function WishlistFilters({
             data-testid="wishlist-sort"
             value={sort}
             onChange={(e) => onSortChange(e.target.value as WishlistSortKey)}
-            className="border-border bg-background h-11 border-2 px-2 font-bold"
+            className="border-border bg-background h-11 border px-2 font-bold"
           >
             <option value="priority">Priority</option>
             <option value="name">Name</option>

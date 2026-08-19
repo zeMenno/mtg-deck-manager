@@ -6,12 +6,12 @@ import { cn } from "@/lib/utils";
 const SIZE_PX = { sm: 14, md: 18, lg: 24 } as const;
 
 const PIP_COLORS: Record<string, string> = {
-  W: "bg-[#f9faf4] text-black border-border",
-  U: "bg-[#0e68ab] text-white border-border",
-  B: "bg-[#150b00] text-white border-border",
-  R: "bg-[#d3202a] text-white border-border",
-  G: "bg-[#00733e] text-white border-border",
-  C: "bg-[#c4c4c4] text-black border-border",
+  W: "bg-mana-w text-mana-w-foreground border-border",
+  U: "bg-mana-u text-mana-u-foreground border-border",
+  B: "bg-mana-b text-mana-b-foreground border-border",
+  R: "bg-mana-r text-mana-r-foreground border-border",
+  G: "bg-mana-g text-mana-g-foreground border-border",
+  C: "bg-mana-c text-mana-c-foreground border-border",
 };
 
 type ManaSymbolProps = {

@@ -42,7 +42,7 @@ export default defineConfig({
           name: "unit-dom",
           environment: "jsdom",
           include: [
-            "tests/unit/components/**/*.test.ts",
+            "tests/unit/components/**/*.test.{ts,tsx}",
             "tests/unit/observability/**/*.test.ts",
           ],
           setupFiles: ["tests/setup/vitest.setup.dom.ts"],

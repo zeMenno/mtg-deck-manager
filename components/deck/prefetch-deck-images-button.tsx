@@ -85,7 +85,7 @@ export function PrefetchDeckImagesButton({
 
   return (
     <div
-      className="border-border flex flex-col gap-2 border-2 p-3"
+      className="border-border flex flex-col gap-2 border p-3"
       data-testid="prefetch-deck-images"
     >
       <Button
@@ -106,7 +106,7 @@ export function PrefetchDeckImagesButton({
       {running && progress ? (
         <div className="flex flex-col gap-1">
           <div
-            className="border-border bg-muted h-3 w-full border-2"
+            className="border-border bg-muted h-3 w-full border"
             role="progressbar"
             aria-valuenow={progress.done}
             aria-valuemin={0}

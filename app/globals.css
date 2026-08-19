@@ -7,9 +7,13 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-mono);
-  --font-heading: var(--font-sans);
+  --font-sans:
+    "Oxanium", "Oxanium Fallback", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Fira Code", "Fira Code Fallback", ui-monospace, monospace;
+  --font-serif:
+    "Merriweather", "Merriweather Fallback", ui-serif, Georgia, serif;
+  --font-heading:
+    "Oxanium", "Oxanium Fallback", ui-sans-serif, system-ui, sans-serif;
   --color-status-current: var(--status-current);
   --color-status-current-foreground: var(--status-current-foreground);
   --color-status-add: var(--status-add);
@@ -22,6 +26,18 @@
   --color-status-commander-foreground: var(--status-commander-foreground);
   --color-warning: var(--warning);
   --color-warning-foreground: var(--warning-foreground);
+  --color-mana-w: var(--mana-w);
+  --color-mana-w-foreground: var(--mana-w-foreground);
+  --color-mana-u: var(--mana-u);
+  --color-mana-u-foreground: var(--mana-u-foreground);
+  --color-mana-b: var(--mana-b);
+  --color-mana-b-foreground: var(--mana-b-foreground);
+  --color-mana-r: var(--mana-r);
+  --color-mana-r-foreground: var(--mana-r-foreground);
+  --color-mana-g: var(--mana-g);
+  --color-mana-g-foreground: var(--mana-g-foreground);
+  --color-mana-c: var(--mana-c);
+  --color-mana-c-foreground: var(--mana-c-foreground);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -51,31 +67,30 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
+  --radius-xs: calc(var(--radius) * 0.5);
+  --radius-sm: calc(var(--radius) * 0.75);
+  --radius-md: calc(var(--radius) * 0.875);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
-  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-  --radius: 0px;
+  --radius-xl: calc(var(--radius) * 1.5);
+  --radius-2xl: calc(var(--radius) * 2);
+  --radius-3xl: calc(var(--radius) * 2.5);
+  --radius-4xl: calc(var(--radius) * 3);
+  --radius: 0.3rem;
   --tracking-tighter: calc(var(--tracking-normal) - 0.05em);
   --tracking-tight: calc(var(--tracking-normal) - 0.025em);
   --tracking-wide: calc(var(--tracking-normal) + 0.025em);
   --tracking-wider: calc(var(--tracking-normal) + 0.05em);
   --tracking-widest: calc(var(--tracking-normal) + 0.1em);
-  --tracking-normal: var(--tracking-normal);
-  --shadow-2xl: var(--shadow-2xl);
-  --shadow-xl: var(--shadow-xl);
-  --shadow-lg: var(--shadow-lg);
-  --shadow-md: var(--shadow-md);
-  --shadow: var(--shadow);
-  --shadow-sm: var(--shadow-sm);
-  --shadow-xs: var(--shadow-xs);
-  --shadow-2xs: var(--shadow-2xs);
-  --spacing: var(--spacing);
-  --letter-spacing: var(--letter-spacing);
+  --tracking-normal: 0em;
+  --shadow-2xl: var(--solar-shadow-2xl);
+  --shadow-xl: var(--solar-shadow-xl);
+  --shadow-lg: var(--solar-shadow-lg);
+  --shadow-md: var(--solar-shadow-md);
+  --shadow: var(--solar-shadow);
+  --shadow-sm: var(--solar-shadow-sm);
+  --shadow-xs: var(--solar-shadow-xs);
+  --shadow-2xs: var(--solar-shadow-2xs);
+  --spacing: 0.25rem;
   --shadow-offset-y: var(--shadow-offset-y);
   --shadow-offset-x: var(--shadow-offset-x);
   --shadow-spread: var(--shadow-spread);
@@ -86,146 +101,181 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0 0 0);
-  --primary: oklch(0.6489 0.237 26.9728);
+  --background: oklch(0.9885 0.0057 84.5659);
+  --foreground: oklch(0.366 0.0251 49.6085);
+  --card: oklch(0.9686 0.0091 78.2818);
+  --card-foreground: oklch(0.366 0.0251 49.6085);
+  --popover: oklch(0.9686 0.0091 78.2818);
+  --popover-foreground: oklch(0.366 0.0251 49.6085);
+  --primary: oklch(0.5553 0.1455 48.9975);
   --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.968 0.211 109.7692);
-  --secondary-foreground: oklch(0 0 0);
-  --muted: oklch(0.9551 0 0);
-  --muted-foreground: oklch(0.3211 0 0);
-  --accent: oklch(0.5635 0.2408 260.8178);
-  --accent-foreground: oklch(1 0 0);
-  --destructive: oklch(0 0 0);
-  --border: oklch(0 0 0);
-  --input: oklch(0 0 0);
-  --ring: oklch(0.6489 0.237 26.9728);
-  --chart-1: oklch(0.6489 0.237 26.9728);
-  --chart-2: oklch(0.968 0.211 109.7692);
-  --chart-3: oklch(0.5635 0.2408 260.8178);
-  --chart-4: oklch(0.7323 0.2492 142.4953);
-  --chart-5: oklch(0.5931 0.2726 328.3634);
-  --radius: 0px;
-  --bottom-nav-height: 4rem;
-  --sidebar: oklch(0.9551 0 0);
-  --sidebar-foreground: oklch(0 0 0);
-  --sidebar-primary: oklch(0.6489 0.237 26.9728);
-  --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.5635 0.2408 260.8178);
-  --sidebar-accent-foreground: oklch(1 0 0);
-  --sidebar-border: oklch(0 0 0);
-  --sidebar-ring: oklch(0.6489 0.237 26.9728);
+  --secondary: oklch(0.8276 0.0752 74.44);
+  --secondary-foreground: oklch(0.4444 0.0096 73.639);
+  --muted: oklch(0.9363 0.0218 83.2637);
+  --muted-foreground: oklch(0.5534 0.0116 58.0708);
+  --accent: oklch(0.9 0.05 74.9889);
+  --accent-foreground: oklch(0.4444 0.0096 73.639);
+  --destructive: oklch(0.4437 0.1613 26.8994);
   --destructive-foreground: oklch(1 0 0);
-  --font-sans: var(--font-dm-sans), "DM Sans", sans-serif;
-  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-  --font-mono: var(--font-space-mono), "Space Mono", monospace;
-  --shadow-color: hsl(0 0% 0%);
-  --shadow-opacity: 1;
-  --shadow-blur: 0px;
+  --border: oklch(0.8866 0.0404 89.6994);
+  --input: oklch(0.8866 0.0404 89.6994);
+  --ring: oklch(0.5553 0.1455 48.9975);
+  --chart-1: oklch(0.5553 0.1455 48.9975);
+  --chart-2: oklch(0.5534 0.0116 58.0708);
+  --chart-3: oklch(0.5538 0.1207 66.4416);
+  --chart-4: oklch(0.5534 0.0116 58.0708);
+  --chart-5: oklch(0.6806 0.1423 75.834);
+  --radius: 0.3rem;
+  --bottom-nav-height: 4rem;
+  --sidebar: oklch(0.9363 0.0218 83.2637);
+  --sidebar-foreground: oklch(0.366 0.0251 49.6085);
+  --sidebar-primary: oklch(0.5553 0.1455 48.9975);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.5538 0.1207 66.4416);
+  --sidebar-accent-foreground: oklch(1 0 0);
+  --sidebar-border: oklch(0.8866 0.0404 89.6994);
+  --sidebar-ring: oklch(0.5553 0.1455 48.9975);
+  --font-sans: var(--font-oxanium), "Oxanium", sans-serif;
+  --font-serif: var(--font-merriweather), "Merriweather", serif;
+  --font-mono: var(--font-fira-code), "Fira Code", monospace;
+  --shadow-color: hsl(28 18% 25%);
+  --shadow-opacity: 0.18;
+  --shadow-blur: 3px;
   --shadow-spread: 0px;
-  --shadow-offset-x: 4px;
-  --shadow-offset-y: 4px;
+  --shadow-offset-x: 0px;
+  --shadow-offset-y: 2px;
   --letter-spacing: 0em;
   --spacing: 0.25rem;
-  /* ADR-010 forbids blurred shadows: the tweakcn scale ships a second blurred
-     layer, which is dropped here so every elevation is a pure hard offset. */
-  --shadow-2xs: 1px 1px 0px 0px var(--shadow-color);
-  --shadow-xs: 2px 2px 0px 0px var(--shadow-color);
-  --shadow-sm: 3px 3px 0px 0px var(--shadow-color);
-  --shadow: 4px 4px 0px 0px var(--shadow-color);
-  --shadow-md: 4px 4px 0px 0px var(--shadow-color);
-  --shadow-lg: 6px 6px 0px 0px var(--shadow-color);
-  --shadow-xl: 8px 8px 0px 0px var(--shadow-color);
-  --shadow-2xl: 10px 10px 0px 0px var(--shadow-color);
+  --solar-shadow-2xs: 0px 2px 3px 0px hsl(28 18% 25% / 0.09);
+  --solar-shadow-xs: 0px 2px 3px 0px hsl(28 18% 25% / 0.09);
+  --solar-shadow-sm:
+    0px 2px 3px 0px hsl(28 18% 25% / 0.18),
+    0px 1px 2px -1px hsl(28 18% 25% / 0.18);
+  --solar-shadow:
+    0px 2px 3px 0px hsl(28 18% 25% / 0.18),
+    0px 1px 2px -1px hsl(28 18% 25% / 0.18);
+  --solar-shadow-md:
+    0px 2px 3px 0px hsl(28 18% 25% / 0.18),
+    0px 2px 4px -1px hsl(28 18% 25% / 0.18);
+  --solar-shadow-lg:
+    0px 2px 3px 0px hsl(28 18% 25% / 0.18),
+    0px 4px 6px -1px hsl(28 18% 25% / 0.18);
+  --solar-shadow-xl:
+    0px 2px 3px 0px hsl(28 18% 25% / 0.18),
+    0px 8px 10px -1px hsl(28 18% 25% / 0.18);
+  --solar-shadow-2xl: 0px 2px 3px 0px hsl(28 18% 25% / 0.45);
   --tracking-normal: 0em;
 
-  /* Semantic status tokens (consumed from Phase 5 onward). Hues are taken from
-     the theme chart ramp so no new colour system is introduced. */
+  /* Application semantics extend Solar Dusk while retaining labelled states. */
   --status-current: var(--foreground);
   --status-current-foreground: var(--background);
-  --status-add: var(--chart-4);
-  --status-add-foreground: oklch(0 0 0);
-  --status-cut: var(--chart-1);
+  --status-add: oklch(0.45 0.12 145);
+  --status-add-foreground: oklch(1 0 0);
+  --status-cut: var(--destructive);
   --status-cut-foreground: oklch(1 0 0);
-  --status-consider: var(--chart-2);
-  --status-consider-foreground: oklch(0 0 0);
-  --status-commander: var(--chart-3);
+  --status-consider: oklch(0.48 0.11 75);
+  --status-consider-foreground: oklch(1 0 0);
+  --status-commander: oklch(0.45 0.11 237);
   --status-commander-foreground: oklch(1 0 0);
-  --warning: var(--chart-2);
-  --warning-foreground: oklch(0 0 0);
+  --warning: oklch(0.48 0.11 75);
+  --warning-foreground: oklch(1 0 0);
+  --mana-w: #f9faf4;
+  --mana-w-foreground: #1f1f1f;
+  --mana-u: #0e68ab;
+  --mana-u-foreground: #ffffff;
+  --mana-b: #150b00;
+  --mana-b-foreground: #ffffff;
+  --mana-r: #b71822;
+  --mana-r-foreground: #ffffff;
+  --mana-g: #006b39;
+  --mana-g-foreground: #ffffff;
+  --mana-c: #cbc5c0;
+  --mana-c-foreground: #1f1f1f;
 }
 
 .dark {
-  --background: oklch(0 0 0);
-  --foreground: oklch(1 0 0);
-  --card: oklch(0.3211 0 0);
-  --card-foreground: oklch(1 0 0);
-  --popover: oklch(0.3211 0 0);
-  --popover-foreground: oklch(1 0 0);
-  --primary: oklch(0.7044 0.1872 23.1858);
-  --primary-foreground: oklch(0 0 0);
-  --secondary: oklch(0.9691 0.2005 109.6228);
-  --secondary-foreground: oklch(0 0 0);
-  --muted: oklch(0.2178 0 0);
-  --muted-foreground: oklch(0.8452 0 0);
-  --accent: oklch(0.6755 0.1765 252.2592);
-  --accent-foreground: oklch(0 0 0);
-  --destructive: oklch(1 0 0);
-  --border: oklch(1 0 0);
-  --input: oklch(1 0 0);
-  --ring: oklch(0.7044 0.1872 23.1858);
-  --chart-1: oklch(0.7044 0.1872 23.1858);
-  --chart-2: oklch(0.9691 0.2005 109.6228);
-  --chart-3: oklch(0.6755 0.1765 252.2592);
-  --chart-4: oklch(0.7395 0.2268 142.8504);
-  --chart-5: oklch(0.6131 0.2458 328.0714);
-  --sidebar: oklch(0 0 0);
-  --sidebar-foreground: oklch(1 0 0);
-  --sidebar-primary: oklch(0.7044 0.1872 23.1858);
-  --sidebar-primary-foreground: oklch(0 0 0);
-  --sidebar-accent: oklch(0.6755 0.1765 252.2592);
-  --sidebar-accent-foreground: oklch(0 0 0);
-  --sidebar-border: oklch(1 0 0);
-  --sidebar-ring: oklch(0.7044 0.1872 23.1858);
-  --destructive-foreground: oklch(0 0 0);
-  --radius: 0px;
-  --font-sans: var(--font-dm-sans), "DM Sans", sans-serif;
-  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-  --font-mono: var(--font-space-mono), "Space Mono", monospace;
-  /* Black-on-black offsets are invisible, so dark mode casts light shadows. */
-  --shadow-color: hsl(0 0% 100%);
-  --shadow-opacity: 1;
-  --shadow-blur: 0px;
+  --background: oklch(0.2161 0.0061 56.0434);
+  --foreground: oklch(0.9699 0.0013 106.4238);
+  --card: oklch(0.2685 0.0063 34.2976);
+  --card-foreground: oklch(0.9699 0.0013 106.4238);
+  --popover: oklch(0.2685 0.0063 34.2976);
+  --popover-foreground: oklch(0.9699 0.0013 106.4238);
+  --primary: oklch(0.7049 0.1867 47.6044);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.4444 0.0096 73.639);
+  --secondary-foreground: oklch(0.9232 0.0026 48.7171);
+  --muted: oklch(0.233 0.0073 67.4563);
+  --muted-foreground: oklch(0.7161 0.0091 56.259);
+  --accent: oklch(0.3598 0.0497 229.3202);
+  --accent-foreground: oklch(0.9232 0.0026 48.7171);
+  --destructive: oklch(0.5771 0.2152 27.325);
+  --destructive-foreground: oklch(1 0 0);
+  --border: oklch(0.3741 0.0087 67.5582);
+  --input: oklch(0.3741 0.0087 67.5582);
+  --ring: oklch(0.7049 0.1867 47.6044);
+  --chart-1: oklch(0.7049 0.1867 47.6044);
+  --chart-2: oklch(0.6847 0.1479 237.3225);
+  --chart-3: oklch(0.7952 0.1617 86.0468);
+  --chart-4: oklch(0.7161 0.0091 56.259);
+  --chart-5: oklch(0.5534 0.0116 58.0708);
+  --sidebar: oklch(0.2685 0.0063 34.2976);
+  --sidebar-foreground: oklch(0.9699 0.0013 106.4238);
+  --sidebar-primary: oklch(0.7049 0.1867 47.6044);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.6847 0.1479 237.3225);
+  --sidebar-accent-foreground: oklch(0.2839 0.0734 254.5378);
+  --sidebar-border: oklch(0.3741 0.0087 67.5582);
+  --sidebar-ring: oklch(0.7049 0.1867 47.6044);
+  --radius: 0.3rem;
+  --font-sans: var(--font-oxanium), "Oxanium", sans-serif;
+  --font-serif: var(--font-merriweather), "Merriweather", serif;
+  --font-mono: var(--font-fira-code), "Fira Code", monospace;
+  --shadow-color: hsl(0 0% 5%);
+  --shadow-opacity: 0.18;
+  --shadow-blur: 3px;
   --shadow-spread: 0px;
-  --shadow-offset-x: 4px;
-  --shadow-offset-y: 4px;
+  --shadow-offset-x: 0px;
+  --shadow-offset-y: 2px;
   --letter-spacing: 0em;
   --spacing: 0.25rem;
-  --shadow-2xs: 1px 1px 0px 0px var(--shadow-color);
-  --shadow-xs: 2px 2px 0px 0px var(--shadow-color);
-  --shadow-sm: 3px 3px 0px 0px var(--shadow-color);
-  --shadow: 4px 4px 0px 0px var(--shadow-color);
-  --shadow-md: 4px 4px 0px 0px var(--shadow-color);
-  --shadow-lg: 6px 6px 0px 0px var(--shadow-color);
-  --shadow-xl: 8px 8px 0px 0px var(--shadow-color);
-  --shadow-2xl: 10px 10px 0px 0px var(--shadow-color);
+  --solar-shadow-2xs: 0px 2px 3px 0px hsl(0 0% 5% / 0.09);
+  --solar-shadow-xs: 0px 2px 3px 0px hsl(0 0% 5% / 0.09);
+  --solar-shadow-sm:
+    0px 2px 3px 0px hsl(0 0% 5% / 0.18), 0px 1px 2px -1px hsl(0 0% 5% / 0.18);
+  --solar-shadow:
+    0px 2px 3px 0px hsl(0 0% 5% / 0.18), 0px 1px 2px -1px hsl(0 0% 5% / 0.18);
+  --solar-shadow-md:
+    0px 2px 3px 0px hsl(0 0% 5% / 0.18), 0px 2px 4px -1px hsl(0 0% 5% / 0.18);
+  --solar-shadow-lg:
+    0px 2px 3px 0px hsl(0 0% 5% / 0.18), 0px 4px 6px -1px hsl(0 0% 5% / 0.18);
+  --solar-shadow-xl:
+    0px 2px 3px 0px hsl(0 0% 5% / 0.18), 0px 8px 10px -1px hsl(0 0% 5% / 0.18);
+  --solar-shadow-2xl: 0px 2px 3px 0px hsl(0 0% 5% / 0.45);
 
   --status-current: var(--foreground);
   --status-current-foreground: var(--background);
-  --status-add: var(--chart-4);
-  --status-add-foreground: oklch(0 0 0);
-  --status-cut: var(--chart-1);
-  --status-cut-foreground: oklch(0 0 0);
-  --status-consider: var(--chart-2);
-  --status-consider-foreground: oklch(0 0 0);
-  --status-commander: var(--chart-3);
-  --status-commander-foreground: oklch(0 0 0);
-  --warning: var(--chart-2);
-  --warning-foreground: oklch(0 0 0);
+  --status-add: oklch(0.72 0.14 145);
+  --status-add-foreground: var(--background);
+  --status-cut: oklch(0.7 0.18 27.325);
+  --status-cut-foreground: var(--background);
+  --status-consider: var(--chart-3);
+  --status-consider-foreground: var(--background);
+  --status-commander: var(--chart-2);
+  --status-commander-foreground: var(--background);
+  --warning: var(--chart-3);
+  --warning-foreground: var(--background);
+  --mana-w: #f9faf4;
+  --mana-w-foreground: #1f1f1f;
+  --mana-u: #0e68ab;
+  --mana-u-foreground: #ffffff;
+  --mana-b: #150b00;
+  --mana-b-foreground: #ffffff;
+  --mana-r: #d3202a;
+  --mana-r-foreground: #ffffff;
+  --mana-g: #00733e;
+  --mana-g-foreground: #ffffff;
+  --mana-c: #cbc5c0;
+  --mana-c-foreground: #1f1f1f;
 }
 
 @layer base {
@@ -246,20 +296,6 @@
   h4 {
     @apply font-bold tracking-tight;
   }
-}
-
-/* Hard offset shadow in the theme's border colour, independent of the elevation
-   scale, for surfaces that must read as Neo Brutalism regardless of context. */
-@utility shadow-brutal {
-  box-shadow: 4px 4px 0 0 var(--border);
-}
-
-@utility shadow-brutal-sm {
-  box-shadow: 2px 2px 0 0 var(--border);
-}
-
-@utility shadow-brutal-lg {
-  box-shadow: 6px 6px 0 0 var(--border);
 }
 
 /* iPhone home-indicator clearance for the fixed bottom navigation. */

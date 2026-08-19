@@ -68,7 +68,7 @@ export function DeckVersionList({ deckId }: DeckVersionListProps) {
 
       {versions.length === 0 ? (
         <div
-          className="border-border flex flex-col gap-3 border-2 p-6"
+          className="border-border flex flex-col gap-3 border p-6"
           data-testid="versions-empty"
         >
           <p className="font-bold">No saved versions yet</p>
@@ -163,7 +163,7 @@ export function DeckVersionList({ deckId }: DeckVersionListProps) {
               value={renameNotes}
               onChange={(e) => setRenameNotes(e.target.value)}
               rows={3}
-              className="border-input shadow-brutal-sm min-h-20 w-full rounded-none border-2 bg-transparent px-3 py-2 text-base outline-none md:text-sm"
+              className="border-input min-h-20 w-full rounded-md border bg-transparent px-3 py-2 text-base shadow-sm outline-none md:text-sm"
               placeholder="Notes…"
             />
           </div>

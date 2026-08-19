@@ -16,7 +16,7 @@ Format: each record states Context → Decision → Consequences → Alternative
 | [ADR-007](#adr-007--indexeddb-via-dexie-with-versioned-migrations-from-v1) | Dexie + migrations from v1                      | Accepted | 3                   |
 | [ADR-008](#adr-008--roles-and-synergies-live-on-deckcard-as-tag-slugs)     | Tags on `DeckCard`, stored as slugs             | Accepted | 3, 5                |
 | [ADR-009](#adr-009--apply-changes-deletes-cut-records)                     | Apply Changes deletes CUT records               | Accepted | 7                   |
-| [ADR-010](#adr-010--tweakcn-neo-brutalism-is-the-only-design-system)       | Neo Brutalism, undiluted                        | Accepted | 1, 14               |
+| [ADR-010](#adr-010--tweakcn-neo-brutalism-is-the-only-design-system)       | Neo Brutalism, undiluted                        | Superseded by ADR-023 | 1, 14       |
 | [ADR-011](#adr-011--official-automation-toolchain)                         | Vitest + TestCafe + Knip + MSW + GitHub Actions | Accepted | all                 |
 | [ADR-012](#adr-012--testcafe-instead-of-playwright-for-e2e)                | TestCafe over Playwright                        | Accepted | 5, 15               |
 | [ADR-013](#adr-013--app-name-mtg-deck-builder)                             | App name: MTG Deck Builder                      | Accepted | 1                   |
@@ -29,6 +29,7 @@ Format: each record states Context → Decision → Consequences → Alternative
 | [ADR-020](#adr-020--example-deck-commander-is-isshin-two-heavens-as-one)   | Example commander = Isshin                      | Accepted | 0                   |
 | [ADR-021](#adr-021--scryfall-symbology-over-icon-font)                     | Scryfall symbology cache over icon fonts        | Accepted | 17                  |
 | [ADR-022](#adr-022--warn-not-block-on-illegal-adds)                        | Warn, never block illegal card adds             | Accepted | 17                  |
+| [ADR-023](#adr-023--solar-dusk-supersedes-neo-brutalism-and-dark-is-the-default) | Solar Dusk, deterministic dark default     | Accepted | 18                  |
 
 Phase 16 operational decisions (not ADR-numbered): [`docs/decisions/error-tracking.md`](./decisions/error-tracking.md), [`docs/decisions/analytics.md`](./decisions/analytics.md), [`docs/decisions/csp.md`](./decisions/csp.md).
 
@@ -173,6 +174,8 @@ Phase 16 operational decisions (not ADR-numbered): [`docs/decisions/error-tracki
 ---
 
 ## ADR-010 — tweakcn Neo Brutalism is the only design system
+
+**Status:** Superseded by ADR-023. Retained as launch-era history.
 
 **Context.** shadcn/ui defaults are rounded and soft. Applying a theme on top of those defaults typically produces a diluted hybrid.
 
@@ -320,6 +323,50 @@ Phase 16 operational decisions (not ADR-numbered): [`docs/decisions/error-tracki
 **Decision.** When adding to a deck whose format marks the card `banned` / `restricted` / `not_legal`, show a confirmation (“Add anyway”) and a warning toast after confirm. Skip when format is `other` or legality is unknown.
 
 **Consequences.** Deck-level Phase 13 validation still surfaces legality errors; add flow never silently refuses.
+
+---
+
+## ADR-023 — Solar Dusk supersedes Neo Brutalism and dark is the default
+
+**Context.** The launch theme's square, hard-offset treatment made dense mobile
+surfaces visually noisy and difficult to extend consistently. Phase 18 requires
+a complete visual-system migration while preserving every route, interaction,
+data model, and offline behavior.
+
+**Decision.** The build-time payload at
+<https://tweakcn.com/r/themes/solar-dusk.json> is authoritative for the base
+light and dark colors, `0.3rem` radius, typography, spacing, tracking, and
+blurred elevation scale copied into `app/globals.css`. The application never
+fetches that payload at runtime. Oxanium, Fira Code, and Merriweather are loaded
+through `next/font`.
+
+Dark is deterministic: the server response contains the `dark` class and
+`next-themes` uses `defaultTheme="dark"`, does not follow the operating system,
+and persists only explicit Dark or Light choices under
+`mtg-deck-builder-theme`.
+
+Application meanings that Solar Dusk does not define—CURRENT, ADD, CUT,
+CONSIDER, COMMANDER, warnings, wishlist priorities, legality, and MTG mana
+colors—remain labelled semantic extensions. Their per-mode foreground and
+background pairs are centralized as CSS tokens; color is never their only cue.
+
+**Consequences.**
+
+- ADR-010 is superseded, not deleted. Phases 0–17 remain accurate history.
+- Tokens, provider, primitives, feature surfaces, PWA metadata, and generated
+  icons form one rollback boundary; a partial rollback would recreate a hybrid.
+- Shared primitives own radius, border, elevation, focus, disabled, and touch
+  behavior. `shadow-brutal*`, hard-offset shadows, press translations, and
+  zero-radius overrides must not return.
+- The static manifest and splash chrome use Solar Dusk's dark background
+  (`#1c1917`); explicit light mode changes content, while static PWA chrome
+  continues to represent the product default.
+- Theme preference is presentation-only local storage and is excluded from
+  IndexedDB, backups, and imports.
+
+**Rejected.** Following the system theme (non-deterministic first run);
+token-only recoloring (leaves a hybrid); runtime registry fetches (offline and
+availability risk); exporting appearance as domain data.
 
 ---
 

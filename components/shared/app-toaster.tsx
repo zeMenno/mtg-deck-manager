@@ -10,11 +10,11 @@ export function AppToaster() {
       closeButton
       toastOptions={{
         classNames: {
-          toast: "border-4 border-border shadow-brutal rounded-none font-sans",
-          title: "font-bold uppercase text-sm",
+          toast: "border border-border shadow-md rounded-md font-sans",
+          title: "text-sm font-semibold",
           description: "text-xs",
           actionButton:
-            "bg-primary text-primary-foreground border-2 border-border uppercase font-bold",
+            "bg-primary text-primary-foreground border border-border rounded-sm font-semibold",
         },
       }}
     />

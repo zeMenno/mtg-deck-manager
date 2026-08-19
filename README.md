@@ -8,7 +8,7 @@ Mobile-first, local-first Progressive Web App for maintaining Magic: The Gatheri
 - **Build plan:** [`build-plan/README.md`](./build-plan/README.md)
 - **Automation strategy:** [`build-plan/automation-strategy.md`](./build-plan/automation-strategy.md)
 
-> **Current status: Phase 17 (Legality / mana symbols / search filters) complete in-repo as v1.1.0.**  
+> **Current status: Phase 18 (Solar Dusk / dark-default appearance) implemented in-repo for v1.1.1; physical iPhone sign-off remains.**
 > Production HTTPS from Phase 16: **https://mtg-deck-manager-two.vercel.app**. Human leftovers: push/redeploy, iPhone §70 QA, tag `v1.0.0`/`v1.1.0` as desired.
 
 ---
@@ -24,7 +24,7 @@ Mobile-first, local-first Progressive Web App for maintaining Magic: The Gatheri
 | Components     | shadcn/ui (`new-york` style)    | CLI 4.x |
 | Icons          | lucide-react                    | 1.x     |
 | Service worker | Serwist (`@serwist/next`)       | 9.5.12  |
-| Theme          | tweakcn Neo Brutalism           | —       |
+| Theme          | tweakcn Solar Dusk              | —       |
 | Unit tests     | Vitest                          | 4.x     |
 | E2E (later)    | TestCafe (Phase 5+)             | —       |
 | Hosting        | Vercel                          | —       |
@@ -85,7 +85,7 @@ app/                    App Router routes
   manifest.ts           Web app manifest → /manifest.webmanifest
   sw.ts                 Serwist service worker source → public/sw.js
   offline/page.tsx      Offline fallback for uncached navigations
-  globals.css           Neo Brutalism tokens, status tokens, custom utilities
+  globals.css           Solar Dusk tokens, status tokens, custom utilities
   settings/install/     iPhone Add to Home Screen guide
   decks|cards|wishlist|settings/page.tsx
 components/
@@ -111,15 +111,17 @@ build-plan/             Phase-by-phase build documents
 
 ## Theme
 
-The single source of design truth is the tweakcn Neo Brutalism theme, imported into [`app/globals.css`](./app/globals.css). Per [ADR-010](./docs/decisions.md):
+The single source of design truth is [tweakcn Solar Dusk](https://tweakcn.com/r/themes/solar-dusk.json), copied at build time into [`app/globals.css`](./app/globals.css). Per [ADR-023](./docs/decisions.md):
 
-- `--radius: 0px` — nothing is rounded.
-- Hard black borders (`border-2` and up), no soft rings.
-- Hard **non-blurred** offset shadows. The elevation scale was flattened to pure offsets, and `shadow-brutal{,-sm,-lg}` utilities cast a 2/4/6px offset in the border colour.
-- DM Sans (sans) and Space Mono (mono), loaded via `next/font/google`.
-- Forbidden: glassmorphism, blurred shadows, gradients, rounded cards, sub-44px tap targets.
+- Dark is the deterministic server-rendered and first-run default; Settings exposes explicit Dark and Light choices.
+- Solar Dusk's exact light/dark palette, `0.3rem` radius, tracking, spacing, and soft elevation scale drive shared primitives.
+- Oxanium (sans/headings), Fira Code (technical metadata), and Merriweather (serif) load through `next/font/google`.
+- Feature surfaces consume semantic tokens instead of raw page-level colors.
+- Mobile controls retain 44px minimum touch targets, visible focus, safe-area handling, and reduced-motion behavior.
 
-shadcn primitives are **not** used as generated — `Button`, `Card`, `Input`, and `Badge` were audited after `shadcn init` to strip rounding and blurred shadows and to raise controls to a 44px minimum height.
+The app never fetches the registry at runtime. `next-themes` persists the local
+choice under `mtg-deck-builder-theme`; appearance is intentionally excluded from
+deck backups.
 
 ### Semantic status tokens
 
@@ -139,9 +141,9 @@ Standalone mode is detected with `display-mode: standalone` plus the non-standar
 
 ### Manifest and icons
 
-[`app/manifest.ts`](./app/manifest.ts) is served at `/manifest.webmanifest` with `display: standalone`, `orientation: portrait`, `theme_color: #000000` (the theme's hard border black) and `background_color: #ffffff`.
+[`app/manifest.ts`](./app/manifest.ts) is served at `/manifest.webmanifest` with `display: standalone`, `orientation: portrait`, and Solar Dusk's dark-default `theme_color` / `background_color` (`#1c1917`).
 
-Icons are **generated, not hand-drawn**: `npm run icons:generate` renders `public/icons/{icon-192,icon-512,icon-512-maskable,apple-touch-icon}.png` from rectangles in the three theme colours via sharp. Edit `scripts/generate-icons.mjs` and re-run; never edit the PNGs. The maskable variant keeps the mark inside the safe zone and bleeds the red field to the edge. A unit test asserts that every icon the manifest references exists on disk.
+Icons are **generated, not hand-drawn**: `npm run icons:generate` renders `public/icons/{icon-192,icon-512,icon-512-maskable,apple-touch-icon}.png` from Solar Dusk dark-background and primary colors via sharp. Edit `scripts/generate-icons.mjs` and re-run; never edit the PNGs. The maskable variant keeps the mark inside the safe zone. A unit test asserts that every icon the manifest references exists on disk.
 
 `apple-touch-icon` and `apple-mobile-web-app-*` tags come from the root layout. Note that Next's metadata API emits only the standardized `mobile-web-app-capable`, so the legacy `apple-mobile-web-app-capable` tag is written explicitly in `app/layout.tsx` for iOS below 16.4. `statusBarStyle: black-translucent` means the page draws under the status bar, which is why the header carries the `pt-safe` utility alongside the bottom nav's `pb-safe`.
 

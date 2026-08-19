@@ -68,7 +68,7 @@ export function DbTestClient() {
         Dev-only persistence smoke test
       </p>
 
-      <section className="border-border shadow-brutal flex flex-col gap-3 border-4 p-4">
+      <section className="border-border flex flex-col gap-3 rounded-lg border p-4 shadow-md">
         <h2 className="font-bold uppercase">Deck CRUD</h2>
         <Input value={name} onChange={(e) => setName(e.target.value)} />
         <Button
@@ -117,7 +117,7 @@ export function DbTestClient() {
         </Button>
       </section>
 
-      <section className="border-border shadow-brutal flex flex-col gap-3 border-4 p-4">
+      <section className="border-border flex flex-col gap-3 rounded-lg border p-4 shadow-md">
         <h2 className="font-bold uppercase">Cards</h2>
         <Button
           disabled={pending || !selectedDeckId}
@@ -157,7 +157,7 @@ export function DbTestClient() {
         </div>
       </section>
 
-      <section className="border-border shadow-brutal border-4 p-4">
+      <section className="border-border rounded-lg border p-4 shadow-md">
         <h2 className="mb-2 font-bold uppercase">State</h2>
         <p className="font-mono text-xs">
           Selected: {selectedDeckId ?? "(none)"}
@@ -184,7 +184,7 @@ export function DbTestClient() {
         </ul>
       </section>
 
-      <section className="border-border shadow-brutal border-4 p-4 font-mono text-xs">
+      <section className="border-border rounded-lg border p-4 font-mono text-xs shadow-md">
         <h2 className="mb-2 font-bold uppercase">Log</h2>
         <ul className="space-y-1">
           {log.map((line) => (

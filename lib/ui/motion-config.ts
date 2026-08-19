@@ -1,6 +1,5 @@
 /**
- * Motion tokens for Phase 14 UX polish.
- * Neo Brutalism favors snappy, decisive motion — keep durations short.
+ * Shared motion tokens. Durations stay short and functional across themes.
  *
  * Page transitions: 200–300ms ease-out
  * Sheet open/close: max 350ms

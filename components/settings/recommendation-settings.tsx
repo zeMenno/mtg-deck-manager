@@ -43,7 +43,7 @@ export function RecommendationSettings() {
 
   return (
     <section
-      className="border-border bg-card shadow-brutal-sm flex flex-col gap-4 border-2 p-4"
+      className="border-border bg-card flex flex-col gap-4 rounded-md border p-4 shadow-sm"
       data-testid="recommendation-settings"
     >
       <div>

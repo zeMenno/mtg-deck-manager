@@ -77,7 +77,7 @@ export function ReplacementLinkPicker({
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search…"
             data-testid="replacement-search"
-            className="border-border bg-background h-11 w-full border-2 px-3"
+            className="border-border bg-background h-11 w-full border px-3"
           />
 
           {filtered.length === 0 ? (

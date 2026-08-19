@@ -29,15 +29,17 @@ export function AppLayout({ children }: AppLayoutProps) {
         <div className="flex min-h-dvh flex-col md:pl-60">
           <SidebarNav />
 
-          <header className="pt-safe border-border bg-secondary sticky top-0 z-40 border-b-4">
+          <header className="pt-safe border-border bg-background/95 sticky top-0 z-40 border-b shadow-sm backdrop-blur">
             <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3 md:px-6">
-              <span className="font-heading text-lg font-black tracking-tight uppercase md:hidden">
+              <span className="font-heading text-lg font-bold tracking-tight md:hidden">
                 MTG Deck Builder
               </span>
-              <span className="font-heading hidden text-lg font-black tracking-tight uppercase md:inline">
+              <span className="font-heading hidden text-lg font-bold tracking-tight md:inline">
                 Deck Builder
               </span>
-              <span className="font-mono text-xs uppercase">Local-first</span>
+              <span className="text-muted-foreground text-xs font-medium">
+                Local-first
+              </span>
             </div>
             <OfflineIndicator />
           </header>

@@ -1,9 +1,9 @@
 import type { MetadataRoute } from "next";
 
 /**
- * Colours mirror the Neo Brutalism tokens in app/globals.css: the theme colour
- * is the hard black border/foreground, the background colour is the app's white
- * canvas so the iOS splash screen does not flash a foreign colour.
+ * Verified sRGB equivalents of Solar Dusk dark tokens in app/globals.css:
+ * background oklch(0.2161 0.0061 56.0434) → #1c1917 and
+ * primary oklch(0.7049 0.1867 47.6044) → #f97316.
  */
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -16,8 +16,8 @@ export default function manifest(): MetadataRoute.Manifest {
     scope: "/",
     display: "standalone",
     orientation: "portrait",
-    background_color: "#ffffff",
-    theme_color: "#000000",
+    background_color: "#1c1917",
+    theme_color: "#1c1917",
     icons: [
       {
         src: "/icons/icon-192.png",

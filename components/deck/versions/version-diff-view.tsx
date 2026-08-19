@@ -43,7 +43,7 @@ export function VersionDiffView({ deckId, diff }: VersionDiffViewProps) {
   if (isEmptyDiff(diff)) {
     return (
       <p
-        className="border-border border-2 p-4 text-sm font-bold"
+        className="border-border border p-4 text-sm font-bold"
         data-testid="version-diff-empty"
       >
         No differences between these decks.
@@ -57,7 +57,7 @@ export function VersionDiffView({ deckId, diff }: VersionDiffViewProps) {
 
       {diff.added.length > 0 ? (
         <section className="flex flex-col gap-2" data-testid="diff-added">
-          <h2 className="text-sm font-black text-green-700 uppercase">Added</h2>
+          <h2 className="text-status-add text-sm font-bold">Added</h2>
           {diff.added.map((row) => (
             <VersionDiffEntry
               key={`add-${row.cardId}-${row.zone}`}
@@ -79,7 +79,7 @@ export function VersionDiffView({ deckId, diff }: VersionDiffViewProps) {
 
       {diff.removed.length > 0 ? (
         <section className="flex flex-col gap-2" data-testid="diff-removed">
-          <h2 className="text-sm font-black text-red-700 uppercase">Removed</h2>
+          <h2 className="text-status-cut text-sm font-bold">Removed</h2>
           {diff.removed.map((row) => (
             <VersionDiffEntry
               key={`rem-${row.cardId}-${row.zone}`}
@@ -101,7 +101,7 @@ export function VersionDiffView({ deckId, diff }: VersionDiffViewProps) {
 
       {diff.quantityChanges.length > 0 ? (
         <section className="flex flex-col gap-2" data-testid="diff-qty">
-          <h2 className="text-sm font-black text-yellow-700 uppercase">
+          <h2 className="text-status-consider text-sm font-bold">
             Quantity changes
           </h2>
           {diff.quantityChanges.map((row) => (
@@ -125,7 +125,7 @@ export function VersionDiffView({ deckId, diff }: VersionDiffViewProps) {
 
       {diff.statusChanges.length > 0 ? (
         <section className="flex flex-col gap-2" data-testid="diff-status">
-          <h2 className="text-sm font-black text-blue-700 uppercase">
+          <h2 className="text-status-commander text-sm font-bold">
             Status changes
           </h2>
           {diff.statusChanges.map((row) => (

@@ -1,6 +1,6 @@
 {
   "name": "mtg-deck-manager",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -38,6 +38,7 @@
     "dexie": "^4.4.5",
     "lucide-react": "^1.32.0",
     "next": "15.5.23",
+    "next-themes": "^0.4.6",
     "radix-ui": "^1.6.7",
     "react": "19.1.0",
     "react-dom": "19.1.0",

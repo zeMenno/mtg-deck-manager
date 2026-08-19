@@ -14,10 +14,10 @@ export function DeckSizeBadge({ counts, className }: DeckSizeBadgeProps) {
     <div
       data-testid="deck-size-badge"
       className={cn(
-        "border-border inline-flex items-baseline gap-2 border-2 px-3 py-2 font-black",
+        "border-border inline-flex items-baseline gap-2 border px-3 py-2 font-black",
         onTarget
           ? "bg-status-current text-status-current-foreground"
-          : "bg-destructive text-white",
+          : "bg-destructive text-destructive-foreground",
         className,
       )}
     >

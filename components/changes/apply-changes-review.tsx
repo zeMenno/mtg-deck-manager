@@ -113,7 +113,7 @@ export function ApplyChangesReview({
             {pairs.map((pair) => (
               <li
                 key={`${pair.add.id}-${pair.cut.id}`}
-                className="border-border border-2 p-2 text-sm"
+                className="border-border border p-2 text-sm"
                 data-testid="replacement-pair"
               >
                 <p>

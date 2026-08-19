@@ -20,7 +20,7 @@ export function DeckCheckSummary({
         className,
       )}
     >
-      <div className="border-border border-2 p-2">
+      <div className="border-border border p-2">
         <dt className="text-muted-foreground">Errors</dt>
         <dd
           className={cn(
@@ -32,13 +32,13 @@ export function DeckCheckSummary({
           {summary.errors}
         </dd>
       </div>
-      <div className="border-border border-2 p-2">
+      <div className="border-border border p-2">
         <dt className="text-muted-foreground">Warnings</dt>
         <dd className="text-lg font-black" data-testid="summary-warnings">
           {summary.warnings}
         </dd>
       </div>
-      <div className="border-border border-2 p-2">
+      <div className="border-border border p-2">
         <dt className="text-muted-foreground">Recs</dt>
         <dd
           className="text-lg font-black"
@@ -47,7 +47,7 @@ export function DeckCheckSummary({
           {summary.recommendations}
         </dd>
       </div>
-      <div className="border-border border-2 p-2">
+      <div className="border-border border p-2">
         <dt className="text-muted-foreground">Passed</dt>
         <dd className="text-lg font-black" data-testid="summary-passed">
           {summary.passed}

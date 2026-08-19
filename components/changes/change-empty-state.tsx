@@ -13,7 +13,7 @@ export function ChangeEmptyState({
 }: ChangeEmptyStateProps) {
   return (
     <div
-      className="border-border flex flex-col gap-2 border-2 border-dashed p-6 text-center"
+      className="border-border flex flex-col gap-2 border border-dashed p-6 text-center"
       data-testid={testId}
     >
       <p className="font-bold">{title}</p>

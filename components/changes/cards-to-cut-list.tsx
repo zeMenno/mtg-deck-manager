@@ -69,7 +69,7 @@ export function CardsToCutList({ deckId, onOpenActions }: CardsToCutListProps) {
             return (
               <li
                 key={item.id}
-                className="border-border flex flex-col gap-2 border-2 p-2"
+                className="border-border flex flex-col gap-2 border p-2"
                 data-testid={`cards-to-cut-row-${item.id}`}
               >
                 <DeckCardRow
@@ -90,7 +90,7 @@ export function CardsToCutList({ deckId, onOpenActions }: CardsToCutListProps) {
                     data-testid={`cut-reason-${item.id}`}
                     rows={2}
                     value={reason}
-                    className="border-border bg-background w-full border-2 p-2 text-sm"
+                    className="border-border bg-background w-full border p-2 text-sm"
                     onChange={(e) =>
                       setNotesDraft((prev) => ({
                         ...prev,

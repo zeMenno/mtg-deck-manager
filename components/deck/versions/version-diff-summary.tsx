@@ -10,20 +10,20 @@ export function VersionDiffSummary({ diff }: VersionDiffSummaryProps) {
   const { summary } = diff;
   return (
     <div
-      className="border-border bg-card shadow-brutal-sm border-2 p-3 font-mono text-sm"
+      className="border-border bg-card rounded-md border p-3 font-mono text-sm shadow-sm"
       data-testid="version-diff-summary"
     >
-      <span className="text-green-700">+ {summary.addedCount} cards</span>
+      <span className="text-status-add">+ {summary.addedCount} cards</span>
       <span className="mx-2">·</span>
-      <span className="text-red-700">− {summary.removedCount} cards</span>
+      <span className="text-status-cut">− {summary.removedCount} cards</span>
       <span className="mx-2">·</span>
-      <span className="text-yellow-700">
+      <span className="text-status-consider">
         {summary.quantityChangeCount} qty changes
       </span>
       {summary.statusChangeCount > 0 ? (
         <>
           <span className="mx-2">·</span>
-          <span className="text-blue-700">
+          <span className="text-status-commander">
             {summary.statusChangeCount} status
           </span>
         </>

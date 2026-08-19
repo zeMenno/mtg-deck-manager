@@ -107,7 +107,7 @@ export function CardImage({
           onLoad={() => setStatus("loaded")}
           onError={() => setStatus("error")}
           className={cn(
-            "border-border bg-muted border-2 object-cover",
+            "border-border bg-muted border object-cover",
             sizeClass,
             status === "loading" && "opacity-0",
             status === "loaded" &&

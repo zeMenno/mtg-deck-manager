@@ -62,7 +62,7 @@ export function DeckHeader({
         type="button"
         data-testid="commander-slot"
         onClick={onPickCommander}
-        className="border-border bg-card shadow-brutal-sm flex items-center gap-3 border-2 p-3 text-left"
+        className="border-border bg-card flex items-center gap-3 rounded-md border p-3 text-left shadow-sm"
       >
         {commander ? (
           <>

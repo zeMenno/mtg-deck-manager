@@ -114,7 +114,7 @@ export function CardSearchInput({
           <span className="sr-only sm:not-sr-only sm:ml-1">Filters</span>
           {filterCount > 0 ? (
             <span
-              className="bg-primary text-primary-foreground border-border absolute -top-1 -right-1 flex size-5 items-center justify-center border-2 text-[0.625rem] font-bold"
+              className="bg-primary text-primary-foreground border-border absolute -top-1 -right-1 flex size-5 items-center justify-center border text-[0.625rem] font-bold"
               data-testid="card-search-filters-count"
             >
               {filterCount}

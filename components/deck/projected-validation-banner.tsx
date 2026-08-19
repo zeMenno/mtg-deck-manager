@@ -38,7 +38,7 @@ export function ProjectedValidationBanner({
     <div
       data-testid="projected-validation-banner"
       className={cn(
-        "border-border flex flex-col gap-2 border-2 p-3",
+        "border-border flex flex-col gap-2 border p-3",
         illegal
           ? "bg-destructive/15"
           : sizeOk

@@ -1,10 +1,9 @@
 /**
  * Generates the PWA icon set in public/icons/ from vector primitives.
  *
- * The artwork is intentionally nothing but axis-aligned rectangles in the three
- * Neo Brutalism theme colours, so it renders identically on every machine (no
- * font or gradient dependencies) and survives being scaled down to a 60px iOS
- * Home Screen tile.
+ * The artwork uses Solar Dusk's dark background and primary accent. It has no
+ * font or gradient dependencies and survives scaling to a 60px iOS Home Screen
+ * tile.
  *
  * Run with: npm run icons:generate
  */
@@ -14,12 +13,11 @@ import { fileURLToPath } from "node:url";
 
 import sharp from "sharp";
 
-// sRGB equivalents of the app's oklch theme tokens in app/globals.css:
-// --primary, --secondary, --foreground/--border, --background.
-const RED = "#ff3333";
-const YELLOW = "#ffff00";
-const BLACK = "#000000";
-const WHITE = "#ffffff";
+// Verified sRGB equivalents of Solar Dusk's dark OKLCH tokens.
+const BACKGROUND = "#1c1917";
+const PRIMARY = "#f97316";
+const BORDER = "#57534e";
+const FOREGROUND = "#fafaf9";
 
 const CANVAS = 512;
 const OUTPUT_DIR = join(
@@ -33,10 +31,10 @@ function rect({ x, y, width, height, fill }) {
   return `<rect x="${x}" y="${y}" width="${width}" height="${height}" fill="${fill}"/>`;
 }
 
-/** A card: hard black border drawn as an outer rect, fill inset by `border`. */
+/** A card silhouette with a quiet token border. */
 function card({ x, y, width, height, fill, border }) {
   return [
-    rect({ x, y, width, height, fill: BLACK }),
+    rect({ x, y, width, height, fill: BORDER }),
     rect({
       x: x + border,
       y: y + border,
@@ -64,7 +62,7 @@ function deckMark(scale) {
   const originX = (CANVAS - markWidth * scale) / 2;
   const originY = (CANVAS - markHeight * scale) / 2;
 
-  const layers = [YELLOW, WHITE, WHITE];
+  const layers = [PRIMARY, FOREGROUND, FOREGROUND];
 
   return layers
     .map((fill, index) =>
@@ -84,7 +82,7 @@ function deckMark(scale) {
         y: originY + (2 * step + border + 18) * scale,
         width: (cardWidth - border * 2 - 36) * scale,
         height: 40 * scale,
-        fill: BLACK,
+        fill: BACKGROUND,
       }),
     )
     .join("");
@@ -92,10 +90,10 @@ function deckMark(scale) {
 
 function svg({ size, maskable }) {
   const frame = maskable
-    ? rect({ x: 0, y: 0, width: CANVAS, height: CANVAS, fill: RED })
+    ? rect({ x: 0, y: 0, width: CANVAS, height: CANVAS, fill: PRIMARY })
     : [
-        rect({ x: 0, y: 0, width: CANVAS, height: CANVAS, fill: BLACK }),
-        rect({ x: 32, y: 32, width: 448, height: 448, fill: RED }),
+        rect({ x: 0, y: 0, width: CANVAS, height: CANVAS, fill: BACKGROUND }),
+        rect({ x: 32, y: 32, width: 448, height: 448, fill: PRIMARY }),
       ].join("");
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${CANVAS} ${CANVAS}">${frame}${deckMark(maskable ? 0.72 : 1)}</svg>`;
@@ -113,7 +111,7 @@ await mkdir(OUTPUT_DIR, { recursive: true });
 for (const target of targets) {
   const png = await sharp(Buffer.from(svg(target)))
     // Opaque background: iOS refuses transparency on Home Screen icons.
-    .flatten({ background: BLACK })
+    .flatten({ background: BACKGROUND })
     .png({ compressionLevel: 9 })
     .toBuffer();
 

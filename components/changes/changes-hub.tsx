@@ -28,7 +28,7 @@ export function ChangesHub({ deckId }: ChangesHubProps) {
 
   return (
     <div className="flex flex-col gap-4" data-testid="changes-hub">
-      <div className="border-border bg-card flex flex-wrap items-center justify-between gap-2 border-2 p-3">
+      <div className="border-border bg-card flex flex-wrap items-center justify-between gap-2 border p-3">
         <p className="font-mono text-xs uppercase">
           Projected {projected.projectedQuantity} cards · {summary.addCount} add
           · {summary.cutCount} cut · {summary.considerCount} consider

@@ -51,7 +51,7 @@ export function InstallBanner() {
     <aside
       data-testid="install-banner"
       aria-labelledby="install-banner-title"
-      className="border-border bg-warning text-warning-foreground shadow-brutal flex flex-col gap-3 border-4 p-4"
+      className="border-border bg-warning text-warning-foreground flex flex-col gap-3 rounded-lg border p-4 shadow-md"
     >
       <div className="flex items-start gap-3">
         <Smartphone aria-hidden="true" className="mt-0.5 size-5 shrink-0" />

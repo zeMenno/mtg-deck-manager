@@ -25,7 +25,7 @@ export function StorageUsageCard({ refreshKey = 0 }: StorageUsageCardProps) {
 
   return (
     <div
-      className="border-border bg-card shadow-brutal-sm border-2 p-3"
+      className="border-border bg-card rounded-md border p-3 shadow-sm"
       data-testid="storage-usage-card"
     >
       <p className="font-mono text-xs uppercase">Storage</p>

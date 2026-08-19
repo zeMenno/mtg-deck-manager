@@ -38,7 +38,7 @@ export function CardImagePlaceholder({
   return (
     <div
       className={cn(
-        "border-border bg-muted text-muted-foreground flex items-center justify-center border-2",
+        "border-border bg-muted text-muted-foreground flex items-center justify-center border",
         variant === "skeleton" &&
           "motion-safe:animate-pulse motion-reduce:animate-none",
         className,

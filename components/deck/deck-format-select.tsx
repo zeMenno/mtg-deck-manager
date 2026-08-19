@@ -27,7 +27,7 @@ export function DeckFormatSelect({
       disabled={disabled}
       onChange={(e) => onChange(e.target.value as DeckFormat)}
       className={cn(
-        "border-border bg-background shadow-brutal-sm h-11 w-full border-2 px-3 font-bold uppercase",
+        "border-border bg-background h-11 w-full rounded-md border px-3 font-bold uppercase shadow-sm",
         className,
       )}
     >

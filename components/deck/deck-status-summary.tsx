@@ -47,7 +47,7 @@ export function DeckStatusSummary({
         const badge = (
           <Badge
             variant="outline"
-            className={cn("border-border border-2", chip.className)}
+            className={cn("border-border border", chip.className)}
             data-testid={`status-count-${chip.key}`}
           >
             {chip.label}

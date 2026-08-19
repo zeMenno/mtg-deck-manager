@@ -181,7 +181,7 @@ export function DeckCardsClient({ params }: DeckCardsClientProps) {
             onChange={(e) =>
               setSort(e.target.value as NonNullable<DeckCardFilters["sort"]>)
             }
-            className="border-border bg-background h-11 flex-1 border-2 px-3 font-bold uppercase"
+            className="border-border bg-background h-11 flex-1 border px-3 font-bold uppercase"
           >
             <option value="name">Name</option>
             <option value="mv">Mana value</option>

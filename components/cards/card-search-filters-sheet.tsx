@@ -47,9 +47,9 @@ function ToggleChip({
       data-testid={testId}
       onClick={onClick}
       className={cn(
-        "border-border inline-flex min-h-11 min-w-11 items-center justify-center border-2 px-3 text-xs font-bold uppercase",
+        "border-border inline-flex min-h-11 min-w-11 items-center justify-center border px-3 text-xs font-bold uppercase",
         active
-          ? "bg-primary text-primary-foreground shadow-brutal-sm"
+          ? "bg-primary text-primary-foreground shadow-sm"
           : "bg-background hover:bg-muted",
       )}
     >
@@ -264,7 +264,7 @@ export function CardSearchFiltersSheet({
             </span>
             <select
               data-testid="filter-legal-in"
-              className="border-border bg-background h-11 border-2 px-3 font-bold"
+              className="border-border bg-background h-11 border px-3 font-bold"
               value={draft.legalIn ?? ""}
               onChange={(e) => {
                 const v = e.target.value;

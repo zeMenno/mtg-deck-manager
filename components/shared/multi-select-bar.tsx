@@ -20,7 +20,7 @@ export function MultiSelectBar({
   return (
     <div
       data-testid="multi-select-bar"
-      className="pb-safe border-border bg-background fixed inset-x-0 bottom-[var(--bottom-nav-height)] z-40 border-t-4 px-4 py-3"
+      className="pb-safe border-border bg-background fixed inset-x-0 bottom-[var(--bottom-nav-height)] z-40 border-t px-4 py-3 shadow-md"
     >
       <div className="mx-auto flex max-w-3xl flex-col gap-2">
         <p className="font-mono text-xs uppercase">{count} selected</p>
