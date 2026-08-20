@@ -7,6 +7,7 @@ import {
   type CreateDeckInput,
 } from "@/lib/db/repositories";
 import { CardRepository } from "@/lib/db/repositories/card-repository";
+import { SettingsRepository } from "@/lib/db/repositories/settings-repository";
 import {
   DEFAULT_FORMAT,
   MAX_QUANTITY,
@@ -16,6 +17,11 @@ import {
   getDuplicateWarnings,
   type DuplicateWarning,
 } from "@/lib/deck/duplicate-detection";
+import {
+  switchDeckCardPrinting,
+  type SwitchPrintingInput,
+  type SwitchPrintingResult,
+} from "@/lib/deck/switch-printing";
 import { getCardById, normalizeScryfallCard } from "@/lib/scryfall";
 import type { DeckCardStatus, DeckCardZone } from "@/types";
 import type { Card } from "@/types/card";
@@ -399,6 +405,18 @@ export class DeckCardService {
       throw new Error(`DeckCard not found: ${deckCardId}`);
     }
     return this.updateDeckCard(deckCardId, { foil: !existing.foil });
+  }
+
+  async switchPrinting(
+    input: SwitchPrintingInput,
+  ): Promise<SwitchPrintingResult> {
+    const currency = await new SettingsRepository(this.database).get(
+      "currency",
+    );
+    return switchDeckCardPrinting(input, {
+      database: this.database,
+      currency,
+    });
   }
 
   async bulkSetStatus(

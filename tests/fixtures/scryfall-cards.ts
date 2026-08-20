@@ -34,6 +34,32 @@ export const FIXTURE_SOL_RING: ScryfallCard = {
   prices: { usd: "1.50", usd_foil: "3.00", eur: "1.20", eur_foil: "2.50" },
 };
 
+export const FIXTURE_SOL_RING_CHEAP: ScryfallCard = {
+  ...FIXTURE_SOL_RING,
+  id: "a2222222-2222-4222-8222-222222222222",
+  set: "cmm",
+  set_name: "Commander Masters",
+  collector_number: "396",
+  released_at: "2023-08-04",
+  prices: { usd: "0.80", usd_foil: "1.75", eur: "0.65", eur_foil: "1.50" },
+};
+
+export const FIXTURE_SOL_RING_OLD: ScryfallCard = {
+  ...FIXTURE_SOL_RING,
+  id: "a3333333-3333-4333-8333-333333333333",
+  set: "lea",
+  set_name: "Limited Edition Alpha",
+  collector_number: "270",
+  released_at: "1993-08-05",
+  prices: { usd: "900.00", usd_foil: null, eur: null, eur_foil: null },
+};
+
+/** Two-page print-search fixture used by Phase 19 pagination tests. */
+export const FIXTURE_SOL_RING_PRINT_PAGES = [
+  [FIXTURE_SOL_RING, FIXTURE_SOL_RING_CHEAP],
+  [FIXTURE_SOL_RING_OLD],
+] as const;
+
 /** Transform DFC — Delver of Secrets // Insectile Aberration style. */
 export const FIXTURE_TRANSFORM_DFC: ScryfallCard = {
   object: "card",
@@ -192,6 +218,8 @@ export const FIXTURE_MINIMAL: ScryfallCard = {
 
 export const FIXTURE_CARDS: ScryfallCard[] = [
   FIXTURE_SOL_RING,
+  FIXTURE_SOL_RING_CHEAP,
+  FIXTURE_SOL_RING_OLD,
   FIXTURE_TRANSFORM_DFC,
   FIXTURE_MODAL_DFC,
   FIXTURE_ADVENTURE,

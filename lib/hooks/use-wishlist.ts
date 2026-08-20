@@ -130,6 +130,20 @@ export function useUpdateWishlistItem() {
   });
 }
 
+export function useSwitchWishlistPrinting() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      itemId,
+      newCardId,
+    }: {
+      itemId: string;
+      newCardId: string;
+    }) => getWishlistService().switchPrinting(itemId, newCardId),
+    onSuccess: () => invalidateWishlist(queryClient),
+  });
+}
+
 export function useRemoveFromWishlist() {
   const queryClient = useQueryClient();
   return useMutation({

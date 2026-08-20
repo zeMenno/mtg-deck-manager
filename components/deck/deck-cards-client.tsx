@@ -307,6 +307,7 @@ export function DeckCardsClient({ params }: DeckCardsClientProps) {
 
         <DeckCardActionsSheet
           item={activeItem}
+          imagesEnabled={imagesEnabled}
           open={actionsOpen}
           onOpenChange={setActionsOpen}
           onViewDetails={() => {
@@ -317,6 +318,8 @@ export function DeckCardsClient({ params }: DeckCardsClientProps) {
 
         <CardDetailSheet
           card={activeItem?.card ?? null}
+          deckCardId={activeItem?.id}
+          foil={activeItem?.foil}
           open={detailOpen}
           onOpenChange={setDetailOpen}
           deckId={deckId}

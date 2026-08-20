@@ -235,6 +235,15 @@ export async function searchCards(
     if (options?.unique) {
       params.set("unique", options.unique);
     }
+    if (options?.order) {
+      params.set("order", options.order);
+    }
+    if (options?.dir) {
+      params.set("dir", options.dir);
+    }
+    if (options?.includeExtras !== undefined) {
+      params.set("include_extras", String(options.includeExtras));
+    }
     return scryfallFetch<ScryfallSearchResult>(
       `/api/cards/search?${params.toString()}`,
     );

@@ -11,6 +11,7 @@ import {
   FIXTURE_CORRUPT_SEARCH,
   FIXTURE_EMPTY_SEARCH,
   FIXTURE_SOL_RING,
+  FIXTURE_SOL_RING_PRINT_PAGES,
 } from "@/tests/fixtures/scryfall-cards";
 
 let forceCorruptSearch = false;
@@ -99,6 +100,21 @@ export const scryfallHandlers = [
         },
         { status: 400 },
       );
+    }
+
+    if (q.includes(`oracleid:${FIXTURE_SOL_RING.oracle_id}`)) {
+      const page = Math.max(1, Number(url.searchParams.get("page") ?? "1"));
+      const data = FIXTURE_SOL_RING_PRINT_PAGES[page - 1] ?? [];
+      return HttpResponse.json({
+        object: "list",
+        total_cards: FIXTURE_SOL_RING_PRINT_PAGES.flat().length,
+        has_more: page < FIXTURE_SOL_RING_PRINT_PAGES.length,
+        next_page:
+          page < FIXTURE_SOL_RING_PRINT_PAGES.length
+            ? `${SCRYFALL_BASE}/cards/search?page=${page + 1}`
+            : undefined,
+        data,
+      });
     }
 
     const data = matchQuery(q);

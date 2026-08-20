@@ -1,8 +1,8 @@
 # MTG Deck Builder — Phase-by-Phase Build Plan
 
-This folder contains **19 executable phase documents** (Phase 0–18) derived from the master product plan at [`plans/mtg-deck-builder-web-app-build-plan.md`](../plans/mtg-deck-builder-web-app-build-plan.md).
+This folder contains **22 executable phase documents** (Phase 0–21) derived from the master product plan at [`plans/mtg-deck-builder-web-app-build-plan.md`](../plans/mtg-deck-builder-web-app-build-plan.md).
 
-Phases 0–16 are the MVP build. **Phases 17–18 are post-launch improvement phases** and are optional for reaching v1.0.0. Phase 18 supersedes the Neo Brutalism visual-system decision after Phase 17 is complete.
+Phases 0–16 are the MVP build. **Phases 17–21 are post-launch improvement phases** and are optional for reaching v1.0.0. Phase 18 supersedes the Neo Brutalism visual-system decision after Phase 17 is complete. Phases 19–21 add printing choice, Archidekt-dialect import into existing decks, and role/synergy *suggestions* (not silent auto-file).
 
 Each phase is designed to be executed by a **new, independent agent** with no prior conversation context.
 
@@ -47,6 +47,9 @@ Do not skip phases — later phases assume earlier deliverables exist.
 | 16    | [phase-16-production-launch.md](./phase-16-production-launch.md)                 | Production deploy, launch checklist                  |
 | 17    | [phase-17-legality-symbols-search-filters.md](./phase-17-legality-symbols-search-filters.md) | Legality tabs, mana symbols, search filters (v1.1) |
 | 18    | [phase-18-solar-dusk-theme.md](./phase-18-solar-dusk-theme.md)                   | Solar Dusk migration, dark-default appearance        |
+| 19    | [phase-19-printing-switcher.md](./phase-19-printing-switcher.md)                 | Switch printings, cheapest English paper print (v1.2) |
+| 20    | [phase-20-archidekt-import.md](./phase-20-archidekt-import.md)                   | Archidekt-dialect parse, import into existing decks (v1.3) |
+| 21    | [phase-21-role-synergy-suggestions.md](./phase-21-role-synergy-suggestions.md)   | Local role/synergy suggestions, overridable (v1.4) |
 
 ---
 
@@ -80,6 +83,9 @@ flowchart TD
   P15 --> P16[Phase16_Launch]
   P16 --> P17[Phase17_LegalitySymbolsFilters]
   P17 --> P18[Phase18_SolarDuskTheme]
+  P18 --> P19[Phase19_PrintingSwitcher]
+  P19 --> P20[Phase20_ArchidektImport]
+  P20 --> P21[Phase21_TagSuggestions]
 ```
 
 Phases 6–7 can partially overlap after Phase 5. Phases 8–13 are largely parallelizable once Phase 5 is complete, but **Phase 14 (Polish) should wait for all feature phases**.
@@ -89,7 +95,7 @@ Phases 6–7 can partially overlap after Phase 5. Phases 8–13 are largely para
 ## Recommended Build Order
 
 ```text
-0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11 → 12 → 13 → 14 → 15 → 16 → 17 → 18
+0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11 → 12 → 13 → 14 → 15 → 16 → 17 → 18 → 19 → 20 → 21
 ```
 
 **First milestone** (after Phase 7): Create decks locally, search Scryfall, mark ADD/CUT/CONSIDER, reopen app with data intact.
@@ -101,6 +107,8 @@ Phases 6–7 can partially overlap after Phase 5. Phases 8–13 are largely para
 **Phase 17 status (2026-08-19):** In-repo **v1.1.0** complete (legality tabs, mana symbols, search filters). See [`phase-17-legality-symbols-search-filters.md`](./phase-17-legality-symbols-search-filters.md).
 
 **Phase 18 status (2026-08-19):** In-repo **v1.1.1** implementation complete (Solar Dusk migration, deterministic dark default, explicit light mode); physical iPhone appearance/cold-start sign-off remains. Completed Phase 0–17 documents retain Neo Brutalism references as historical implementation context.
+
+**Phase 19 status (2026-08-20):** In-repo **v1.2.0** implementation complete (printing picker, identity-safe swaps, wishlist single-item switch, and cancellable previewed bulk cheapest). **Phases 20–21 remain planned.** Archidekt import (20) follows 19 so SET+collector number land on a printing the user can still cheapen. Tag suggestions (21) follow 20 so import categories and heuristics do not fight. See ADR-024–026.
 
 ---
 

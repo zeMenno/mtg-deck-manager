@@ -70,6 +70,9 @@ Every item below must exist in the v1.0 release. The phase that owns it is liste
 | S-26 | Image on/off toggle and compact / comfortable / image density modes      | 9            |
 | S-27 | Deck statistics: mana curve, type, color, role, synergy, land count      | 6            |
 | S-28 | Data-safety UX: last backup timestamp, guarded destructive reset         | 10           |
+| S-29 | Switch card printing; cheapest English paper printing (previewed bulk)   | 19           |
+| S-30 | Archidekt-dialect text import into an existing deck (previewed)          | 20           |
+| S-31 | Overridable role/synergy *suggestions* from local heuristics             | 21           |
 
 ### 2.2 Explicitly out of scope for v1.0 (from master plan §63)
 
@@ -84,9 +87,11 @@ These must be actively refused during implementation. Requests for them are post
 - Native App Store release
 - Authenticated TCGplayer API pricing (links only)
 - Price history charts and wishlist price alerts
-- Moxfield / Archidekt importers (plain text and CSV only in v1.0)
 - Bulk download of the entire Scryfall card or image database
-- Automatic role/synergy classification of cards
+- Silent, non-overridable auto-filing of roles/synergies (suggestions are Phase 21)
+- Archidekt/Moxfield/EDHREC account scrape or unpublished crowd category tables
+
+Post-v1.0 phases cover a **text dialect** for Archidekt exports (Phase 20) and **suggestions** for roles/synergies (Phase 21). They do not restore the v1.0 ban on AI or on bulk Scryfall downloads.
 
 ### 2.3 Scope-change rule
 
@@ -233,7 +238,7 @@ Result shape: `ApplyChangesResult { promotedCount, removedCount, appliedAt, erro
 - Both are stored on `DeckCard`, not on `Card` — the same card can play a different role in a different deck.
 - Both are stored as **stable tag ids** (see [`data-model.md`](./data-model.md) §5), not free display strings.
 - The catalogs below are **seeded defaults**. The user may create custom tags (`Tag.category = 'custom'`) and may rename or hide seeded ones.
-- **No automatic classification in the MVP.** The app never guesses a card's role. Suggestions are a post-MVP feature and must always be overridable.
+- **Suggestions (Phase 21), never silent classification.** Heuristics may pre-fill empty tag arrays and a bulk "Suggest tags" preview may apply to untagged cards. The user can always remove or replace tags. The app does not clone Archidekt's crowd categories or EDHREC synergy scores (ADR-026).
 - Filtering, grouping, and the role/synergy distribution widgets all read these tags.
 
 ### 5.2 Role catalog — 26 entries (locked)

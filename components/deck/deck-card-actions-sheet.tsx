@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
+import { PrintingPickerSheet } from "@/components/cards/printing-picker-sheet";
 import { RoleSynergyPicker } from "@/components/deck/role-synergy-picker";
 import { DeckStatusBadge } from "@/components/deck/deck-status-badge";
 import { Button } from "@/components/ui/button";
@@ -32,6 +33,7 @@ type DeckCardActionsSheetProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onViewDetails?: () => void;
+  imagesEnabled?: boolean;
 };
 
 export function DeckCardActionsSheet({
@@ -39,6 +41,7 @@ export function DeckCardActionsSheet({
   open,
   onOpenChange,
   onViewDetails,
+  imagesEnabled = true,
 }: DeckCardActionsSheetProps) {
   const setStatus = useSetStatus();
   const setQuantity = useSetQuantity();
@@ -53,6 +56,7 @@ export function DeckCardActionsSheet({
   const [synergies, setSynergies] = useState<string[]>([]);
   const [confirmRemove, setConfirmRemove] = useState(false);
   const [statusPulse, setStatusPulse] = useState(false);
+  const [printingOpen, setPrintingOpen] = useState(false);
 
   useEffect(() => {
     if (!item) return;
@@ -281,6 +285,18 @@ export function DeckCardActionsSheet({
 
             <Button
               type="button"
+              variant="outline"
+              data-testid="change-printing-btn"
+              onClick={() => {
+                onOpenChange(false);
+                setPrintingOpen(true);
+              }}
+            >
+              Change printing
+            </Button>
+
+            <Button
+              type="button"
               variant="destructive"
               data-testid="remove-from-deck-btn"
               onClick={() => setConfirmRemove(true)}
@@ -290,6 +306,15 @@ export function DeckCardActionsSheet({
           </div>
         </SheetContent>
       </Sheet>
+
+      <PrintingPickerSheet
+        card={item.card}
+        deckCardId={item.id}
+        foil={item.foil}
+        imagesEnabled={imagesEnabled}
+        open={printingOpen}
+        onOpenChange={setPrintingOpen}
+      />
 
       <ConfirmDialog
         open={confirmRemove}

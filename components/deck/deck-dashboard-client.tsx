@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 import { CardDetailSheet } from "@/components/cards/card-detail-sheet";
+import { BulkCheapestSheet } from "@/components/deck/bulk-cheapest-sheet";
 import { CommanderPicker } from "@/components/deck/commander-picker";
 import { DeckActionsSheet } from "@/components/deck/deck-actions-sheet";
 import { DeckAddCardSheet } from "@/components/deck/deck-add-card-sheet";
@@ -38,6 +39,7 @@ export function DeckDashboardClient({ params }: DeckDashboardClientProps) {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [saveVersionOpen, setSaveVersionOpen] = useState(false);
   const [detailCard, setDetailCard] = useState<Card | null>(null);
+  const [bulkCheapestOpen, setBulkCheapestOpen] = useState(false);
 
   useEffect(() => {
     if (searchParams.get("pickCommander") === "1") {
@@ -94,6 +96,7 @@ export function DeckDashboardClient({ params }: DeckDashboardClientProps) {
           deckId={deckId}
           onAddCard={() => setAddOpen(true)}
           onSaveVersion={() => setSaveVersionOpen(true)}
+          onCheapestPrintings={() => setBulkCheapestOpen(true)}
         />
 
         {commander ? (
@@ -128,6 +131,11 @@ export function DeckDashboardClient({ params }: DeckDashboardClientProps) {
           deckId={deckId}
           open={saveVersionOpen}
           onOpenChange={setSaveVersionOpen}
+        />
+        <BulkCheapestSheet
+          deckId={deckId}
+          open={bulkCheapestOpen}
+          onOpenChange={setBulkCheapestOpen}
         />
         <CardDetailSheet
           card={detailCard}

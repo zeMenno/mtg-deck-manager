@@ -621,3 +621,5 @@ Phase 18 leaves:
 Every future phase must read Phase 18 and use Solar Dusk tokens and shared
 primitives. It must not reintroduce hard-offset shadows, zero-radius overrides,
 or Neo Brutalism-specific utility classes.
+
+Next scheduled feature phase: [Phase 19 — Printing Switcher & Cheapest Print](./phase-19-printing-switcher.md).

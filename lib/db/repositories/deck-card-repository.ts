@@ -198,6 +198,20 @@ export class DeckCardRepository {
     }
   }
 
+  /** Retarget ADD -> CUT links when a CUT row is merged into another row. */
+  async retargetReplacements(
+    fromDeckCardId: string,
+    toDeckCardId: string,
+  ): Promise<void> {
+    const all = await this.database.deckCards.toArray();
+    const linked = all.filter(
+      (row) => row.replacesDeckCardId === fromDeckCardId,
+    );
+    for (const row of linked) {
+      await this.update(row.id, { replacesDeckCardId: toDeckCardId });
+    }
+  }
+
   async delete(id: string): Promise<void> {
     await this.database.deckCards.delete(id);
   }

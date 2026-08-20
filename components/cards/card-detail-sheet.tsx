@@ -10,6 +10,7 @@ import { CardImage } from "@/components/cards/card-image";
 import { CardLegalityPanel } from "@/components/cards/card-legality-panel";
 import { CardMetadata } from "@/components/cards/card-metadata";
 import { CardPriceDisplay } from "@/components/cards/card-price";
+import { PrintingPickerSheet } from "@/components/cards/printing-picker-sheet";
 import { IllegalCardDialog } from "@/components/cards/illegal-card-dialog";
 import { TcgplayerLink } from "@/components/cards/tcgplayer-link";
 import { AddToWishlistSheet } from "@/components/wishlist/add-to-wishlist-sheet";
@@ -44,20 +45,23 @@ type CardDetailSheetProps = {
   card: Card | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  /**
-   * @deprecated Detail always shows large art when available (Phase 9).
-   * Kept for call-site compatibility; ignored.
-   */
+  /** Controls thumbnails in the printing picker. */
   imagesEnabled?: boolean;
   /** Prefill target deck (e.g. when opened from a deck context). */
   deckId?: string;
+  /** Existing deck row; enables a printing switch instead of browse-only. */
+  deckCardId?: string;
+  foil?: boolean;
 };
 
 export function CardDetailSheet({
   card,
   open,
   onOpenChange,
+  imagesEnabled = true,
   deckId: deckIdProp,
+  deckCardId,
+  foil,
 }: CardDetailSheetProps) {
   const [faceIndex, setFaceIndex] = useState(0);
   const [tab, setTab] = useState("overview");
@@ -81,6 +85,7 @@ export function CardDetailSheet({
   const { showUndo } = useUndoAction();
   const queryClient = useQueryClient();
   const [refreshingPrice, setRefreshingPrice] = useState(false);
+  const [printingOpen, setPrintingOpen] = useState(false);
 
   useEffect(() => {
     setFaceIndex(0);
@@ -233,6 +238,14 @@ export function CardDetailSheet({
 
                   <TabsContent value="overview" className="flex flex-col gap-4">
                     <CardMetadata card={activeCard} face={activeFace} />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      data-testid="card-detail-printings-btn"
+                      onClick={() => setPrintingOpen(true)}
+                    >
+                      {deckCardId ? "Change printing" : "Browse printings"}
+                    </Button>
                   </TabsContent>
 
                   <TabsContent value="legality">
@@ -436,6 +449,16 @@ export function CardDetailSheet({
           ) : null}
         </SheetContent>
       </Sheet>
+
+      <PrintingPickerSheet
+        card={activeCard}
+        deckCardId={deckCardId}
+        foil={foil}
+        imagesEnabled={imagesEnabled}
+        open={printingOpen}
+        onOpenChange={setPrintingOpen}
+        onPrintingSelected={setDisplayCard}
+      />
 
       <IllegalCardDialog
         open={illegalOpen}

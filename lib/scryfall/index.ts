@@ -51,6 +51,11 @@ export {
   normalizeScryfallCards,
   mapLegalities,
 } from "@/lib/scryfall/normalize";
+export { listPrintings } from "@/lib/scryfall/prints";
+export type {
+  PrintingFilters,
+  ListPrintingsOptions,
+} from "@/lib/scryfall/prints";
 
 export {
   fetchSymbology,

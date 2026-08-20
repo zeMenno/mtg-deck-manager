@@ -15,12 +15,14 @@ type DeckDashboardProps = {
   deckId: string;
   onAddCard?: () => void;
   onSaveVersion?: () => void;
+  onCheapestPrintings?: () => void;
 };
 
 export function DeckDashboard({
   deckId,
   onAddCard,
   onSaveVersion,
+  onCheapestPrintings,
 }: DeckDashboardProps) {
   const { deck } = useDeck(deckId);
   const { stats, isLoading, isEmpty } = useDeckStats(deckId, "current");
@@ -80,6 +82,16 @@ export function DeckDashboard({
           <Button asChild variant="outline" data-testid="version-history-link">
             <Link href={`/decks/${deckId}/versions`}>Version history</Link>
           </Button>
+          {onCheapestPrintings ? (
+            <Button
+              type="button"
+              variant="outline"
+              data-testid="bulk-cheapest-btn"
+              onClick={onCheapestPrintings}
+            >
+              Cheapest printings…
+            </Button>
+          ) : null}
         </div>
       </div>
     );
@@ -141,6 +153,16 @@ export function DeckDashboard({
         <Button asChild variant="outline" data-testid="review-changes-btn">
           <Link href={`/decks/${deckId}/changes`}>Review changes</Link>
         </Button>
+        {onCheapestPrintings ? (
+          <Button
+            type="button"
+            variant="outline"
+            data-testid="bulk-cheapest-btn"
+            onClick={onCheapestPrintings}
+          >
+            Cheapest printings…
+          </Button>
+        ) : null}
         <PrefetchDeckImagesButton deckId={deckId} />
       </section>
     </div>

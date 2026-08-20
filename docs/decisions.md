@@ -30,6 +30,9 @@ Format: each record states Context → Decision → Consequences → Alternative
 | [ADR-021](#adr-021--scryfall-symbology-over-icon-font)                     | Scryfall symbology cache over icon fonts        | Accepted | 17                  |
 | [ADR-022](#adr-022--warn-not-block-on-illegal-adds)                        | Warn, never block illegal card adds             | Accepted | 17                  |
 | [ADR-023](#adr-023--solar-dusk-supersedes-neo-brutalism-and-dark-is-the-default) | Solar Dusk, deterministic dark default     | Accepted | 18                  |
+| [ADR-024](#adr-024--printing-switch-is-an-oracleid-preserving-cardid-swap) | Switch printings; cheapest is filtered paper | Accepted | 19                  |
+| [ADR-025](#adr-025--archidekt-text-is-a-parser-dialect-import-into-existing-is-previewed) | Archidekt dialect; existing-deck import is consider-by-default | Accepted | 20                  |
+| [ADR-026](#adr-026--tag-suggestions-are-local-heuristics-never-silent-overwrite) | Suggest roles/synergies; do not clone Archidekt crowd data | Accepted | 21                  |
 
 Phase 16 operational decisions (not ADR-numbered): [`docs/decisions/error-tracking.md`](./decisions/error-tracking.md), [`docs/decisions/analytics.md`](./decisions/analytics.md), [`docs/decisions/csp.md`](./decisions/csp.md).
 
@@ -367,6 +370,53 @@ background pairs are centralized as CSS tokens; color is never their only cue.
 **Rejected.** Following the system theme (non-deterministic first run);
 token-only recoloring (leaves a hybrid); runtime registry fetches (offline and
 availability risk); exporting appearance as domain data.
+
+---
+
+## ADR-024 — Printing switch is an oracleId-preserving cardId swap
+
+**Context.** Users want a cheaper or preferred art/set of a card they already run. ADR-003 already keys `DeckCard.cardId` on the Scryfall printing. Search uses `unique=cards`, so the stored printing is often Scryfall's default, not the cheapest. "Cheapest deck" is also requested, but Scryfall prices are references, and the cheapest copy in the world may be digital, foreign, or oversized.
+
+**Decision.** Phase 19 switches printings by changing `DeckCard.cardId` (plus card/price upsert). Cheapest means: among **English `game:paper` printings that have a non-null price in the user's currency**, matching the row's foil flag, excluding oversized. Bulk cheapest previews first, skips `owned` rows by default, and recommends running on ADD / shopping-list cards rather than the whole binder. Missing prices are skipped, never treated as $0.
+
+**Consequences.**
+
+- No schema change is required for the swap itself.
+- Duplicate-oracle rows are merged when the target printing already exists in the same zone+status.
+- Users can still pick a more expensive printing on purpose (art, set completion).
+- **Phase 19 follow-through (v1.2.0):** deck and wishlist pickers use this model; deck merges preserve metadata, retarget ADD → CUT links, and update the shipped printing-id `deck.commanderId` representation.
+
+**Rejected.** Keying the deck on `oracleId` and storing printing as metadata (breaks prices/images); scraping shop inventories; including all languages and digital products in the default cheapest pass.
+
+---
+
+## ADR-025 — Archidekt text is a parser dialect; import into existing is previewed
+
+**Context.** Phase 10 already imports Arena/Moxfield-ish text into **new** decks. `importTextDecklist({ targetDeckId })` exists but is unused. Archidekt's default export appends `*F*`, `[categories]`, and `^label,#hex^` after `(SET) collector`, which the current end-anchored set parser mishandles. There is no universal decklist standard.
+
+**Decision.** Extend the existing text parser to understand Archidekt decorations instead of adding a second importer. Resolve set + collector number to a printing. Import into an existing deck is a **preview-then-apply** flow. New rows default to status `consider`. Oracles already in that zone are **skipped** by default. `^labels^` are ignored. `[categories]` map onto seeded tag names when they match; type buckets (Creature, Instant, …) and unmapped strings do not create tags.
+
+**Consequences.**
+
+- `/decks/new` remains the create-from-list path; the deck dashboard gains Import cards.
+- A full Archidekt list pasted as CURRENT is refused as the default (too easy to wreck a live deck).
+
+**Rejected.** Treating Archidekt's format as *the* standard; silent merge as CURRENT; scraping Archidekt URLs; creating a custom tag per unique category string.
+
+---
+
+## ADR-026 — Tag suggestions are local heuristics, never silent overwrite
+
+**Context.** Product spec §2.2 forbade automatic role/synergy classification. Archidekt "auto categories" are crowd-sourced from *their* users' labels (~30 allowlisted names, applied at add time, not retroactive). EDHREC "synergy" is statistical lift vs colour identity. Scryfall Tagger oracle tags are the closest public dataset but live in bulk files, which the spec also declined to download wholesale. Tags are on `DeckCard` because the same card plays different roles in different decks (ADR-008).
+
+**Decision.** Phase 21 **suggests** tags with deterministic local rules (type line, Scryfall keywords, a tested oracle-text rule table) plus Phase 20 import maps. Suggestions apply automatically only when both role and synergy arrays are empty (on-add setting default on). Bulk suggest previews and defaults to untagged cards. `role.other` and deck-strategy synergies (Aggro, Control, Midrange, Go-Wide) are not auto-assigned. No LLM. No Archidekt/EDHREC scrape. Scryfall Tagger bulk is out of scope until a later ADR.
+
+**Consequences.**
+
+- Suggestions will disagree with Archidekt on many cards; that is accepted.
+- Rule-table misses are fixed by extending tests, not by "just use AI".
+
+**Rejected.** Silent auto-file as the only behaviour; cloning Archidekt's unpublished category table; EDHREC synergy % as a tag; downloading full Scryfall oracle-tag bulk in this phase.
 
 ---
 

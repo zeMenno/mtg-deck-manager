@@ -5,6 +5,15 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] — 2026-08-20
+
+### Added
+
+- Printing picker for deck cards, card details, and individual wishlist items, with English paper filters, optional languages/extras, offline cache fallback, and printing-specific set, art, and reference prices.
+- Identity-preserving printing swaps that retain deck-card metadata, merge matching rows safely, retarget upgrade links, and keep commander printing references current.
+- Cheapest-print selection for individual cards plus a cancellable deck preview/apply flow that defaults to ADD cards and skips owned copies.
+- Offline-only automated coverage for print pagination, pricing tie-breaks, swaps/merges, bulk defaults, component behavior, and dashboard smoke.
+
 ## [1.1.1] — 2026-08-19
 
 ### Changed
@@ -62,6 +71,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Commander** (primary MVP format). Other formats may be stored but are not fully validated.
 
+[1.2.0]: https://github.com/zeMenno/mtg-deck-manager/releases/tag/v1.2.0
 [1.1.1]: https://github.com/zeMenno/mtg-deck-manager/releases/tag/v1.1.1
 [1.1.0]: https://github.com/zeMenno/mtg-deck-manager/releases/tag/v1.1.0
 [1.0.0]: https://github.com/zeMenno/mtg-deck-manager/releases/tag/v1.0.0

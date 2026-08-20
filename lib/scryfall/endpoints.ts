@@ -18,6 +18,7 @@ export type SearchCardsOptions = {
   page?: number;
   order?: string;
   dir?: "asc" | "desc";
+  includeExtras?: boolean;
 };
 
 function withBase(path: string): string {
@@ -44,6 +45,9 @@ export function searchCardsUrl(
   }
   if (options.dir) {
     params.set("dir", options.dir);
+  }
+  if (options.includeExtras !== undefined) {
+    params.set("include_extras", String(options.includeExtras));
   }
   return withBase(`/cards/search?${params.toString()}`);
 }
