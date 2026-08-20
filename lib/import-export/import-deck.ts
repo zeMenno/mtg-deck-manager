@@ -8,6 +8,7 @@ import {
   CardRepository,
   DeckCardRepository,
   DeckRepository,
+  SettingsRepository,
 } from "@/lib/db/repositories";
 import { DeckExportSchema } from "@/lib/import-export/backup-schema";
 import { parseDeckCsv } from "@/lib/import-export/csv-deck-parser";
@@ -15,11 +16,15 @@ import {
   assertUniqueRemappedIds,
   remapDeckPackage,
 } from "@/lib/import-export/id-remap";
+import { mapArchidektCategories } from "@/lib/import-export/archidekt-categories";
+import { applyImportIntoDeck } from "@/lib/import-export/import-into-deck";
 import {
+  importCardKey,
   resolveImportCards,
   type ResolveProgress,
 } from "@/lib/import-export/resolve-import-cards";
 import { parseTextDecklist } from "@/lib/import-export/text-decklist-parser";
+import { suggestTags } from "@/lib/tags/suggest-tags";
 import type {
   ImportResult,
   UnresolvedCardRef,
@@ -129,6 +134,14 @@ export async function importTextDecklist(
   text: string,
   options: ImportTextDecklistOptions = {},
 ): Promise<ImportResult> {
+  if (options.targetDeckId) {
+    return applyImportIntoDeck(text, options.targetDeckId, {
+      ...(options.database ? { database: options.database } : {}),
+      ...(options.onProgress ? { onProgress: options.onProgress } : {}),
+      ...(options.lookup ? { lookup: options.lookup } : {}),
+    });
+  }
+
   const database = options.database ?? getDatabase();
   const parsed = parseTextDecklist(text);
   if (parsed.lines.length === 0) {
@@ -139,6 +152,7 @@ export async function importTextDecklist(
     parsed.lines.map((l) => ({
       name: l.name,
       ...(l.setCode ? { setCode: l.setCode } : {}),
+      ...(l.collectorNumber ? { collectorNumber: l.collectorNumber } : {}),
     })),
     {
       database,
@@ -148,45 +162,52 @@ export async function importTextDecklist(
   );
 
   const unresolved: UnresolvedCardRef[] = parsed.lines
-    .filter((l) => !resolution.byName.has(l.name.toLowerCase()))
+    .filter((l) => !resolution.byKey.has(importCardKey(l)))
     .map((l) => ({
       name: l.name,
       line: l.line,
       zone: l.zone,
       quantity: l.quantity,
       ...(l.setCode ? { setCode: l.setCode } : {}),
+      ...(l.collectorNumber ? { collectorNumber: l.collectorNumber } : {}),
     }));
 
   const decks = new DeckRepository(database);
   const deckCards = new DeckCardRepository(database);
 
-  let deckId = options.targetDeckId;
-  let deckName: string | undefined;
-
-  if (!deckId) {
-    const name =
-      options.deckName?.trim() ||
-      parsed.deckName ||
-      `Imported deck ${new Date().toISOString().slice(0, 10)}`;
-    const unique = await uniqueDeckName(name, database);
-    const deck = await decks.create({
-      name: unique,
-      format: options.format ?? parsed.format ?? "commander",
-    });
-    deckId = deck.id;
-    deckName = deck.name;
-  } else {
-    const existing = await decks.getById(deckId);
-    if (!existing) throw new Error(`Deck not found: ${deckId}`);
-    deckName = existing.name;
-  }
+  const name =
+    options.deckName?.trim() ||
+    parsed.deckName ||
+    `Imported deck ${new Date().toISOString().slice(0, 10)}`;
+  const unique = await uniqueDeckName(name, database);
+  const deck = await decks.create({
+    name: unique,
+    format: options.format ?? parsed.format ?? "commander",
+  });
+  const deckId = deck.id;
+  const deckName = deck.name;
 
   let added = 0;
   let commanderId: string | undefined;
+  const suggestOnAdd = await new SettingsRepository(database).get(
+    "tags.suggestOnAdd",
+  );
 
   for (const line of parsed.lines) {
-    const card = resolution.byName.get(line.name.toLowerCase());
+    const card = resolution.byKey.get(importCardKey(line));
     if (!card) continue;
+    const mapped = mapArchidektCategories(line.categories);
+    const heuristic = suggestOnAdd
+      ? suggestTags(card, {
+          importedRoles: mapped.roleIds,
+          importedSynergies: mapped.synergyIds,
+        })
+      : null;
+    const roles =
+      mapped.roleIds.length > 0 ? mapped.roleIds : (heuristic?.roles ?? []);
+    const synergies = [
+      ...new Set([...mapped.synergyIds, ...(heuristic?.synergies ?? [])]),
+    ];
     await deckCards.add({
       deckId,
       cardId: card.id,
@@ -194,6 +215,8 @@ export async function importTextDecklist(
       zone: line.zone,
       status: line.status ?? "current",
       ...(line.foil ? { foil: true } : {}),
+      ...(roles.length > 0 ? { roles } : {}),
+      ...(synergies.length > 0 ? { synergies } : {}),
     });
     added += 1;
     if (line.zone === "commander" && !commanderId) {

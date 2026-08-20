@@ -135,6 +135,21 @@ export function useUpdateDeckCard() {
   });
 }
 
+export function useSwitchPrinting() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      deckCardId,
+      newCardId,
+    }: {
+      deckCardId: string;
+      newCardId: string;
+    }) => deckCardService.switchPrinting({ deckCardId, newCardId }),
+    onSuccess: (result) =>
+      invalidateDeckQueries(queryClient, result.deckCard.deckId),
+  });
+}
+
 export function useSetStatus() {
   const queryClient = useQueryClient();
   return useMutation({

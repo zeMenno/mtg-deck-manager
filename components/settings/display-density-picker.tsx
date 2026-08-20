@@ -1,6 +1,11 @@
 "use client";
 
-import { Image as ImageIcon, LayoutGrid, LayoutList } from "lucide-react";
+import {
+  Image as ImageIcon,
+  LayoutGrid,
+  LayoutList,
+  Grid3x3,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -14,6 +19,7 @@ const OPTIONS: Array<{
   { value: "compact", label: "Compact", icon: LayoutList },
   { value: "comfortable", label: "Comfortable", icon: LayoutGrid },
   { value: "image", label: "Image", icon: ImageIcon },
+  { value: "grid", label: "Grid", icon: Grid3x3 },
 ];
 
 type DisplayDensityPickerProps = {
@@ -27,7 +33,7 @@ type DisplayDensityPickerProps = {
 };
 
 /**
- * Segmented control: Compact | Comfortable | Image.
+ * Segmented control: Compact | Comfortable | Image | Grid.
  */
 export function DisplayDensityPicker({
   value,
@@ -46,7 +52,8 @@ export function DisplayDensityPicker({
     >
       {OPTIONS.map(({ value: option, label, icon: Icon }) => {
         const active = value === option;
-        const imageBlocked = option === "image" && !imagesEnabled;
+        const imageBlocked =
+          (option === "image" || option === "grid") && !imagesEnabled;
         return (
           <Button
             key={option}
@@ -59,7 +66,7 @@ export function DisplayDensityPicker({
               imageBlocked ? `${label} (enables images)` : `${label} density`
             }
             data-testid={`density-${option}`}
-            title={imageBlocked ? "Selecting Image turns images on" : label}
+            title={imageBlocked ? `Selecting ${label} turns images on` : label}
             className={cn(!active && "shadow-none")}
             onClick={() => onChange(option)}
           >

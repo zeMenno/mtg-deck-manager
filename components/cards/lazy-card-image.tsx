@@ -17,6 +17,7 @@ type LazyCardImageProps = {
   priority?: boolean;
   imagesEnabled?: boolean;
   className?: string;
+  onClick?: () => void;
 };
 
 /**
@@ -28,6 +29,7 @@ export function LazyCardImage({
   priority = false,
   imagesEnabled = true,
   className,
+  onClick,
 }: LazyCardImageProps) {
   const { ref, mounted } = useLazyMount({
     enabled: !priority,
@@ -55,6 +57,7 @@ export function LazyCardImage({
         size={size}
         priority={priority}
         imagesEnabled={imagesEnabled}
+        onClick={onClick}
       />
     </div>
   );

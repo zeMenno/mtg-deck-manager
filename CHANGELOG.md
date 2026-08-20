@@ -5,6 +5,54 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] — 2026-08-20
+
+### Added
+
+- Grid display density: zone-grouped card tiles with full-width art, quantity/status overlays, and a compact meta strip for actions.
+- Full-screen card magnifier (pinch, double-tap, keyboard zoom, DFC flip, details hand-off) and a desktop-only hover preview.
+- Settings for hover preview and tap-art-to-zoom; Grid/Image still auto-enable images when they were off.
+
+### Notes
+
+- Tile art uses the Scryfall `normal` tier; the overlay requests `large` and falls back to cached `normal` or readable card text offline.
+- Compact, comfortable, and image rows are unchanged. Changes lists and version detail still use rows; `grid` maps to comfortable if a row receives it.
+
+## [1.4.0] — 2026-08-20
+
+### Added
+
+- Deterministic, offline role and synergy suggestions from cached card type lines, keywords, and a conservative oracle-text rule table.
+- Suggest-on-add setting, enabled by default for cards with empty tags; all suggested tags remain editable.
+- Deck-level **Suggest tags…** preview with per-card reasons, selection, untagged/fill-empty/replace policies, and explicit confirmation before replacing existing tags.
+- Golden and integration coverage for ramp, draw, removal, counterspells, kindred tags, deliberate misses, offline bulk apply, and non-overwrite defaults.
+
+### Notes
+
+- Suggestions do not use an LLM, scrape deck sites, copy Archidekt crowd categories, or interpret EDHREC synergy scores.
+- `role.other` and broad strategy synergies are never automatically applied.
+
+## [1.3.0] — 2026-08-20
+
+### Added
+
+- Archidekt-dialect text parsing (`*F*` / `*E*`, `[categories]`, `^labels^`) on the existing decklist parser, with SET + collector number resolution to a specific Scryfall printing.
+- Import cards into an existing deck from the dashboard: preview (new / already present / unresolved), default Consider status, skip-existing by oracle, and optional printing replacement.
+- Category names map onto seeded role/synergy tags when they match; type buckets and unmapped labels such as Buy are ignored.
+
+### Changed
+
+- `/decks/new` copy now mentions Arena, Moxfield, and Archidekt text. Existing-deck `targetDeckId` imports go through DeckService merge rules and never overwrite a commander.
+
+## [1.2.0] — 2026-08-20
+
+### Added
+
+- Printing picker for deck cards, card details, and individual wishlist items, with English paper filters, optional languages/extras, offline cache fallback, and printing-specific set, art, and reference prices.
+- Identity-preserving printing swaps that retain deck-card metadata, merge matching rows safely, retarget upgrade links, and keep commander printing references current.
+- Cheapest-print selection for individual cards plus a cancellable deck preview/apply flow that defaults to ADD cards and skips owned copies.
+- Offline-only automated coverage for print pagination, pricing tie-breaks, swaps/merges, bulk defaults, component behavior, and dashboard smoke.
+
 ## [1.1.1] — 2026-08-19
 
 ### Changed
@@ -62,6 +110,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Commander** (primary MVP format). Other formats may be stored but are not fully validated.
 
+[1.5.0]: https://github.com/zeMenno/mtg-deck-manager/releases/tag/v1.5.0
+[1.4.0]: https://github.com/zeMenno/mtg-deck-manager/releases/tag/v1.4.0
+[1.3.0]: https://github.com/zeMenno/mtg-deck-manager/releases/tag/v1.3.0
+[1.2.0]: https://github.com/zeMenno/mtg-deck-manager/releases/tag/v1.2.0
 [1.1.1]: https://github.com/zeMenno/mtg-deck-manager/releases/tag/v1.1.1
 [1.1.0]: https://github.com/zeMenno/mtg-deck-manager/releases/tag/v1.1.0
 [1.0.0]: https://github.com/zeMenno/mtg-deck-manager/releases/tag/v1.0.0

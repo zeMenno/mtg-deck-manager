@@ -9,6 +9,8 @@ import { CardPriceRepository } from "@/lib/db/repositories/card-price-repository
 import { WishlistRepository } from "@/lib/db/repositories/wishlist-repository";
 import { SettingsRepository } from "@/lib/db/repositories/settings-repository";
 import { selectUnitPrice } from "@/lib/pricing/valuation";
+import { mapScryfallPrices } from "@/lib/pricing/providers/scryfall-pricing-provider";
+import { getCardById, normalizeScryfallCard } from "@/lib/scryfall";
 import type { Currency, WishlistPriority } from "@/types";
 import type { WishlistItem } from "@/types/card";
 import {
@@ -211,6 +213,42 @@ export class WishlistService {
     return this.wishlist.updateItem(itemId, next);
   }
 
+  /** Switch a wishlist row to another printing of the same oracle card. */
+  async switchPrinting(
+    itemId: string,
+    newCardId: string,
+  ): Promise<WishlistItem> {
+    const source = await this.wishlist.getItemById(itemId);
+    if (!source) throw new Error(`Wishlist item not found: ${itemId}`);
+    const currentCard = await this.cards.getById(source.cardId);
+    if (!currentCard) throw new Error(`Card not found: ${source.cardId}`);
+
+    const raw = await getCardById(newCardId);
+    const target = normalizeScryfallCard(raw);
+    if (target.oracleId !== currentCard.oracleId) {
+      throw new Error("Printing must have the same oracle identity");
+    }
+    await this.cards.upsert(target);
+    const currency = await this.settings.get("currency");
+    const price = mapScryfallPrices(raw, currency, new Date().toISOString());
+    if (price) await this.prices.upsert(price);
+
+    const existing = (await this.wishlist.findByCardId(newCardId)).find(
+      (item) => item.id !== itemId,
+    );
+    if (existing) {
+      const merged = await this.wishlist.updateItem(existing.id, {
+        quantity: existing.quantity + source.quantity,
+        notes: existing.notes || source.notes,
+        targetDeckId: existing.targetDeckId || source.targetDeckId,
+        targetRole: existing.targetRole || source.targetRole,
+      });
+      await this.wishlist.removeItem(source.id);
+      return merged;
+    }
+    return this.wishlist.updateItem(itemId, { cardId: newCardId });
+  }
+
   async removeFromWishlist(itemId: string): Promise<void> {
     await this.wishlist.removeItem(itemId);
   }
@@ -383,4 +421,6 @@ export const wishlistService = {
     getWishlistService().updateNotes(...args),
   updateQuantity: (...args: Parameters<WishlistService["updateQuantity"]>) =>
     getWishlistService().updateQuantity(...args),
+  switchPrinting: (...args: Parameters<WishlistService["switchPrinting"]>) =>
+    getWishlistService().switchPrinting(...args),
 };

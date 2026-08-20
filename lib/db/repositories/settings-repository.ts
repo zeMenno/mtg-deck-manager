@@ -1,6 +1,7 @@
 import type { DeckBuilderDatabase } from "@/lib/db/database";
 import { getDatabase } from "@/lib/db/database";
 import { nowIso } from "@/lib/db/ids";
+import { parseDisplayDensity } from "@/lib/display/get-effective-density";
 import {
   DEFAULT_APP_SETTINGS,
   type AppSetting,
@@ -9,6 +10,10 @@ import {
 } from "@/types/card";
 import type { RecommendationConfig } from "@/types/deck-validation";
 
+function parseBoolean(value: unknown, fallback: boolean): boolean {
+  return typeof value === "boolean" ? value : fallback;
+}
+
 export class SettingsRepository {
   constructor(private readonly database: DeckBuilderDatabase = getDatabase()) {}
 
@@ -16,6 +21,9 @@ export class SettingsRepository {
     const row = await this.database.settings.get(key);
     if (row === undefined) {
       return DEFAULT_APP_SETTINGS[key];
+    }
+    if (key === "densityMode") {
+      return parseDisplayDensity(row.value) as AppSettings[K];
     }
     return row.value as AppSettings[K];
   }
@@ -45,9 +53,9 @@ export class SettingsRepository {
       imagesEnabled:
         (map.get("imagesEnabled") as boolean | undefined) ??
         DEFAULT_APP_SETTINGS.imagesEnabled,
-      densityMode:
-        (map.get("densityMode") as AppSettings["densityMode"] | undefined) ??
-        DEFAULT_APP_SETTINGS.densityMode,
+      densityMode: parseDisplayDensity(
+        map.get("densityMode") ?? DEFAULT_APP_SETTINGS.densityMode,
+      ),
       currency:
         (map.get("currency") as AppSettings["currency"] | undefined) ??
         DEFAULT_APP_SETTINGS.currency,
@@ -69,6 +77,18 @@ export class SettingsRepository {
       searchFilters: map.has("searchFilters")
         ? (map.get("searchFilters") as AppSettings["searchFilters"])
         : DEFAULT_APP_SETTINGS.searchFilters,
+      "tags.suggestOnAdd": parseBoolean(
+        map.get("tags.suggestOnAdd"),
+        DEFAULT_APP_SETTINGS["tags.suggestOnAdd"],
+      ),
+      "cardZoom.hoverPreview": parseBoolean(
+        map.get("cardZoom.hoverPreview"),
+        DEFAULT_APP_SETTINGS["cardZoom.hoverPreview"],
+      ),
+      "cardZoom.tapImageOpensZoom": parseBoolean(
+        map.get("cardZoom.tapImageOpensZoom"),
+        DEFAULT_APP_SETTINGS["cardZoom.tapImageOpensZoom"],
+      ),
     };
   }
 }

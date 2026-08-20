@@ -10,6 +10,7 @@ import {
   autocompleteUrl,
   cardByIdUrl,
   cardsCollectionUrl,
+  cardBySetCollectorUrl,
   namedCardUrl,
   searchCardsUrl,
   type SearchCardsOptions,
@@ -235,6 +236,15 @@ export async function searchCards(
     if (options?.unique) {
       params.set("unique", options.unique);
     }
+    if (options?.order) {
+      params.set("order", options.order);
+    }
+    if (options?.dir) {
+      params.set("dir", options.dir);
+    }
+    if (options?.includeExtras !== undefined) {
+      params.set("include_extras", String(options.includeExtras));
+    }
     return scryfallFetch<ScryfallSearchResult>(
       `/api/cards/search?${params.toString()}`,
     );
@@ -305,6 +315,43 @@ export async function getCardNamed(
   return scryfallFetch<ScryfallCard>(
     namedCardUrl(name, { fuzzy, set: options.set }),
   );
+}
+
+function stripCollectorDecorations(collectorNumber: string): string {
+  return collectorNumber.replace(/[★☆*]/g, "").trim();
+}
+
+/**
+ * Resolve a printing via `/cards/{set}/{collector_number}`.
+ * On 404, retries once with ★/☆/* stripped from the collector number.
+ */
+export async function getCardBySetCollector(
+  setCode: string,
+  collectorNumber: string,
+): Promise<ScryfallCard> {
+  const set = setCode.trim().toLowerCase();
+  const number = collectorNumber.trim();
+
+  const fetchPrinting = async (value: string): Promise<ScryfallCard> => {
+    if (isProxyEnabled()) {
+      const params = new URLSearchParams();
+      params.set("set", set);
+      params.set("number", value);
+      return scryfallFetch<ScryfallCard>(
+        `/api/cards/by-set?${params.toString()}`,
+      );
+    }
+    return scryfallFetch<ScryfallCard>(cardBySetCollectorUrl(set, value));
+  };
+
+  try {
+    return await fetchPrinting(number);
+  } catch (err) {
+    if (!(err instanceof ScryfallNotFoundError)) throw err;
+    const stripped = stripCollectorDecorations(number);
+    if (!stripped || stripped === number) throw err;
+    return fetchPrinting(stripped);
+  }
 }
 
 /** Max ids per collection request (Scryfall docs). */

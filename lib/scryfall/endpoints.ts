@@ -18,6 +18,7 @@ export type SearchCardsOptions = {
   page?: number;
   order?: string;
   dir?: "asc" | "desc";
+  includeExtras?: boolean;
 };
 
 function withBase(path: string): string {
@@ -45,12 +46,27 @@ export function searchCardsUrl(
   if (options.dir) {
     params.set("dir", options.dir);
   }
+  if (options.includeExtras !== undefined) {
+    params.set("include_extras", String(options.includeExtras));
+  }
   return withBase(`/cards/search?${params.toString()}`);
 }
 
 /** `/cards/{id}` */
 export function cardByIdUrl(id: string): string {
   return withBase(`/cards/${encodeURIComponent(id)}`);
+}
+
+/** `/cards/{set}/{collector_number}` — a specific printing. */
+export function cardBySetCollectorUrl(
+  setCode: string,
+  collectorNumber: string,
+): string {
+  const set = setCode.trim().toLowerCase();
+  const number = collectorNumber.trim();
+  return withBase(
+    `/cards/${encodeURIComponent(set)}/${encodeURIComponent(number)}`,
+  );
 }
 
 /**

@@ -40,6 +40,7 @@ export interface ScryfallPrices {
   usd_etched?: string | null;
   eur?: string | null;
   eur_foil?: string | null;
+  eur_etched?: string | null;
   tix?: string | null;
 }
 
@@ -61,6 +62,7 @@ export interface ScryfallCard {
   set_name?: string;
   collector_number?: string;
   rarity?: string;
+  released_at?: string;
   image_uris?: ScryfallImageUris;
   card_faces?: ScryfallCardFace[];
   scryfall_uri?: string;

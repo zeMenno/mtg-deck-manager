@@ -45,7 +45,7 @@ export type WishlistPriority = "essential" | "high" | "medium" | "low";
 export type Currency = "USD" | "EUR";
 
 /** Card list density. */
-export type DisplayDensity = "compact" | "comfortable" | "image";
+export type DisplayDensity = "compact" | "comfortable" | "image" | "grid";
 ```
 
 `pauper` is included so Phase 5's enum does not have to widen the union later. Only `commander` has real rules in v1.0.
@@ -60,7 +60,7 @@ export interface Deck {
   name: string;
   format: DeckFormat;
   description?: string;
-  /** DeckCard.id of the card in the `commander` zone. Undefined until chosen. */
+  /** Card.id (Scryfall printing) of the commander. Undefined until chosen. */
   commanderId?: string;
   createdAt: string; // ISO 8601
   updatedAt: string; // ISO 8601
@@ -71,7 +71,7 @@ export interface Deck {
 }
 ```
 
-`commanderId` references a **`DeckCard.id`**, not a `Card.id`. This keeps the commander a normal deck card (with roles, synergies, notes, and a price) while still being addressable in one hop. Phase 5 must enforce that the referenced deck card has `zone === 'commander'`.
+`commanderId` references a **`Card.id` printing** in the shipped codebase. The corresponding `DeckCard` remains a normal row in the `commander` zone. Phase 19 preserves this established representation: switching that row updates `commanderId` from the old printing id to the new printing id.
 
 ---
 
@@ -106,7 +106,7 @@ export interface DeckCard {
 Invariants (enforced by the service layer, asserted by tests):
 
 1. `quantity >= 1`. Removing a card deletes the record; it never goes to zero.
-2. At most one `DeckCard` per `(deckId, cardId, zone)`. Changing status mutates the existing record.
+2. At most one `DeckCard` per `(deckId, cardId, zone, status)`.
 3. `zone === 'commander'` implies `quantity === 1`.
 4. `replacesDeckCardId` may only be set on a record whose `status === 'add'`, and may only point at a record in the same deck whose `status === 'cut'`.
 5. `roles` and `synergies` contain no duplicates.
@@ -197,7 +197,7 @@ export interface CardFace {
 }
 ```
 
-**Identity rule (ADR-003):** deck cards, wishlist items, and prices all key on `Card.id` (the printing). `oracleId` is used for de-duplication ("you already run this card"), for Commander singleton validation, and for switching printings without losing the card's place in the deck.
+**Identity rule (ADR-003):** deck cards, wishlist items, and prices all key on `Card.id` (the printing). `oracleId` is used for de-duplication ("you already run this card"), for Commander singleton validation, and for switching printings without losing the card's place in the deck. Phase 19 is the user-facing switcher: it updates `DeckCard.cardId` and upserts the new `Card` / `CardPrice` rows.
 
 ---
 
@@ -369,7 +369,7 @@ Known setting keys (extend deliberately, document here):
 | Key                      | Type                   | Default     | Owning phase |
 | ------------------------ | ---------------------- | ----------- | ------------ |
 | `imagesEnabled`          | `boolean`              | `true`      | 9            |
-| `densityMode`            | `DisplayDensity`       | `'comfortable'` | 9         |
+| `densityMode`            | `DisplayDensity`       | `'comfortable'` | 9 / 22    |
 | `currency`               | `Currency`             | `'USD'`     | 8            |
 | `priceFreshnessHours`    | `number`               | `24`        | 8            |
 | `lastBackupAt`           | `string \| null`       | `null`      | 10           |
@@ -377,6 +377,9 @@ Known setting keys (extend deliberately, document here):
 | `activeDeckId`           | `string \| null`       | `null`      | 5            |
 | `recommendationConfig`   | `RecommendationConfig` | see §11     | 13           |
 | `searchFilters`          | `CardSearchFilters \| null` | `null` | 17           |
+| `tags.suggestOnAdd`      | `boolean`              | `true`      | 21           |
+| `cardZoom.hoverPreview`  | `boolean`              | `true`      | 22           |
+| `cardZoom.tapImageOpensZoom` | `boolean`          | `true`      | 22           |
 
 Known appMeta keys: `schemaVersion` (number), `firstRunAt` (ISO string), `tagsSeededVersion` (number).
 
@@ -393,6 +396,12 @@ export interface AppSettings {
   activeDeckId: string | null;
   recommendationConfig: RecommendationConfig;
   searchFilters: CardSearchFilters | null;
+  /** Prefill empty role/synergy arrays from local heuristics on add. Phase 21. */
+  "tags.suggestOnAdd": boolean;
+  /** Fine-pointer hover preview of card art. Phase 22. */
+  "cardZoom.hoverPreview": boolean;
+  /** Tap list thumbnails to open the zoom overlay. Phase 22. */
+  "cardZoom.tapImageOpensZoom": boolean;
 }
 
 /** Cached Scryfall symbology (Dexie `symbols` table) — Phase 17. Not in backups. */

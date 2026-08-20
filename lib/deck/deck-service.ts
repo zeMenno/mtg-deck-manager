@@ -7,6 +7,7 @@ import {
   type CreateDeckInput,
 } from "@/lib/db/repositories";
 import { CardRepository } from "@/lib/db/repositories/card-repository";
+import { SettingsRepository } from "@/lib/db/repositories/settings-repository";
 import {
   DEFAULT_FORMAT,
   MAX_QUANTITY,
@@ -16,7 +17,13 @@ import {
   getDuplicateWarnings,
   type DuplicateWarning,
 } from "@/lib/deck/duplicate-detection";
+import {
+  switchDeckCardPrinting,
+  type SwitchPrintingInput,
+  type SwitchPrintingResult,
+} from "@/lib/deck/switch-printing";
 import { getCardById, normalizeScryfallCard } from "@/lib/scryfall";
+import { suggestTags } from "@/lib/tags/suggest-tags";
 import type { DeckCardStatus, DeckCardZone } from "@/types";
 import type { Card } from "@/types/card";
 import type { Deck, DeckCard } from "@/types/deck";
@@ -41,6 +48,8 @@ export type AddCardToDeckResult = {
   warnings: DuplicateWarning[];
   /** True when quantity was incremented on an existing row. */
   merged: boolean;
+  /** Local deterministic tags applied to a newly created row. */
+  suggestedTagIds: string[];
 };
 
 export class DeckService {
@@ -131,7 +140,13 @@ export class DeckService {
       throw new Error(`Deck not found: ${deckId}`);
     }
 
-    await this.ensureCardInCache(cardId);
+    const card = await this.ensureCardInCache(cardId);
+    const suggestOnAdd = await new SettingsRepository(this.database).get(
+      "tags.suggestOnAdd",
+    );
+    const suggestion = suggestOnAdd
+      ? suggestTags(card)
+      : { roles: [], synergies: [] };
 
     return this.database.transaction(
       "rw",
@@ -178,6 +193,8 @@ export class DeckService {
               zone: "commander",
               quantity: 1,
               status: "current",
+              roles: suggestion.roles,
+              synergies: suggestion.synergies,
             });
           }
         }
@@ -239,12 +256,26 @@ export class DeckCardService {
 
     let deckCard: DeckCard;
     let merged = false;
+    let suggestedTagIds: string[] = [];
 
     if (match) {
       const nextQty = Math.min(MAX_QUANTITY, match.quantity + quantity);
       deckCard = await this.deckCards.update(match.id, { quantity: nextQty });
       merged = true;
     } else {
+      let roles = input.roles ?? [];
+      let synergies = input.synergies ?? [];
+      if (roles.length === 0 && synergies.length === 0) {
+        const suggestOnAdd = await new SettingsRepository(this.database).get(
+          "tags.suggestOnAdd",
+        );
+        if (suggestOnAdd) {
+          const suggestion = suggestTags(card);
+          roles = suggestion.roles;
+          synergies = suggestion.synergies;
+          suggestedTagIds = [...roles, ...synergies];
+        }
+      }
       const qty = zone === "commander" ? 1 : Math.min(MAX_QUANTITY, quantity);
       deckCard = await this.deckCards.add({
         deckId: input.deckId,
@@ -255,13 +286,13 @@ export class DeckCardService {
         foil: input.foil,
         owned: input.owned,
         notes: input.notes,
-        roles: input.roles,
-        synergies: input.synergies,
+        roles,
+        synergies,
       });
     }
 
     await this.decks.update(input.deckId, {});
-    return { deckCard, warnings, merged };
+    return { deckCard, warnings, merged, suggestedTagIds };
   }
 
   /** Alias used by older call sites / tests. */
@@ -399,6 +430,18 @@ export class DeckCardService {
       throw new Error(`DeckCard not found: ${deckCardId}`);
     }
     return this.updateDeckCard(deckCardId, { foil: !existing.foil });
+  }
+
+  async switchPrinting(
+    input: SwitchPrintingInput,
+  ): Promise<SwitchPrintingResult> {
+    const currency = await new SettingsRepository(this.database).get(
+      "currency",
+    );
+    return switchDeckCardPrinting(input, {
+      database: this.database,
+      currency,
+    });
   }
 
   async bulkSetStatus(

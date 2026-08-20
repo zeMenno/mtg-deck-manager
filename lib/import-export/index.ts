@@ -69,7 +69,35 @@ export {
   parseTextDecklist,
   normalizeCardName,
   parseNameWithSet,
+  stripArchidektDecorations,
 } from "@/lib/import-export/text-decklist-parser";
+
+export {
+  mapArchidektCategory,
+  mapArchidektCategories,
+  isArchidektTypeBucket,
+} from "@/lib/import-export/archidekt-categories";
+
+export {
+  previewImportIntoDeck,
+  applyImportIntoDeck,
+} from "@/lib/import-export/import-into-deck";
+export type {
+  ExistingDeckConflictPolicy,
+  ImportIntoDeckNewStatus,
+  ImportIntoDeckPreview,
+  ImportIntoDeckPreviewRow,
+} from "@/lib/import-export/import-into-deck";
+
+export {
+  resolveImportCards,
+  importCardKey,
+} from "@/lib/import-export/resolve-import-cards";
+export type {
+  ResolveProgress,
+  ResolveImportCardsResult,
+  ImportCardRef,
+} from "@/lib/import-export/resolve-import-cards";
 
 export {
   CSV_HEADERS,
@@ -82,12 +110,6 @@ export {
   remapDeckPackage,
   assertUniqueRemappedIds,
 } from "@/lib/import-export/id-remap";
-
-export { resolveImportCards } from "@/lib/import-export/resolve-import-cards";
-export type {
-  ResolveProgress,
-  ResolveImportCardsResult,
-} from "@/lib/import-export/resolve-import-cards";
 
 export {
   downloadBlob,

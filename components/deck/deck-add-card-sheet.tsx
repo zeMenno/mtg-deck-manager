@@ -57,6 +57,9 @@ export function DeckAddCardSheet({
       if (result.warnings.length > 0) {
         toast.warning(result.warnings[0]!.message);
       }
+      if (result.suggestedTagIds.length > 0) {
+        toast.info("Tags suggested — edit them from the card actions");
+      }
       showUndo({
         message: `Added ${name}`,
         undo: async () => {

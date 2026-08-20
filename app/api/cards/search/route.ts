@@ -28,11 +28,17 @@ export async function GET(request: Request) {
   const page = pageRaw ? Number.parseInt(pageRaw, 10) : undefined;
   const unique =
     (searchParams.get("unique") as SearchUniqueMode | null) ?? "cards";
+  const order = searchParams.get("order") ?? undefined;
+  const dir = searchParams.get("dir") === "desc" ? "desc" : "asc";
+  const includeExtras = searchParams.get("include_extras") === "true";
 
   try {
     const upstream = buildSearchUpstream(q, {
       page: Number.isFinite(page) ? page : undefined,
       unique,
+      order,
+      dir,
+      includeExtras,
     });
     const response = await proxyScryfallGet(upstream);
     const body = await response.text();

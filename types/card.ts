@@ -169,6 +169,12 @@ export interface AppSettings {
   recommendationConfig: RecommendationConfig;
   /** Last-used card search filters (Phase 17). */
   searchFilters: CardSearchFilters | null;
+  /** Apply deterministic local suggestions when adding an untagged card. */
+  "tags.suggestOnAdd": boolean;
+  /** Fine-pointer hover preview of card art. */
+  "cardZoom.hoverPreview": boolean;
+  /** Tap/click list thumbnails to open the zoom overlay. */
+  "cardZoom.tapImageOpensZoom": boolean;
 }
 
 export const DEFAULT_APP_SETTINGS: AppSettings = {
@@ -181,6 +187,9 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   activeDeckId: null,
   recommendationConfig: { ...DEFAULT_RECOMMENDATION_CONFIG },
   searchFilters: null,
+  "tags.suggestOnAdd": true,
+  "cardZoom.hoverPreview": true,
+  "cardZoom.tapImageOpensZoom": true,
 };
 
 /** Known setting keys (docs/data-model.md §9). */
@@ -196,4 +205,7 @@ export const SETTING_KEYS: SettingKey[] = [
   "activeDeckId",
   "recommendationConfig",
   "searchFilters",
+  "tags.suggestOnAdd",
+  "cardZoom.hoverPreview",
+  "cardZoom.tapImageOpensZoom",
 ];

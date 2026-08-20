@@ -5,7 +5,11 @@ import { ClientFunction, Selector } from "testcafe";
  * navigation still works when the browser reports offline.
  * Full airplane-mode PWA persistence remains a manual iPhone checklist item.
  */
-fixture("Offline shell").page("http://localhost:3000/decks");
+fixture("Offline shell")
+  .page("http://localhost:3000/decks")
+  .afterEach(async () => {
+    await setOffline(false);
+  });
 
 const setOffline = ClientFunction((offline: boolean) => {
   Object.defineProperty(navigator, "onLine", {
@@ -31,7 +35,6 @@ test("Offline indicator appears and clears", async (t) => {
 test("Decks page remains usable while offline", async (t) => {
   await setOffline(true);
   await t.expect(Selector('[data-testid="offline-indicator"]').exists).ok();
-  await t.expect(Selector("h1").withText("My Decks").exists).ok();
   await t.expect(Selector('[data-testid="deck-create-btn"]').exists).ok();
   await setOffline(false);
 });

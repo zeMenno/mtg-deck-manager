@@ -1,5 +1,5 @@
 /**
- * Arena / MTGO / Moxfield-style text decklist parser.
+ * Arena / MTGO / Moxfield / Archidekt-dialect text decklist parser.
  */
 
 import type {
@@ -142,29 +142,109 @@ function parseQuantityPrefix(line: string): QtyParse | null {
   return null;
 }
 
-type NameParts = {
+export type NameParts = {
   name: string;
   setCode?: string;
   collectorNumber?: string;
+  categories?: string[];
+  foil?: boolean;
+  warning?: string;
 };
 
+const TRAILING_CARET = /\s*\^[^^]*\^\s*$/;
+const TRAILING_CATEGORY = /\s*\[([^\]]+)\]\s*$/;
+const TRAILING_FINISH = /\s*(?:\*F\*|\*E\*|\(foil\))\s*$/i;
+const INLINE_FINISH = /\*F\*|\*E\*|\(foil\)/gi;
+
+function splitCategoryList(raw: string): string[] {
+  return raw
+    .split(",")
+    .map((part) => part.trim())
+    .filter(Boolean);
+}
+
 /**
- * Parse "Card Name (SET) 123" Moxfield / Arena style.
+ * Strip Archidekt-style trailing decorations: foil flags, [categories], ^labels^.
+ */
+export function stripArchidektDecorations(rest: string): {
+  remainder: string;
+  categories: string[];
+  foil: boolean;
+} {
+  let working = rest.trim();
+  const categories: string[] = [];
+  let foil = false;
+  let changed = true;
+
+  while (changed && working) {
+    changed = false;
+    const caret = working.match(TRAILING_CARET);
+    if (caret) {
+      working = working.slice(0, -caret[0].length).trim();
+      changed = true;
+      continue;
+    }
+    const category = working.match(TRAILING_CATEGORY);
+    if (category) {
+      categories.unshift(...splitCategoryList(category[1] ?? ""));
+      working = working.slice(0, -category[0].length).trim();
+      changed = true;
+      continue;
+    }
+    const finish = working.match(TRAILING_FINISH);
+    if (finish) {
+      foil = true;
+      working = working.slice(0, -finish[0].length).trim();
+      changed = true;
+    }
+  }
+
+  if (working.match(INLINE_FINISH)) {
+    foil = true;
+    working = working.replace(INLINE_FINISH, " ").replace(/\s+/g, " ").trim();
+  }
+
+  return { remainder: working, categories, foil };
+}
+
+/**
+ * Parse "Card Name (SET) 123" plus Archidekt decorations after the printing.
  */
 export function parseNameWithSet(rest: string): NameParts {
-  const cleaned = normalizeCardName(rest);
-  // "Name (SET) 123" or "Name (SET)"
-  const moxfield = cleaned.match(
-    /^(.+?)\s+\(([A-Za-z0-9]+)\)(?:\s+(\d+[A-Za-z]?))?\s*$/,
+  const decorations = stripArchidektDecorations(normalizeCardName(rest));
+  const cleaned = decorations.remainder;
+  const withSet = cleaned.match(
+    /^(.+?)\s+\(([A-Za-z0-9]+)\)(?:\s+(\S+))?(?:\s+(.*))?$/,
   );
-  if (moxfield) {
-    return {
-      name: normalizeCardName(moxfield[1]!),
-      setCode: moxfield[2]!.toLowerCase(),
-      ...(moxfield[3] ? { collectorNumber: moxfield[3] } : {}),
-    };
+
+  let name: string;
+  let setCode: string | undefined;
+  let collectorNumber: string | undefined;
+  let leftover: string | undefined;
+
+  if (withSet) {
+    name = normalizeCardName(withSet[1]!);
+    setCode = withSet[2]!.toLowerCase();
+    collectorNumber = withSet[3];
+    leftover = withSet[4]?.trim();
+  } else {
+    name = cleaned;
   }
-  return { name: cleaned };
+
+  const warning = leftover
+    ? `Ignored unrecognized tokens after ${name}: ${leftover}`
+    : undefined;
+
+  return {
+    name,
+    ...(setCode ? { setCode } : {}),
+    ...(collectorNumber ? { collectorNumber } : {}),
+    ...(decorations.categories.length > 0
+      ? { categories: decorations.categories }
+      : {}),
+    ...(decorations.foil ? { foil: true } : {}),
+    ...(warning ? { warning } : {}),
+  };
 }
 
 /**
@@ -232,8 +312,12 @@ export function parseTextDecklist(text: string): ParsedDecklist {
       ...(parts.collectorNumber
         ? { collectorNumber: parts.collectorNumber }
         : {}),
+      ...(parts.categories && parts.categories.length > 0
+        ? { categories: parts.categories }
+        : {}),
+      ...(parts.warning ? { parseWarning: parts.warning } : {}),
       ...(status ? { status } : {}),
-      ...(qty.foil ? { foil: true } : {}),
+      ...(qty.foil || parts.foil ? { foil: true } : {}),
     };
     result.lines.push(entry);
   }

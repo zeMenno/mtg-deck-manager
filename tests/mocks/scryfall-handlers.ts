@@ -11,6 +11,7 @@ import {
   FIXTURE_CORRUPT_SEARCH,
   FIXTURE_EMPTY_SEARCH,
   FIXTURE_SOL_RING,
+  FIXTURE_SOL_RING_PRINT_PAGES,
 } from "@/tests/fixtures/scryfall-cards";
 
 let forceCorruptSearch = false;
@@ -101,6 +102,21 @@ export const scryfallHandlers = [
       );
     }
 
+    if (q.includes(`oracleid:${FIXTURE_SOL_RING.oracle_id}`)) {
+      const page = Math.max(1, Number(url.searchParams.get("page") ?? "1"));
+      const data = FIXTURE_SOL_RING_PRINT_PAGES[page - 1] ?? [];
+      return HttpResponse.json({
+        object: "list",
+        total_cards: FIXTURE_SOL_RING_PRINT_PAGES.flat().length,
+        has_more: page < FIXTURE_SOL_RING_PRINT_PAGES.length,
+        next_page:
+          page < FIXTURE_SOL_RING_PRINT_PAGES.length
+            ? `${SCRYFALL_BASE}/cards/search?page=${page + 1}`
+            : undefined,
+        data,
+      });
+    }
+
     const data = matchQuery(q);
     if (data.length === 0) {
       return HttpResponse.json(
@@ -120,6 +136,27 @@ export const scryfallHandlers = [
       has_more: false,
       data,
     });
+  }),
+
+  http.get(`${SCRYFALL_BASE}/cards/:set/:number`, ({ params }) => {
+    const set = String(params.set).toLowerCase();
+    const number = decodeURIComponent(String(params.number));
+    const card = FIXTURE_CARDS.find(
+      (c) =>
+        (c.set ?? "").toLowerCase() === set && c.collector_number === number,
+    );
+    if (!card) {
+      return HttpResponse.json(
+        {
+          object: "error",
+          code: "not_found",
+          status: 404,
+          details: "Card not found.",
+        },
+        { status: 404 },
+      );
+    }
+    return HttpResponse.json(card);
   }),
 
   http.get(`${SCRYFALL_BASE}/cards/:id`, ({ params }) => {

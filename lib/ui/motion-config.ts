@@ -16,6 +16,8 @@ export const MOTION = {
   pulseMs: 180,
   /** Stagger delay between list items (ms). Cap usage. */
   staggerMs: 30,
+  /** Card zoom overlay fade / scale (ms). */
+  zoomMs: 200,
   /** Ease-out cubic-bezier for CSS transitions. */
   easeOut: "cubic-bezier(0.16, 1, 0.3, 1)",
   /** Default CSS transition string for opacity fades. */
@@ -26,7 +28,7 @@ export const MOTION = {
 
 export type MotionDurationKey = keyof Pick<
   typeof MOTION,
-  "pageMs" | "sheetMs" | "pulseMs" | "staggerMs"
+  "pageMs" | "sheetMs" | "pulseMs" | "staggerMs" | "zoomMs"
 >;
 
 /** Duration in seconds for style props / Framer-like APIs. */

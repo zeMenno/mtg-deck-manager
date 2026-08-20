@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { CardImage } from "@/components/cards/card-image";
+import { PrintingPickerSheet } from "@/components/cards/printing-picker-sheet";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { PriorityPicker } from "@/components/wishlist/priority-picker";
 import { Button } from "@/components/ui/button";
@@ -56,6 +57,7 @@ export function EditWishlistItemSheet({
   const [targetRole, setTargetRole] = useState("");
   const [notes, setNotes] = useState("");
   const [confirmRemove, setConfirmRemove] = useState(false);
+  const [printingOpen, setPrintingOpen] = useState(false);
 
   useEffect(() => {
     if (!item) return;
@@ -225,6 +227,19 @@ export function EditWishlistItemSheet({
               </div>
 
               <SheetFooter>
+                {item.card ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    data-testid="wishlist-change-printing-btn"
+                    onClick={() => {
+                      onOpenChange(false);
+                      setPrintingOpen(true);
+                    }}
+                  >
+                    Change printing
+                  </Button>
+                ) : null}
                 {onViewCard ? (
                   <Button
                     type="button"
@@ -276,6 +291,13 @@ export function EditWishlistItemSheet({
           ) : null}
         </SheetContent>
       </Sheet>
+
+      <PrintingPickerSheet
+        card={item?.card ?? null}
+        wishlistItemId={item?.id}
+        open={printingOpen}
+        onOpenChange={setPrintingOpen}
+      />
 
       <ConfirmDialog
         open={confirmRemove}

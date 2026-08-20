@@ -70,6 +70,44 @@ SIDEBOARD:
     expect(result.lines).toHaveLength(1);
   });
 
+  it("parses Archidekt decorations without swallowing the name", () => {
+    const result = parseTextDecklist(
+      `1x Sol Ring (c21) 263 *F* [Ramp] ^Buy,#0066ff^`,
+    );
+    expect(result.lines).toHaveLength(1);
+    expect(result.lines[0]).toMatchObject({
+      quantity: 1,
+      name: "Sol Ring",
+      setCode: "c21",
+      collectorNumber: "263",
+      foil: true,
+      categories: ["Ramp"],
+    });
+    expect(result.lines[0]?.name).not.toContain("Ramp");
+    expect(result.lines[0]?.raw).toContain("^Buy,#0066ff^");
+  });
+
+  it("parses multiple and comma-separated Archidekt categories", () => {
+    const result = parseTextDecklist(
+      `1 Lightning Greaves (c21) 123 [Ramp] [Token, Soldier]`,
+    );
+    expect(result.lines[0]).toMatchObject({
+      name: "Lightning Greaves",
+      setCode: "c21",
+      collectorNumber: "123",
+      categories: ["Ramp", "Token", "Soldier"],
+    });
+  });
+
+  it("still parses Arena lines without decorations", () => {
+    const result = parseTextDecklist(`1 Sol Ring (M21) 239`);
+    expect(result.lines[0]).toMatchObject({
+      name: "Sol Ring",
+      setCode: "m21",
+      collectorNumber: "239",
+    });
+  });
+
   it("normalizes smart quotes in names", () => {
     const result = parseTextDecklist(`1 Jace\u2019s Ingenuity`);
     expect(result.lines[0]?.name).toBe("Jace's Ingenuity");

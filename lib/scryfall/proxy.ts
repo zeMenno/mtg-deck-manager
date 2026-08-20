@@ -3,9 +3,10 @@ import {
   searchCardsUrl,
   cardByIdUrl,
   namedCardUrl,
+  cardBySetCollectorUrl,
 } from "@/lib/scryfall/endpoints";
 import { schedule } from "@/lib/scryfall/rate-limiter";
-import type { SearchUniqueMode } from "@/lib/scryfall/endpoints";
+import type { SearchCardsOptions } from "@/lib/scryfall/endpoints";
 
 /**
  * Server-side Scryfall forwarder with the shared rate limiter.
@@ -27,11 +28,14 @@ export async function proxyScryfallGet(url: string): Promise<Response> {
 
 export function buildSearchUpstream(
   q: string,
-  options?: { page?: number; unique?: SearchUniqueMode },
+  options?: SearchCardsOptions,
 ): string {
   return searchCardsUrl(q, {
     unique: options?.unique ?? "cards",
     page: options?.page,
+    order: options?.order,
+    dir: options?.dir,
+    includeExtras: options?.includeExtras,
   });
 }
 
@@ -44,4 +48,11 @@ export function buildNamedUpstream(
   options?: { fuzzy?: boolean; set?: string },
 ): string {
   return namedCardUrl(name, options);
+}
+
+export function buildSetCollectorUpstream(
+  setCode: string,
+  collectorNumber: string,
+): string {
+  return cardBySetCollectorUrl(setCode, collectorNumber);
 }

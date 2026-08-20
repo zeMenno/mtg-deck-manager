@@ -13,8 +13,12 @@ export function AppearanceSettings() {
     imagesEnabled,
     density,
     effectiveDensity,
+    hoverPreview,
+    tapImageOpensZoom,
     setImagesEnabled,
     setDensity,
+    setHoverPreview,
+    setTapImageOpensZoom,
     hydrated,
   } = useDisplayPreferences();
 
@@ -82,6 +86,38 @@ export function AppearanceSettings() {
         </p>
       </div>
 
+      <div className="flex flex-col gap-2">
+        <span className="text-xs font-semibold">Card zoom</span>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            type="button"
+            size="sm"
+            variant={hoverPreview ? "default" : "outline"}
+            aria-pressed={hoverPreview}
+            data-testid="settings-hover-preview"
+            disabled={!hydrated}
+            onClick={() => setHoverPreview(!hoverPreview)}
+          >
+            Hover preview: {hoverPreview ? "ON" : "OFF"}
+          </Button>
+          <Button
+            type="button"
+            size="sm"
+            variant={tapImageOpensZoom ? "default" : "outline"}
+            aria-pressed={tapImageOpensZoom}
+            data-testid="settings-tap-image-zoom"
+            disabled={!hydrated}
+            onClick={() => setTapImageOpensZoom(!tapImageOpensZoom)}
+          >
+            Tap art to zoom: {tapImageOpensZoom ? "ON" : "OFF"}
+          </Button>
+        </div>
+        <p className="text-muted-foreground text-xs">
+          Hover preview is desktop-only. On a phone, tap the art to open the
+          magnifier.
+        </p>
+      </div>
+
       <div
         className="border-border bg-muted flex flex-col gap-2 rounded-md border p-3"
         aria-hidden="true"
@@ -101,6 +137,21 @@ function DensityPreview({
   images: boolean;
 }) {
   const showThumb = images && density !== "compact";
+  if (density === "grid" && images) {
+    return (
+      <div className="grid grid-cols-2 gap-2">
+        {["Sample Card", "Another Card"].map((name) => (
+          <div
+            key={name}
+            className="border-border bg-card overflow-hidden rounded-md border shadow-xs"
+          >
+            <div className="bg-background aspect-[488/680] w-full" />
+            <p className="truncate px-2 py-1 text-xs font-bold">{name}</p>
+          </div>
+        ))}
+      </div>
+    );
+  }
   return (
     <div className="border-border bg-card flex items-center gap-2 rounded-md border p-2 shadow-xs">
       {showThumb ? (

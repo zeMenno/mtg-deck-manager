@@ -108,6 +108,10 @@ export type ParsedDecklistLine = {
   name: string;
   setCode?: string;
   collectorNumber?: string;
+  /** Archidekt `[category]` display names (not tag ids). */
+  categories?: string[];
+  /** Non-fatal leftover tokens after name/set/number. */
+  parseWarning?: string;
   status?: DeckCardStatus;
   foil?: boolean;
   line: number;

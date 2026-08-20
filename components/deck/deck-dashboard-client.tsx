@@ -5,12 +5,15 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 import { CardDetailSheet } from "@/components/cards/card-detail-sheet";
+import { BulkCheapestSheet } from "@/components/deck/bulk-cheapest-sheet";
 import { CommanderPicker } from "@/components/deck/commander-picker";
 import { DeckActionsSheet } from "@/components/deck/deck-actions-sheet";
 import { DeckAddCardSheet } from "@/components/deck/deck-add-card-sheet";
 import { DeckDashboard } from "@/components/deck/deck-dashboard";
 import { DeckHeader } from "@/components/deck/deck-header";
+import { DeckImportIntoSheet } from "@/components/deck/deck-import-into-sheet";
 import { SaveVersionDialog } from "@/components/deck/save-version-dialog";
+import { SuggestTagsSheet } from "@/components/deck/suggest-tags-sheet";
 import { DeckTabs } from "@/components/navigation/deck-tabs";
 import { PageTransition } from "@/components/shared/page-transition";
 import { DeckDashboardSkeleton } from "@/components/shared/skeletons";
@@ -38,6 +41,9 @@ export function DeckDashboardClient({ params }: DeckDashboardClientProps) {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [saveVersionOpen, setSaveVersionOpen] = useState(false);
   const [detailCard, setDetailCard] = useState<Card | null>(null);
+  const [bulkCheapestOpen, setBulkCheapestOpen] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
+  const [suggestTagsOpen, setSuggestTagsOpen] = useState(false);
 
   useEffect(() => {
     if (searchParams.get("pickCommander") === "1") {
@@ -94,6 +100,9 @@ export function DeckDashboardClient({ params }: DeckDashboardClientProps) {
           deckId={deckId}
           onAddCard={() => setAddOpen(true)}
           onSaveVersion={() => setSaveVersionOpen(true)}
+          onCheapestPrintings={() => setBulkCheapestOpen(true)}
+          onImportCards={() => setImportOpen(true)}
+          onSuggestTags={() => setSuggestTagsOpen(true)}
         />
 
         {commander ? (
@@ -128,6 +137,21 @@ export function DeckDashboardClient({ params }: DeckDashboardClientProps) {
           deckId={deckId}
           open={saveVersionOpen}
           onOpenChange={setSaveVersionOpen}
+        />
+        <BulkCheapestSheet
+          deckId={deckId}
+          open={bulkCheapestOpen}
+          onOpenChange={setBulkCheapestOpen}
+        />
+        <DeckImportIntoSheet
+          deckId={deckId}
+          open={importOpen}
+          onOpenChange={setImportOpen}
+        />
+        <SuggestTagsSheet
+          deckId={deckId}
+          open={suggestTagsOpen}
+          onOpenChange={setSuggestTagsOpen}
         />
         <CardDetailSheet
           card={detailCard}

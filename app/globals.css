@@ -364,6 +364,11 @@
   animation: status-pulse 180ms ease-out;
 }
 
+@utility card-tile-contain {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 280px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

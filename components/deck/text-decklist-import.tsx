@@ -62,9 +62,12 @@ export function TextDecklistImport({
     >
       <h2 className="font-mono text-xs uppercase">Paste decklist</h2>
       <p className="text-muted-foreground text-sm">
-        Arena / MTGO / Moxfield-style lists. Lines like{" "}
+        Arena, Moxfield, and Archidekt text. Lines like{" "}
         <code className="font-mono text-xs">1 Sol Ring</code> or{" "}
-        <code className="font-mono text-xs">1x Card Name (SET)</code>.
+        <code className="font-mono text-xs">
+          1x Sol Ring (c21) 263 *F* [Ramp]
+        </code>
+        .
       </p>
       <textarea
         data-testid="decklist-textarea"

@@ -15,12 +15,18 @@ type DeckDashboardProps = {
   deckId: string;
   onAddCard?: () => void;
   onSaveVersion?: () => void;
+  onCheapestPrintings?: () => void;
+  onImportCards?: () => void;
+  onSuggestTags?: () => void;
 };
 
 export function DeckDashboard({
   deckId,
   onAddCard,
   onSaveVersion,
+  onCheapestPrintings,
+  onImportCards,
+  onSuggestTags,
 }: DeckDashboardProps) {
   const { deck } = useDeck(deckId);
   const { stats, isLoading, isEmpty } = useDeckStats(deckId, "current");
@@ -64,6 +70,26 @@ export function DeckDashboard({
               Add card
             </Button>
           ) : null}
+          {onImportCards ? (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onImportCards}
+              data-testid="empty-import-cards"
+            >
+              Import cards
+            </Button>
+          ) : null}
+          {onSuggestTags ? (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onSuggestTags}
+              data-testid="empty-suggest-tags"
+            >
+              Suggest tags…
+            </Button>
+          ) : null}
           <Button asChild variant="outline">
             <Link href={`/decks/${deckId}/cards`}>Edit cards</Link>
           </Button>
@@ -80,6 +106,16 @@ export function DeckDashboard({
           <Button asChild variant="outline" data-testid="version-history-link">
             <Link href={`/decks/${deckId}/versions`}>Version history</Link>
           </Button>
+          {onCheapestPrintings ? (
+            <Button
+              type="button"
+              variant="outline"
+              data-testid="bulk-cheapest-btn"
+              onClick={onCheapestPrintings}
+            >
+              Cheapest printings…
+            </Button>
+          ) : null}
         </div>
       </div>
     );
@@ -123,6 +159,26 @@ export function DeckDashboard({
             Add card
           </Button>
         ) : null}
+        {onImportCards ? (
+          <Button
+            type="button"
+            variant="outline"
+            data-testid="deck-import-cards-btn"
+            onClick={onImportCards}
+          >
+            Import cards
+          </Button>
+        ) : null}
+        {onSuggestTags ? (
+          <Button
+            type="button"
+            variant="outline"
+            data-testid="deck-suggest-tags-btn"
+            onClick={onSuggestTags}
+          >
+            Suggest tags…
+          </Button>
+        ) : null}
         {onSaveVersion ? (
           <Button
             type="button"
@@ -141,6 +197,16 @@ export function DeckDashboard({
         <Button asChild variant="outline" data-testid="review-changes-btn">
           <Link href={`/decks/${deckId}/changes`}>Review changes</Link>
         </Button>
+        {onCheapestPrintings ? (
+          <Button
+            type="button"
+            variant="outline"
+            data-testid="bulk-cheapest-btn"
+            onClick={onCheapestPrintings}
+          >
+            Cheapest printings…
+          </Button>
+        ) : null}
         <PrefetchDeckImagesButton deckId={deckId} />
       </section>
     </div>

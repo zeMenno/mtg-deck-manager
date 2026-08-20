@@ -7,8 +7,12 @@ export interface DisplayPreferences {
   imagesEnabled: boolean;
   /** Preferred density when images are enabled. */
   density: DisplayDensity;
+  /** Fine-pointer hover preview of card art. */
+  hoverPreview: boolean;
+  /** Tap/click list thumbnails to open the zoom overlay. */
+  tapImageOpensZoom: boolean;
 }
 
-export type CardImageSize = "xs" | "sm" | "md" | "lg" | "full";
+export type CardImageSize = "xs" | "sm" | "md" | "lg" | "full" | "tile";
 
 export type CardImageUrlTier = "small" | "normal" | "large";

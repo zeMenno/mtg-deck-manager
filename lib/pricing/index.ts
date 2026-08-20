@@ -9,6 +9,7 @@ export * from "@/lib/pricing/types";
 export * from "@/lib/pricing/constants";
 export * from "@/lib/pricing/format-price";
 export * from "@/lib/pricing/valuation";
+export * from "@/lib/pricing/cheapest-printing";
 export {
   PricingService,
   getPricingService,
