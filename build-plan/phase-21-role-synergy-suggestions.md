@@ -1,6 +1,6 @@
 # Phase 21 — Role & Synergy Suggestions
 
-> **Status: Planned** (after Phase 20). Target ship: **v1.4.0**.
+> **Status: Implemented** (2026-08-20). Shipped in-repo as **v1.4.0**.
 
 ## Agent Handoff Prompt
 

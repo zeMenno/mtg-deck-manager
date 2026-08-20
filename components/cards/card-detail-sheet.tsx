@@ -133,6 +133,9 @@ export function CardDetailSheet({
       } else if (illegalOverride) {
         toast.warning(`Added ${activeCard.name} (format warning)`);
       }
+      if (result.suggestedTagIds.length > 0) {
+        toast.info("Tags suggested — edit them on the card");
+      }
       const deckCardId = result.deckCard.id;
       showUndo({
         message: `Added ${activeCard.name}`,

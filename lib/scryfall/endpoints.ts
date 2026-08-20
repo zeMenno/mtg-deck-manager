@@ -57,6 +57,18 @@ export function cardByIdUrl(id: string): string {
   return withBase(`/cards/${encodeURIComponent(id)}`);
 }
 
+/** `/cards/{set}/{collector_number}` — a specific printing. */
+export function cardBySetCollectorUrl(
+  setCode: string,
+  collectorNumber: string,
+): string {
+  const set = setCode.trim().toLowerCase();
+  const number = collectorNumber.trim();
+  return withBase(
+    `/cards/${encodeURIComponent(set)}/${encodeURIComponent(number)}`,
+  );
+}
+
 /**
  * Collection endpoint path (POST body separately).
  * Scryfall allows max 75 identifiers per request.

@@ -11,20 +11,34 @@ import type { DisplayDensity } from "@/types";
 
 const PERSIST_DEBOUNCE_MS = 300;
 
+function needsImages(density: DisplayDensity): boolean {
+  return density === "image" || density === "grid";
+}
+
 /**
  * Reactive display preferences with optimistic Zustand updates and
- * debounced Dexie persistence (`imagesEnabled`, `densityMode`).
+ * debounced Dexie persistence (`imagesEnabled`, `densityMode`, zoom keys).
  */
 export function useDisplayPreferences() {
   const { ready } = useDatabase();
   const imagesEnabled = useDisplayPreferencesStore((s) => s.imagesEnabled);
   const density = useDisplayPreferencesStore((s) => s.density);
+  const hoverPreview = useDisplayPreferencesStore((s) => s.hoverPreview);
+  const tapImageOpensZoom = useDisplayPreferencesStore(
+    (s) => s.tapImageOpensZoom,
+  );
   const hydrated = useDisplayPreferencesStore((s) => s.hydrated);
   const hydrate = useDisplayPreferencesStore((s) => s.hydrate);
   const setImagesEnabledStore = useDisplayPreferencesStore(
     (s) => s.setImagesEnabled,
   );
   const setDensityStore = useDisplayPreferencesStore((s) => s.setDensity);
+  const setHoverPreviewStore = useDisplayPreferencesStore(
+    (s) => s.setHoverPreview,
+  );
+  const setTapImageOpensZoomStore = useDisplayPreferencesStore(
+    (s) => s.setTapImageOpensZoom,
+  );
 
   const persistTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pending = useRef<Partial<DisplayPreferences>>({});
@@ -35,6 +49,8 @@ export function useDisplayPreferences() {
       hydrate({
         imagesEnabled: settings.imagesEnabled,
         density: settings.densityMode,
+        hoverPreview: settings["cardZoom.hoverPreview"],
+        tapImageOpensZoom: settings["cardZoom.tapImageOpensZoom"],
       });
     });
   }, [ready, hydrated, hydrate]);
@@ -48,6 +64,12 @@ export function useDisplayPreferences() {
     }
     if (batch.density !== undefined) {
       await repo.set("densityMode", batch.density);
+    }
+    if (batch.hoverPreview !== undefined) {
+      await repo.set("cardZoom.hoverPreview", batch.hoverPreview);
+    }
+    if (batch.tapImageOpensZoom !== undefined) {
+      await repo.set("cardZoom.tapImageOpensZoom", batch.tapImageOpensZoom);
     }
   }, []);
 
@@ -87,13 +109,29 @@ export function useDisplayPreferences() {
     [schedulePersist, setDensityStore],
   );
 
-  /** Selecting Image while images are OFF re-enables images. */
+  const setHoverPreview = useCallback(
+    (next: boolean) => {
+      setHoverPreviewStore(next);
+      schedulePersist({ hoverPreview: next });
+    },
+    [schedulePersist, setHoverPreviewStore],
+  );
+
+  const setTapImageOpensZoom = useCallback(
+    (next: boolean) => {
+      setTapImageOpensZoomStore(next);
+      schedulePersist({ tapImageOpensZoom: next });
+    },
+    [schedulePersist, setTapImageOpensZoomStore],
+  );
+
+  /** Selecting Image or Grid while images are OFF re-enables images. */
   const setDensityOrEnable = useCallback(
     (next: DisplayDensity) => {
-      if (next === "image" && !imagesEnabled) {
+      if (needsImages(next) && !imagesEnabled) {
         setImagesEnabledStore(true);
-        setDensityStore("image");
-        schedulePersist({ imagesEnabled: true, density: "image" });
+        setDensityStore(next);
+        schedulePersist({ imagesEnabled: true, density: next });
         return;
       }
       setDensity(next);
@@ -112,10 +150,19 @@ export function useDisplayPreferences() {
   return {
     imagesEnabled,
     density,
+    hoverPreview,
+    tapImageOpensZoom,
     effectiveDensity,
     hydrated,
     setImagesEnabled,
     setDensity: setDensityOrEnable,
-    preferences: { imagesEnabled, density } satisfies DisplayPreferences,
+    setHoverPreview,
+    setTapImageOpensZoom,
+    preferences: {
+      imagesEnabled,
+      density,
+      hoverPreview,
+      tapImageOpensZoom,
+    } satisfies DisplayPreferences,
   };
 }

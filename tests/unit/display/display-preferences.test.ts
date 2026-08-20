@@ -1,6 +1,9 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { getEffectiveDensity } from "@/lib/display/get-effective-density";
+import {
+  getEffectiveDensity,
+  parseDisplayDensity,
+} from "@/lib/display/get-effective-density";
 import {
   getCardImageUrl,
   isAllowedCardImageUrl,
@@ -8,6 +11,7 @@ import {
 import {
   estimateRowHeight,
   getDensityRowClass,
+  toRowDensity,
 } from "@/lib/display/density-classes";
 import type { Card } from "@/types/card";
 
@@ -33,6 +37,12 @@ describe("getEffectiveDensity", () => {
     ).toBe("compact");
   });
 
+  it("returns compact when images are disabled even if density is grid", () => {
+    expect(getEffectiveDensity({ imagesEnabled: false, density: "grid" })).toBe(
+      "compact",
+    );
+  });
+
   it("returns the preferred density when images are enabled", () => {
     expect(
       getEffectiveDensity({ imagesEnabled: true, density: "comfortable" }),
@@ -40,6 +50,17 @@ describe("getEffectiveDensity", () => {
     expect(getEffectiveDensity({ imagesEnabled: true, density: "image" })).toBe(
       "image",
     );
+    expect(getEffectiveDensity({ imagesEnabled: true, density: "grid" })).toBe(
+      "grid",
+    );
+  });
+});
+
+describe("parseDisplayDensity", () => {
+  it("falls unknown persisted values back to comfortable", () => {
+    expect(parseDisplayDensity("huge")).toBe("comfortable");
+    expect(parseDisplayDensity(undefined)).toBe("comfortable");
+    expect(parseDisplayDensity("grid")).toBe("grid");
   });
 });
 
@@ -56,6 +77,7 @@ describe("getCardImageUrl", () => {
     expect(getCardImageUrl(card, "md")).toContain("/normal/");
     expect(getCardImageUrl(card, "lg")).toContain("/large/");
     expect(getCardImageUrl(card, "full")).toContain("/large/");
+    expect(getCardImageUrl(card, "tile")).toContain("/normal/");
   });
 
   it("returns the front face image for a DFC", () => {
@@ -114,6 +136,8 @@ describe("density class mapping", () => {
     expect(getDensityRowClass("compact")).toContain("py-2");
     expect(getDensityRowClass("comfortable")).toContain("p-3");
     expect(getDensityRowClass("image")).toContain("p-2");
+    expect(getDensityRowClass("grid")).toBe(getDensityRowClass("comfortable"));
+    expect(toRowDensity("grid")).toBe("comfortable");
     expect(estimateRowHeight("compact")).toBeLessThan(
       estimateRowHeight("image"),
     );

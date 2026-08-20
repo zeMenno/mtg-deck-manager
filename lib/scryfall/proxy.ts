@@ -3,6 +3,7 @@ import {
   searchCardsUrl,
   cardByIdUrl,
   namedCardUrl,
+  cardBySetCollectorUrl,
 } from "@/lib/scryfall/endpoints";
 import { schedule } from "@/lib/scryfall/rate-limiter";
 import type { SearchCardsOptions } from "@/lib/scryfall/endpoints";
@@ -47,4 +48,11 @@ export function buildNamedUpstream(
   options?: { fuzzy?: boolean; set?: string },
 ): string {
   return namedCardUrl(name, options);
+}
+
+export function buildSetCollectorUpstream(
+  setCode: string,
+  collectorNumber: string,
+): string {
+  return cardBySetCollectorUrl(setCode, collectorNumber);
 }

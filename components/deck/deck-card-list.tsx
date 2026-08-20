@@ -3,20 +3,19 @@
 import { useMemo, useRef } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 
+import { CardZoomOverlay } from "@/components/cards/card-zoom-overlay";
+import { DeckCardGrid } from "@/components/deck/deck-card-grid";
 import { DeckCardRow } from "@/components/deck/deck-card-row";
 import { DeckZoneGroup } from "@/components/deck/deck-zone-group";
+import { DECK_CARD_ZONES } from "@/lib/deck/constants";
+import { groupDeckCardsByZone } from "@/lib/deck/group-cards-by-zone";
 import { IMAGE_MODE_VIRTUALIZE_THRESHOLD } from "@/lib/display/constants";
 import { estimateRowHeight } from "@/lib/display/density-classes";
-import type { DisplayDensity, DeckCardZone, DeckFormat } from "@/types";
+import { useCardZoom } from "@/lib/hooks/use-card-zoom";
+import { useDisplayPreferences } from "@/lib/hooks/use-display-preferences";
+import type { DisplayDensity, DeckFormat } from "@/types";
 import type { Tag } from "@/types/card";
 import type { DeckCardWithCard } from "@/types/deck";
-
-const ZONE_ORDER: DeckCardZone[] = [
-  "commander",
-  "mainboard",
-  "sideboard",
-  "maybeboard",
-];
 
 type DeckCardListProps = {
   cards: DeckCardWithCard[];
@@ -28,6 +27,7 @@ type DeckCardListProps = {
   deckFormat?: DeckFormat;
   onPress: (item: DeckCardWithCard) => void;
   onLongPress: (item: DeckCardWithCard) => void;
+  onOpenDetails?: (item: DeckCardWithCard) => void;
   groupByZone?: boolean;
 };
 
@@ -41,11 +41,14 @@ export function DeckCardList({
   deckFormat,
   onPress,
   onLongPress,
+  onOpenDetails,
   groupByZone = true,
 }: DeckCardListProps) {
   const parentRef = useRef<HTMLDivElement>(null);
+  const zoom = useCardZoom();
+  const { tapImageOpensZoom, hoverPreview } = useDisplayPreferences();
+  const detailsItem = useRef<DeckCardWithCard | null>(null);
 
-  // Phase 9: virtualize when image mode + long lists (flat, no zone headers).
   const useVirtual =
     density === "image" &&
     cards.length > IMAGE_MODE_VIRTUALIZE_THRESHOLD &&
@@ -60,14 +63,7 @@ export function DeckCardList({
 
   const grouped = useMemo(() => {
     if (!groupByZone || useVirtual) return null;
-    const map = new Map<DeckCardZone, DeckCardWithCard[]>();
-    for (const zone of ZONE_ORDER) map.set(zone, []);
-    for (const card of cards) {
-      const list = map.get(card.zone) ?? [];
-      list.push(card);
-      map.set(card.zone, list);
-    }
-    return map;
+    return groupDeckCardsByZone(cards);
   }, [cards, groupByZone, useVirtual]);
 
   function resolveTags(ids: string[]): Tag[] {
@@ -75,6 +71,12 @@ export function DeckCardList({
     return ids
       .map((id) => tagsById.get(id))
       .filter((t): t is Tag => t !== undefined);
+  }
+
+  function openZoom(item: DeckCardWithCard) {
+    if (!imagesEnabled || multiSelectMode) return;
+    detailsItem.current = item;
+    zoom.openZoom(item.card, item.id);
   }
 
   function renderRow(item: DeckCardWithCard) {
@@ -92,6 +94,11 @@ export function DeckCardList({
         deckFormat={deckFormat}
         onPress={() => onPress(item)}
         onLongPress={() => onLongPress(item)}
+        onZoom={
+          tapImageOpensZoom && imagesEnabled && !multiSelectMode
+            ? () => openZoom(item)
+            : undefined
+        }
       />
     );
   }
@@ -107,62 +114,109 @@ export function DeckCardList({
     );
   }
 
+  const overlay = (
+    <CardZoomOverlay
+      card={zoom.card}
+      open={zoom.open}
+      onOpenChange={(next) => {
+        if (!next) zoom.closeZoom();
+      }}
+      imagesEnabled={imagesEnabled}
+      onOpenDetails={
+        onOpenDetails
+          ? () => {
+              const item = detailsItem.current;
+              zoom.closeZoom();
+              if (item) onOpenDetails(item);
+            }
+          : undefined
+      }
+    />
+  );
+
+  if (density === "grid") {
+    return (
+      <>
+        <DeckCardGrid
+          cards={cards}
+          imagesEnabled={imagesEnabled}
+          tagsById={tagsById}
+          selectedIds={selectedIds}
+          multiSelectMode={multiSelectMode}
+          deckFormat={deckFormat}
+          hoverPreviewEnabled={hoverPreview && !zoom.open}
+          zoomOpen={zoom.open}
+          onPress={onPress}
+          onLongPress={onLongPress}
+          onZoom={openZoom}
+        />
+        {overlay}
+      </>
+    );
+  }
+
   if (useVirtual) {
     return (
-      <div
-        ref={parentRef}
-        className="h-[60dvh] overflow-auto"
-        data-testid="deck-card-list"
-        data-virtualized="true"
-      >
+      <>
         <div
-          style={{
-            height: virtualizer.getTotalSize(),
-            width: "100%",
-            position: "relative",
-          }}
+          ref={parentRef}
+          className="h-[60dvh] overflow-auto"
+          data-testid="deck-card-list"
+          data-virtualized="true"
         >
-          {virtualizer.getVirtualItems().map((virtualRow) => {
-            const item = cards[virtualRow.index]!;
-            return (
-              <div
-                key={item.id}
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  width: "100%",
-                  transform: `translateY(${virtualRow.start}px)`,
-                }}
-                className="pb-2"
-              >
-                {renderRow(item)}
-              </div>
-            );
-          })}
+          <div
+            style={{
+              height: virtualizer.getTotalSize(),
+              width: "100%",
+              position: "relative",
+            }}
+          >
+            {virtualizer.getVirtualItems().map((virtualRow) => {
+              const item = cards[virtualRow.index]!;
+              return (
+                <div
+                  key={item.id}
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    transform: `translateY(${virtualRow.start}px)`,
+                  }}
+                  className="pb-2"
+                >
+                  {renderRow(item)}
+                </div>
+              );
+            })}
+          </div>
         </div>
-      </div>
+        {overlay}
+      </>
     );
   }
 
   return (
-    <div className="flex flex-col gap-6" data-testid="deck-card-list">
-      {ZONE_ORDER.map((zone) => {
-        const zoneCards = grouped?.get(zone) ?? [];
-        if (zoneCards.length === 0) return null;
-        return (
-          <DeckZoneGroup
-            key={zone}
-            title={zone}
-            count={zoneCards.reduce((s, c) => s + c.quantity, 0)}
-          >
-            {zoneCards.map((item) => renderRow(item))}
-          </DeckZoneGroup>
-        );
-      })}
-      {multiSelectMode ? (
-        <p className="sr-only">Multi-select mode active</p>
-      ) : null}
-    </div>
+    <>
+      <div className="flex flex-col gap-6" data-testid="deck-card-list">
+        {DECK_CARD_ZONES.map((zone) => {
+          const zoneCards = grouped?.get(zone) ?? [];
+          if (zoneCards.length === 0) return null;
+          return (
+            <DeckZoneGroup
+              key={zone}
+              title={zone}
+              count={zoneCards.reduce((s, c) => s + c.quantity, 0)}
+            >
+              {zoneCards.map((item) => renderRow(item))}
+            </DeckZoneGroup>
+          );
+        })}
+        {multiSelectMode ? (
+          <p className="sr-only">Multi-select mode active</p>
+        ) : null}
+      </div>
+      {overlay}
+    </>
   );
 }

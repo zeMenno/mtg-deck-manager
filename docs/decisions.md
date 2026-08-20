@@ -420,6 +420,30 @@ availability risk); exporting appearance as domain data.
 
 ---
 
+## ADR-027 — `grid` is a fourth display mode, not a replacement for rows
+
+**Context.** Card-shaped tiles are a better recognition surface for a 100-card Commander deck than horizontal rows, but compact/comfortable/image rows are already shipping and several consumers (`DeckCardRow` in changes lists, version detail, wishlist) must keep working. An orthogonal `layout × density` axis would create meaningless combinations and a settings migration.
+
+**Decision.** Phase 22 extends `DisplayDensity` with `"grid"`. The existing `densityMode` key stores it (no Dexie schema bump). Unknown values still fall back to `"comfortable"`. `DeckCardRow` maps `grid` to comfortable. `imagesEnabled === false` still forces compact rows, including hiding grid.
+
+**Consequences.** Exhaustive `switch (density)` sites must add a real `grid` case. Selecting Grid while images are off auto-enables images, same as Image mode.
+
+**Rejected.** Replacing rows everywhere; a second layout axis; silently turning `image` density into a grid.
+
+---
+
+## ADR-028 — The zoom overlay is the card-reading surface; hover preview is an enhancement
+
+**Context.** Oracle text on a phone-sized thumbnail is unreadable. A cursor lens is worse on touch. Hover is unavailable on the primary iPhone device.
+
+**Decision.** `CardZoomOverlay` is the required magnifier (tap/click, pinch, double-tap, keyboard). `CardHoverPreview` renders only for `(pointer: fine)`, is `aria-hidden`, and never gates functionality. A lens loupe stays out of scope.
+
+**Consequences.** Tile art opens the overlay; the meta strip keeps today's actions sheet. Offline overlay falls back large → normal → readable Dexie text.
+
+**Rejected.** Hover-only magnifier; replacing `CardDetailSheet` with the overlay.
+
+---
+
 ## Open questions
 
 These are the only unresolved items. Each has a **documented working default** so no phase is blocked waiting for an answer; if the user disagrees, changing them now is cheap.

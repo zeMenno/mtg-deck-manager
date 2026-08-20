@@ -1,6 +1,6 @@
 # Phase 20 — Archidekt-Dialect Import Into Existing Decks
 
-> **Status: Planned** (after Phase 19). Target ship: **v1.3.0**.
+> **Status: Implemented** (2026-08-20). Shipped in-repo as **v1.3.0**.
 
 ## Agent Handoff Prompt
 

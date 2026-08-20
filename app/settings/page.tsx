@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 
 import { AppearanceSettings } from "@/components/settings/appearance-settings";
 import { RecommendationSettings } from "@/components/settings/recommendation-settings";
+import { TagSuggestionSettings } from "@/components/settings/tag-suggestion-settings";
 import { useDatabase } from "@/components/providers/database-provider";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -89,6 +90,8 @@ export default function SettingsPage() {
       <AppearanceSettings />
 
       <RecommendationSettings />
+
+      <TagSuggestionSettings />
 
       <section
         className="border-border bg-card flex flex-col gap-3 rounded-md border p-4 shadow-sm"

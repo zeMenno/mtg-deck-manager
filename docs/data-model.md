@@ -45,7 +45,7 @@ export type WishlistPriority = "essential" | "high" | "medium" | "low";
 export type Currency = "USD" | "EUR";
 
 /** Card list density. */
-export type DisplayDensity = "compact" | "comfortable" | "image";
+export type DisplayDensity = "compact" | "comfortable" | "image" | "grid";
 ```
 
 `pauper` is included so Phase 5's enum does not have to widen the union later. Only `commander` has real rules in v1.0.
@@ -369,7 +369,7 @@ Known setting keys (extend deliberately, document here):
 | Key                      | Type                   | Default     | Owning phase |
 | ------------------------ | ---------------------- | ----------- | ------------ |
 | `imagesEnabled`          | `boolean`              | `true`      | 9            |
-| `densityMode`            | `DisplayDensity`       | `'comfortable'` | 9         |
+| `densityMode`            | `DisplayDensity`       | `'comfortable'` | 9 / 22    |
 | `currency`               | `Currency`             | `'USD'`     | 8            |
 | `priceFreshnessHours`    | `number`               | `24`        | 8            |
 | `lastBackupAt`           | `string \| null`       | `null`      | 10           |
@@ -378,6 +378,8 @@ Known setting keys (extend deliberately, document here):
 | `recommendationConfig`   | `RecommendationConfig` | see §11     | 13           |
 | `searchFilters`          | `CardSearchFilters \| null` | `null` | 17           |
 | `tags.suggestOnAdd`      | `boolean`              | `true`      | 21           |
+| `cardZoom.hoverPreview`  | `boolean`              | `true`      | 22           |
+| `cardZoom.tapImageOpensZoom` | `boolean`          | `true`      | 22           |
 
 Known appMeta keys: `schemaVersion` (number), `firstRunAt` (ISO string), `tagsSeededVersion` (number).
 
@@ -395,7 +397,11 @@ export interface AppSettings {
   recommendationConfig: RecommendationConfig;
   searchFilters: CardSearchFilters | null;
   /** Prefill empty role/synergy arrays from local heuristics on add. Phase 21. */
-  tagsSuggestOnAdd: boolean;
+  "tags.suggestOnAdd": boolean;
+  /** Fine-pointer hover preview of card art. Phase 22. */
+  "cardZoom.hoverPreview": boolean;
+  /** Tap list thumbnails to open the zoom overlay. Phase 22. */
+  "cardZoom.tapImageOpensZoom": boolean;
 }
 
 /** Cached Scryfall symbology (Dexie `symbols` table) — Phase 17. Not in backups. */

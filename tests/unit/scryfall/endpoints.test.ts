@@ -5,6 +5,7 @@ import {
   USER_AGENT,
   autocompleteUrl,
   cardByIdUrl,
+  cardBySetCollectorUrl,
   cardsCollectionUrl,
   searchCardsUrl,
 } from "@/lib/scryfall/endpoints";
@@ -30,6 +31,12 @@ describe("scryfall endpoints", () => {
 
   it("builds card by id URL", () => {
     expect(cardByIdUrl("abc-123")).toBe(`${SCRYFALL_BASE}/cards/abc-123`);
+  });
+
+  it("builds card by set and collector number URL", () => {
+    expect(cardBySetCollectorUrl("CMM", "396")).toBe(
+      `${SCRYFALL_BASE}/cards/cmm/396`,
+    );
   });
 
   it("builds collection and autocomplete URLs", () => {

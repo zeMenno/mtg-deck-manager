@@ -16,6 +16,8 @@ type DeckDashboardProps = {
   onAddCard?: () => void;
   onSaveVersion?: () => void;
   onCheapestPrintings?: () => void;
+  onImportCards?: () => void;
+  onSuggestTags?: () => void;
 };
 
 export function DeckDashboard({
@@ -23,6 +25,8 @@ export function DeckDashboard({
   onAddCard,
   onSaveVersion,
   onCheapestPrintings,
+  onImportCards,
+  onSuggestTags,
 }: DeckDashboardProps) {
   const { deck } = useDeck(deckId);
   const { stats, isLoading, isEmpty } = useDeckStats(deckId, "current");
@@ -64,6 +68,26 @@ export function DeckDashboard({
               data-testid="empty-add-card"
             >
               Add card
+            </Button>
+          ) : null}
+          {onImportCards ? (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onImportCards}
+              data-testid="empty-import-cards"
+            >
+              Import cards
+            </Button>
+          ) : null}
+          {onSuggestTags ? (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onSuggestTags}
+              data-testid="empty-suggest-tags"
+            >
+              Suggest tags…
             </Button>
           ) : null}
           <Button asChild variant="outline">
@@ -133,6 +157,26 @@ export function DeckDashboard({
             onClick={onAddCard}
           >
             Add card
+          </Button>
+        ) : null}
+        {onImportCards ? (
+          <Button
+            type="button"
+            variant="outline"
+            data-testid="deck-import-cards-btn"
+            onClick={onImportCards}
+          >
+            Import cards
+          </Button>
+        ) : null}
+        {onSuggestTags ? (
+          <Button
+            type="button"
+            variant="outline"
+            data-testid="deck-suggest-tags-btn"
+            onClick={onSuggestTags}
+          >
+            Suggest tags…
           </Button>
         ) : null}
         {onSaveVersion ? (

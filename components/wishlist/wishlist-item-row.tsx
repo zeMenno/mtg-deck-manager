@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import {
   getDensityNameClass,
   getDensityRowClass,
+  toRowDensity,
 } from "@/lib/display/density-classes";
 import { cn } from "@/lib/utils";
 import type { DisplayDensity } from "@/types";
@@ -44,17 +45,18 @@ function WishlistItemRowComponent({
   onConsider,
   onAdd,
 }: WishlistItemRowProps) {
+  const rowDensity = toRowDensity(density);
   const card = item.card;
   const showThumb =
-    imagesEnabled && (density === "comfortable" || density === "image");
+    imagesEnabled && (rowDensity === "comfortable" || rowDensity === "image");
 
   return (
     <div
       data-testid={`wishlist-item-${item.id}`}
-      data-density={density}
+      data-density={rowDensity}
       className={cn(
         "border-border bg-card flex w-full items-stretch rounded-md border shadow-sm",
-        getDensityRowClass(density),
+        getDensityRowClass(rowDensity),
         selected && "bg-primary/10 ring-primary ring-2",
       )}
     >
@@ -80,7 +82,7 @@ function WishlistItemRowComponent({
         {showThumb && card ? (
           <LazyCardImage
             card={card}
-            size={density === "image" ? "sm" : "xs"}
+            size={rowDensity === "image" ? "sm" : "xs"}
             imagesEnabled={imagesEnabled}
             className="shrink-0"
           />
@@ -88,14 +90,14 @@ function WishlistItemRowComponent({
 
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
-            <span className={getDensityNameClass(density)}>
+            <span className={getDensityNameClass(rowDensity)}>
               {item.quantity > 1 ? `${item.quantity}× ` : null}
               {card?.name ?? "Unknown card"}
             </span>
             <PriorityBadge priority={item.priority} />
           </div>
 
-          {density !== "compact" && card?.typeLine ? (
+          {rowDensity !== "compact" && card?.typeLine ? (
             <p className="text-muted-foreground truncate text-xs">
               {card.typeLine}
             </p>
@@ -128,8 +130,8 @@ function WishlistItemRowComponent({
             <CardPriceDisplay
               cardId={item.cardId}
               quantity={item.quantity}
-              showSource={density === "comfortable"}
-              showTimestamp={density === "comfortable"}
+              showSource={rowDensity === "comfortable"}
+              showTimestamp={rowDensity === "comfortable"}
             />
             {card?.tcgplayerUri ? (
               <TcgplayerLink

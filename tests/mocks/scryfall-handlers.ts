@@ -138,6 +138,27 @@ export const scryfallHandlers = [
     });
   }),
 
+  http.get(`${SCRYFALL_BASE}/cards/:set/:number`, ({ params }) => {
+    const set = String(params.set).toLowerCase();
+    const number = decodeURIComponent(String(params.number));
+    const card = FIXTURE_CARDS.find(
+      (c) =>
+        (c.set ?? "").toLowerCase() === set && c.collector_number === number,
+    );
+    if (!card) {
+      return HttpResponse.json(
+        {
+          object: "error",
+          code: "not_found",
+          status: 404,
+          details: "Card not found.",
+        },
+        { status: 404 },
+      );
+    }
+    return HttpResponse.json(card);
+  }),
+
   http.get(`${SCRYFALL_BASE}/cards/:id`, ({ params }) => {
     const id = String(params.id);
     const card =

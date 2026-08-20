@@ -14,7 +14,10 @@ import { DeckListToolbar } from "@/components/deck/deck-list-toolbar";
 import { DeckTabs } from "@/components/navigation/deck-tabs";
 import { MultiSelectBar } from "@/components/shared/multi-select-bar";
 import { PageTransition } from "@/components/shared/page-transition";
-import { DeckCardListSkeleton } from "@/components/shared/skeletons";
+import {
+  DeckCardGridSkeleton,
+  DeckCardListSkeleton,
+} from "@/components/shared/skeletons";
 import { Button } from "@/components/ui/button";
 import type { DeckCardFilters } from "@/lib/deck/deck-queries";
 import { useDeck } from "@/lib/hooks/use-deck";
@@ -194,7 +197,11 @@ export function DeckCardsClient({ params }: DeckCardsClientProps) {
         <DeckListToolbar />
 
         {isLoading ? (
-          <DeckCardListSkeleton />
+          effectiveDensity === "grid" ? (
+            <DeckCardGridSkeleton />
+          ) : (
+            <DeckCardListSkeleton />
+          )
         ) : (
           <DeckCardList
             cards={cards}
@@ -215,6 +222,10 @@ export function DeckCardsClient({ params }: DeckCardsClientProps) {
             onLongPress={(item) => {
               enterMultiSelect(item.id);
               toast.message("Multi-select on");
+            }}
+            onOpenDetails={(item) => {
+              setActiveItem(item);
+              setDetailOpen(true);
             }}
           />
         )}

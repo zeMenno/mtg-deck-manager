@@ -61,4 +61,43 @@ describe("settings persistence", () => {
     expect(again.imagesEnabled).toBe(true);
     expect(again.densityMode).toBe("comfortable");
   });
+
+  it("defaults suggest-on-add on and persists disabling it", async () => {
+    database = await resetDatabase();
+    const settings = new SettingsService(database);
+
+    expect(await settings.get("tags.suggestOnAdd")).toBe(true);
+    await settings.set("tags.suggestOnAdd", false);
+
+    expect((await settings.getAll())["tags.suggestOnAdd"]).toBe(false);
+  });
+
+  it("round-trips grid density and card zoom keys", async () => {
+    database = await resetDatabase();
+    const settings = new SettingsService(database);
+
+    expect(await settings.get("cardZoom.hoverPreview")).toBe(true);
+    expect(await settings.get("cardZoom.tapImageOpensZoom")).toBe(true);
+
+    await settings.set("densityMode", "grid");
+    await settings.set("cardZoom.hoverPreview", false);
+    await settings.set("cardZoom.tapImageOpensZoom", false);
+
+    const typed = await settings.getAll();
+    expect(typed.densityMode).toBe("grid");
+    expect(typed["cardZoom.hoverPreview"]).toBe(false);
+    expect(typed["cardZoom.tapImageOpensZoom"]).toBe(false);
+  });
+
+  it("falls unknown densityMode values back to comfortable", async () => {
+    database = await resetDatabase();
+    await database.settings.put({
+      key: "densityMode",
+      value: "huge",
+      updatedAt: new Date().toISOString(),
+    });
+    const settings = new SettingsService(database);
+    expect((await settings.getAll()).densityMode).toBe("comfortable");
+    expect(await settings.get("densityMode")).toBe("comfortable");
+  });
 });

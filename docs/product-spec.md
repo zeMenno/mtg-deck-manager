@@ -398,7 +398,9 @@ Plain-text layout:
 
 ### 8.3 Import
 
-v1.0 accepts: full JSON backup, single-deck JSON, and plain-text decklists (`<qty> <card name>` per line, `//` comments and blank lines ignored, unresolved names reported rather than silently skipped). CSV import is **export-only** in v1.0 unless Phase 10 finds it trivial. Moxfield / Archidekt importers are post-MVP.
+v1.0 accepts: full JSON backup, single-deck JSON, and plain-text decklists (`<qty> <card name>` per line, `//` comments and blank lines ignored, unresolved names reported rather than silently skipped). CSV import is **export-only** in v1.0 unless Phase 10 finds it trivial.
+
+v1.3 extends the same text parser with an Archidekt dialect (`(SET)` collector, `*F*`, `[categories]`, ignored `^labels^`) and a previewed import into an **existing** deck (default status Consider; skip duplicate oracles). `/decks/new` remains the create-from-list path. Archidekt URL scrape is still out of scope.
 
 ### 8.4 Data-safety UX
 

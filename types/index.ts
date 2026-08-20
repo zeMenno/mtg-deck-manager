@@ -33,7 +33,7 @@ export type WishlistPriority = "essential" | "high" | "medium" | "low";
 export type Currency = "USD" | "EUR";
 
 /** Card list density. */
-export type DisplayDensity = "compact" | "comfortable" | "image";
+export type DisplayDensity = "compact" | "comfortable" | "image" | "grid";
 
 export type {
   Deck,

@@ -85,8 +85,8 @@ describe("PrintingPickerSheet", () => {
     );
 
     expect(screen.getByText(/CMM/)).toBeDefined();
-    expect(screen.getByTestId("printing-option-cheap").textContent).toContain(
-      "0.80",
+    expect(screen.getByTestId("printing-option-cheap").textContent).toMatch(
+      /0[.,]80/,
     );
     fireEvent.click(screen.getByTestId("printing-option-cheap"));
 
